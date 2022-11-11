@@ -1,0 +1,72 @@
+/*
+ * Flight
+ * Copyright 2022 Kiran Hart
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package ca.tweetzy.flight.database;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import org.bukkit.plugin.Plugin;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+public class MySQLConnector implements DatabaseConnector {
+
+    private final Plugin plugin;
+    private HikariDataSource hikari;
+    private boolean initializedSuccessfully;
+
+    public MySQLConnector(Plugin plugin, String hostname, int port, String database, String username, String password, boolean useSSL) {
+        this.plugin = plugin;
+
+        plugin.getLogger().info("connecting to " + hostname + " : " + port);
+
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl("jdbc:mysql://" + hostname + ":" + port + "/" + database + "?useSSL=" + useSSL);
+        config.setUsername(username);
+        config.setPassword(password);
+        config.setMaximumPoolSize(3);
+
+        try {
+            this.hikari = new HikariDataSource(config);
+            this.initializedSuccessfully = true;
+        } catch (Exception ex) {
+            this.initializedSuccessfully = false;
+        }
+    }
+
+    @Override
+    public boolean isInitialized() {
+        return this.initializedSuccessfully;
+    }
+
+    @Override
+    public void closeConnection() {
+        this.hikari.close();
+    }
+
+    @Override
+    public void connect(ConnectionCallback callback) {
+        try (Connection connection = this.hikari.getConnection()) {
+            callback.accept(connection);
+        } catch (SQLException ex) {
+            this.plugin.getLogger().severe("An error occurred executing a MySQL query: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+}
