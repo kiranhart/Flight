@@ -18,6 +18,7 @@
 
 package ca.tweetzy.flight.gui.template;
 
+import ca.tweetzy.flight.FlightPlugin;
 import ca.tweetzy.flight.comp.enums.CompMaterial;
 import ca.tweetzy.flight.gui.Gui;
 import ca.tweetzy.flight.gui.events.GuiClickEvent;
@@ -98,7 +99,7 @@ public final class MaterialPickerGUI extends BaseGUI {
         setButton(5, 4, buildSearchButton(), click -> {
             click.gui.exit();
 
-            new TitleInput(click.player, Common.colorize(this.inputTitle), Common.colorize(this.inputSubtitle)) {
+            new TitleInput(FlightPlugin.getInstance(), click.player, Common.colorize(this.inputTitle), Common.colorize(this.inputSubtitle)) {
                 @Override
                 public boolean onResult(String string) {
                     if (string.isEmpty()) return false;

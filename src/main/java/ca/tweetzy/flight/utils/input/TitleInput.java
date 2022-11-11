@@ -24,6 +24,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * The current file has been created by Kiran Hart
@@ -38,16 +39,16 @@ public abstract class TitleInput extends Input {
     private final String subTitle;
     private final String actionbar;
 
-    public TitleInput(@NonNull final Player player, final String title, final String subTitle, final String actionbar) {
-        super(player);
+    public TitleInput(@NonNull final JavaPlugin plugin, @NonNull final Player player, final String title, final String subTitle, final String actionbar) {
+        super(plugin, player);
         this.player = player;
         this.title = title;
         this.subTitle = subTitle;
         this.actionbar = actionbar;
     }
 
-    public TitleInput(@NonNull final Player player, final String title, final String subTitle) {
-        this(player, Common.colorize(title), Common.colorize(subTitle), Common.colorize(""));
+    public TitleInput(@NonNull final JavaPlugin plugin, @NonNull final Player player, final String title, final String subTitle) {
+        this(plugin, player, Common.colorize(title), Common.colorize(subTitle), Common.colorize(""));
     }
 
     public abstract boolean onResult(String string);
