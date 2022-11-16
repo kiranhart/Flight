@@ -16,23 +16,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package ca.tweetzy.flight.utils;
+package ca.tweetzy.flight.config;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Supplier;
 
 /**
- * Date Created: April 10 2022
- * Time Created: 12:38 p.m.
- *
- * @author Kiran Hart
- */
-@Getter
-@AllArgsConstructor
-@Data
-public class Pair<K, V> {
+ * The original author of this code is SpraxDev, the original is from SongodaCore,
+ * the following code below, may not reflect the original version.
+ */public interface HeaderCommentable {
+    void setHeaderComment(@Nullable Supplier<String> comment);
 
-    private final K first;
-    private final V second;
+    default void setHeaderComment(@Nullable String comment) {
+        setHeaderComment(() -> comment);
+    }
+
+    @Nullable Supplier<String> getHeaderComment();
+
+    @NotNull String generateHeaderCommentLines();
 }

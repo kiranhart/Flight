@@ -95,7 +95,7 @@ public abstract class FlightPlugin extends JavaPlugin implements Listener {
 
 			// metrics
 			if (this.getBStatsId() != -1) {
-				console.sendMessage(Common.colorize(String.format("&8[#00ce74FeatherCore&8]#CBCBCB Enabling metrics for #00ce74%s", getDescription().getName())));
+				console.sendMessage(Common.colorize(String.format("&8[#00ce74FlightCore&8]#CBCBCB Enabling metrics for #00ce74%s", getDescription().getName())));
 				Metrics metrics = new Metrics(this, this.getBStatsId());
 
 				if (!this.getCustomMetricCharts().isEmpty())

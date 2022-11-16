@@ -1,21 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Flight
-  ~ Copyright 2022 Kiran Hart
-  ~
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -122,7 +105,7 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.30</version>
+            <version>1.33</version>
             <scope>compile</scope>
         </dependency>
 
@@ -151,7 +134,6 @@
                 <groupId>de.m3y.maven</groupId>
                 <artifactId>inject-maven-plugin</artifactId>
                 <version>1.3</version>
-
                 <executions>
                     <execution>
                         <phase>process-classes</phase>
@@ -213,10 +195,6 @@
                         <relocation>
                             <pattern>com.zaxxer</pattern>
                             <shadedPattern>${project.groupId}.${project.artifactId}.third_party.com.zaxxer</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>net.kyori</pattern>
-                            <shadedPattern>${project.groupId}.${project.artifactId}.third_party.kyori</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>org.yaml</pattern>
