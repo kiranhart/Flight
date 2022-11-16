@@ -25,7 +25,8 @@ import java.util.function.Supplier;
 /**
  * The original author of this code is SpraxDev, the original is from SongodaCore,
  * the following code below, may not reflect the original version.
- */public interface WriteableConfigEntry extends ConfigEntry {
+ */
+public interface WriteableConfigEntry extends ConfigEntry {
     @Override
     default void set(@Nullable Object value) {
         getConfig().set(getKey(), value);

@@ -33,7 +33,8 @@ import java.util.function.Function;
 /**
  * The original author of this code is SpraxDev, the original is from SongodaCore,
  * the following code below, may not reflect the original version.
- */public class YamlConfigEntry implements WriteableConfigEntry {
+ */
+public class YamlConfigEntry implements WriteableConfigEntry {
     protected final @NotNull YamlConfiguration config;
     protected final @NotNull String key;
     protected @Nullable Object defaultValue;

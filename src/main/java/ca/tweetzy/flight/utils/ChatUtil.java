@@ -36,6 +36,7 @@ public final class ChatUtil {
      * It takes an enum and returns a string with the first letter of each word capitalized
      *
      * @param enumeration The enumeration to capitalize.
+     *
      * @return The name of the enumeration in all caps.
      */
     public static String capitalizeFully(final Enum<?> enumeration) {
@@ -46,6 +47,7 @@ public final class ChatUtil {
      * It takes a string, formats it, and then capitalizes it
      *
      * @param string The string to capitalize, may be null
+     *
      * @return The string with the first letter of each word capitalized.
      */
     public static String capitalizeFully(final String string) {
@@ -56,6 +58,7 @@ public final class ChatUtil {
      * Capitalize the first letter of the given string.
      *
      * @param enumeration The enumeration to capitalize.
+     *
      * @return The name of the enumeration.
      */
     public static String capitalize(final Enum<?> enumeration) {
@@ -66,6 +69,7 @@ public final class ChatUtil {
      * It takes a string, formats it, and then capitalizes the first letter
      *
      * @param string The string to capitalize.
+     *
      * @return The first letter of the string is capitalized.
      */
     public static String capitalize(final String string) {
@@ -76,6 +80,7 @@ public final class ChatUtil {
      * It takes a string and returns a string with the first letter capitalized and the rest of the letters lowercase
      *
      * @param enumeration The enumeration to format.
+     *
      * @return The name of the enumeration.
      */
     public static String format(final Enum<?> enumeration) {
@@ -86,6 +91,7 @@ public final class ChatUtil {
      * It takes a string, makes it lowercase, replaces underscores with spaces, and trims the string
      *
      * @param string The string to format.
+     *
      * @return The string is being returned in lower case and the underscores are being replaced with spaces.
      */
     public static String format(final String string) {
@@ -96,6 +102,7 @@ public final class ChatUtil {
      * It takes a string, and adds spaces to the beginning of each line until the string is centered
      *
      * @param message The message you want to center.
+     *
      * @return A string with the message centered.
      */
     public static String centerMessage(String message) {

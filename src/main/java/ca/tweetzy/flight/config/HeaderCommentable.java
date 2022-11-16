@@ -26,7 +26,8 @@ import java.util.function.Supplier;
 /**
  * The original author of this code is SpraxDev, the original is from SongodaCore,
  * the following code below, may not reflect the original version.
- */public interface HeaderCommentable {
+ */
+public interface HeaderCommentable {
     void setHeaderComment(@Nullable Supplier<String> comment);
 
     default void setHeaderComment(@Nullable String comment) {

@@ -30,7 +30,8 @@ import java.util.function.Supplier;
 /**
  * The original author of this code is SpraxDev, the original is from SongodaCore,
  * the following code below, may not reflect the original version.
- */public class ReadOnlyConfigEntry implements ConfigEntry {
+ */
+public class ReadOnlyConfigEntry implements ConfigEntry {
     protected final @NotNull IConfiguration config;
     protected final @NotNull String key;
 

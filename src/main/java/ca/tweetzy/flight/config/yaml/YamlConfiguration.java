@@ -48,10 +48,12 @@ import java.util.function.Supplier;
 
 // TODO: Allow registering own custom value converter (e.g. Bukkit-Location to Map and back)
 //       + move the huge block from #set into such a converter and register it by default
+
 /**
  * The original author of this code is SpraxDev, the original is from SongodaCore,
  * the following code below, may not reflect the original version.
- */public class YamlConfiguration implements IConfiguration, HeaderCommentable, NodeCommentable {
+ */
+public class YamlConfiguration implements IConfiguration, HeaderCommentable, NodeCommentable {
     protected final @NotNull Yaml yaml;
     protected final @NotNull DumperOptions yamlDumperOptions;
     protected final @NotNull YamlCommentRepresenter yamlCommentRepresenter;

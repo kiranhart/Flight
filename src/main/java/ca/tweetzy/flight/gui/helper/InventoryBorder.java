@@ -36,6 +36,7 @@ public final class InventoryBorder {
      * If the index is on the first or last row, or the first or last column, add it to the list.
      *
      * @param rows The number of rows in the grid.
+     *
      * @return A list of integers.
      */
     public static List<Integer> getBorders(final int rows) {

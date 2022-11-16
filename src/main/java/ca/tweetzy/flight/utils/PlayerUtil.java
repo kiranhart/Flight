@@ -42,6 +42,7 @@ public final class PlayerUtil {
      * Returns the item in the player's hand, or null if the player is not holding an item.
      *
      * @param player The player to get the hand of.
+     *
      * @return The item in the player's hand.
      */
     public ItemStack getHand(@NonNull final Player player) {
@@ -52,7 +53,8 @@ public final class PlayerUtil {
      * Returns the item in the player's hand, or null if the player is not holding anything.
      *
      * @param player The player to get the item from.
-     * @param hand The hand to get the item from.
+     * @param hand   The hand to get the item from.
+     *
      * @return The item in the player's hand.
      */
     public ItemStack getHand(@NonNull final Player player, Hand hand) {
@@ -66,9 +68,10 @@ public final class PlayerUtil {
     /**
      * It gets the highest number from a permission node
      *
-     * @param player The player to check the permission for.
+     * @param player     The player to check the permission for.
      * @param permission The permission to check.
-     * @param def The default value to return if no permission is found.
+     * @param def        The default value to return if no permission is found.
+     *
      * @return The highest number in the permission.
      */
     public int getNumberPermission(@NonNull final Player player, @NonNull final String permission, final int def) {
@@ -110,6 +113,7 @@ public final class PlayerUtil {
      * If the player's inventory is empty, return true, otherwise return false.
      *
      * @param player The player to check the inventory of.
+     *
      * @return A boolean value.
      */
     public boolean isInventoryEmpty(@NonNull final Player player) {
@@ -127,6 +131,7 @@ public final class PlayerUtil {
      *
      * @param player is the player being checked
      * @param stack  is the item you want to find
+     *
      * @return the total count of the item(s)
      */
     public int getItemCountInPlayerInventory(@NonNull final Player player, ItemStack stack) {

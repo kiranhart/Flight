@@ -35,7 +35,8 @@ import java.util.function.Supplier;
 /**
  * The original author of this code is SpraxDev, the original is from SongodaCore,
  * the following code below, may not reflect the original version.
- */public class YamlCommentRepresenter extends Representer {
+ */
+public class YamlCommentRepresenter extends Representer {
     private final Map<String, Supplier<String>> nodeComments;
 
     public YamlCommentRepresenter(DumperOptions dumperOptions, Map<String, Supplier<String>> nodeComments) {

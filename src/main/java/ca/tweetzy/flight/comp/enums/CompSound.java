@@ -34,7 +34,12 @@ import org.bukkit.scheduler.BukkitTask;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.WeakHashMap;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -1429,6 +1434,7 @@ public enum CompSound {
      * @param name the sound name to format.
      *
      * @return an enum name.
+     *
      * @since 1.0.0
      */
     @Nonnull
@@ -1466,6 +1472,7 @@ public enum CompSound {
      * @param sound the name of the sound.
      *
      * @return a matched CompSound.
+     *
      * @since 1.0.0
      */
     @Nonnull
@@ -1480,6 +1487,7 @@ public enum CompSound {
      * @param sound the Bukkit sound.
      *
      * @return a matched sound.
+     *
      * @throws IllegalArgumentException may be thrown as an unexpected exception.
      * @since 2.0.0
      */
@@ -1646,6 +1654,7 @@ public enum CompSound {
      * @param delay       the delay between each play.
      *
      * @return the async task handling the operation.
+     *
      * @since 2.0.0
      */
     @Nonnull
@@ -1683,6 +1692,7 @@ public enum CompSound {
      * Parses the CompSound as a {@link Sound} based on the server version.
      *
      * @return the vanilla sound.
+     *
      * @since 1.0.0
      */
     @Nullable
@@ -1700,6 +1710,7 @@ public enum CompSound {
      * </blockquote>
      *
      * @return true if the current version has this sound, otherwise false.
+     *
      * @since 1.0.0
      */
     public boolean isSupported() {
@@ -1717,6 +1728,7 @@ public enum CompSound {
      * @param delay  the delay between each repeat.
      *
      * @return the async task handling this operation.
+     *
      * @see #play(Location, float, float)
      * @since 2.0.0
      */
@@ -1839,11 +1851,14 @@ public enum CompSound {
      * @since 3.0.0
      */
     public static class Record {
-        @Nonnull public final CompSound sound;
+        @Nonnull
+        public final CompSound sound;
         public final float volume, pitch;
         public boolean playAtLocation;
-        @Nullable public Player player;
-        @Nullable public Location location;
+        @Nullable
+        public Player player;
+        @Nullable
+        public Location location;
 
         public Record(@Nonnull CompSound sound) {
             this(sound, DEFAULT_VOLUME, DEFAULT_PITCH);

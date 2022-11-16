@@ -35,7 +35,14 @@ import org.bukkit.potion.Potion;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -1568,7 +1575,9 @@ public enum CompMaterial {
         this.material = mat;
     }
 
-    CompMaterial(String... legacy) {this(0, legacy);}
+    CompMaterial(String... legacy) {
+        this(0, legacy);
+    }
 
     /**
      * Checks if the version is 1.13 Aquatic Update or higher.
@@ -1579,6 +1588,7 @@ public enum CompMaterial {
      * </blockquote>
      *
      * @return true if 1.13 or higher.
+     *
      * @see #getVersion()
      * @see #supports(int)
      * @since 1.0.0
@@ -1616,6 +1626,7 @@ public enum CompMaterial {
      * @param name the name of the material.
      *
      * @return an optional that can be empty.
+     *
      * @since 5.1.0
      */
     @Nonnull
@@ -1627,6 +1638,7 @@ public enum CompMaterial {
      * The current version of the server.
      *
      * @return the current server version minor number.
+     *
      * @see #supports(int)
      * @since 2.0.0
      */
@@ -1687,6 +1699,7 @@ public enum CompMaterial {
      * @param name the material string that consists of the material name, data and separator character.
      *
      * @return the parsed CompMaterial.
+     *
      * @see #matchCompMaterial(String)
      * @since 3.0.0
      */
@@ -1729,6 +1742,7 @@ public enum CompMaterial {
      * @param item the ItemStack to match.
      *
      * @return an CompMaterial if matched any.
+     *
      * @throws IllegalArgumentException may be thrown as an unexpected exception.
      * @see #matchCompMaterial(Material)
      * @since 2.0.0
@@ -1780,6 +1794,7 @@ public enum CompMaterial {
      * @param data the data value of the material. Is always 0 or {@link #UNKNOWN_DATA_VALUE} when {@link Data#ISFLAT}
      *
      * @return an CompMaterial (with the same data value if specified)
+     *
      * @see #matchCompMaterial(Material)
      * @see #matchCompMaterial(int, byte)
      * @see #matchCompMaterial(ItemStack)
@@ -1818,6 +1833,7 @@ public enum CompMaterial {
      * @param name the name of the material to check.
      *
      * @return true if there's a duplicated material for this material, otherwise false.
+     *
      * @since 2.0.0
      */
     private static boolean isDuplicated(@Nonnull String name) {
@@ -1833,11 +1849,12 @@ public enum CompMaterial {
      * @param data the data value of the material.
      *
      * @return a parsed CompMaterial with the same ID and data value.
+     *
      * @see #matchCompMaterial(ItemStack)
      * @since 2.0.0
      * @deprecated this method loops through all the available materials and matches their ID using {@link #getId()}
-     * which takes a really long time. Plugins should no longer support IDs. If you want, you can make a {@link Map} cache yourself.
-     * This method obviously doesn't work for 1.13+ and will not be supported. This is only here for debugging purposes.
+     *         which takes a really long time. Plugins should no longer support IDs. If you want, you can make a {@link Map} cache yourself.
+     *         This method obviously doesn't work for 1.13+ and will not be supported. This is only here for debugging purposes.
      */
     @Nonnull
     @Deprecated
@@ -1906,6 +1923,7 @@ public enum CompMaterial {
      * @param name the material name to modify.
      *
      * @return an enum name.
+     *
      * @since 2.0.0
      */
     @Nonnull
@@ -1944,6 +1962,7 @@ public enum CompMaterial {
      * @param version the major version to be checked. "1." is ignored. E.g. 1.12 = 12 | 1.9 = 9
      *
      * @return true of the version is equal or higher than the current version.
+     *
      * @since 2.0.0
      */
     public static boolean supports(int version) {
@@ -1968,6 +1987,7 @@ public enum CompMaterial {
      * The only special exceptions are {@link #BRICKS} and {@link #NETHER_BRICKS}
      *
      * @return true if this material is a plural form material, otherwise false.
+     *
      * @since 8.0.0
      */
     private boolean isPlural() {
@@ -2011,6 +2031,7 @@ public enum CompMaterial {
      * @param materials the material names to check base material on.
      *
      * @return true if one of the given material names is similar to the base material.
+     *
      * @since 3.1.1
      */
     public boolean isOneOf(@Nullable Collection<String> materials) {
@@ -2076,6 +2097,7 @@ public enum CompMaterial {
      * @param name the material name to check.
      *
      * @return true if it's one of the legacy names, otherwise false.
+     *
      * @since 2.0.0
      */
     private boolean anyMatchLegacy(@Nonnull String name) {
@@ -2097,6 +2119,7 @@ public enum CompMaterial {
      * </pre>
      *
      * @return a more user-friendly enum name.
+     *
      * @since 3.0.0
      */
     @Override
@@ -2112,6 +2135,7 @@ public enum CompMaterial {
      * Spigot added material ID support back in 1.16+
      *
      * @return the ID of the material or <b>-1</b> if it's not a legacy material or the server doesn't support the material.
+     *
      * @see #matchCompMaterial(int, byte)
      * @since 2.2.0
      */
@@ -2135,6 +2159,7 @@ public enum CompMaterial {
      * or {@link ItemStack#getDurability()} if not damageable.
      *
      * @return data of this material, or 0 if none.
+     *
      * @since 1.0.0
      */
     @SuppressWarnings("deprecation")
@@ -2147,6 +2172,7 @@ public enum CompMaterial {
      * Uses data values on older versions.
      *
      * @return an ItemStack with the same material (and data value if in older versions.)
+     *
      * @see #setType(ItemStack)
      * @since 2.0.0
      */
@@ -2162,6 +2188,7 @@ public enum CompMaterial {
      * Parses the material of this CompMaterial.
      *
      * @return the material related to this CompMaterial based on the server version.
+     *
      * @since 1.0.0
      */
     @Nullable
@@ -2175,6 +2202,7 @@ public enum CompMaterial {
      * @param item item to check.
      *
      * @return true if the material is the same as the item's material (and data value if on older versions), otherwise false.
+     *
      * @since 1.0.0
      */
     @SuppressWarnings("deprecation")
@@ -2192,6 +2220,7 @@ public enum CompMaterial {
      * if you're going to parse and use the material/item later.
      *
      * @return true if the material exists in {@link Material} list.
+     *
      * @since 2.0.0
      */
     public boolean isSupported() {

@@ -26,7 +26,8 @@ import java.util.function.Supplier;
 /**
  * The original author of this code is SpraxDev, the original is from SongodaCore,
  * the following code below, may not reflect the original version.
- */public interface NodeCommentable {
+ */
+public interface NodeCommentable {
     void setNodeComment(@NotNull String key, @Nullable Supplier<String> comment);
 
     default void setNodeComment(@NotNull String key, @Nullable String comment) {

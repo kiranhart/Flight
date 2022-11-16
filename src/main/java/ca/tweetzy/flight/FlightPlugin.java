@@ -38,19 +38,19 @@ import java.util.logging.Level;
  */
 public abstract class FlightPlugin extends JavaPlugin implements Listener {
 
-	private boolean emergencyStop = false;
+    private boolean emergencyStop = false;
 
-	/**
-	 * The instance of this plugin
-	 */
-	private static volatile FlightPlugin instance;
+    /**
+     * The instance of this plugin
+     */
+    private static volatile FlightPlugin instance;
 
-	public static FlightPlugin getInstance() {
-		if (instance == null) {
-			instance = JavaPlugin.getPlugin(FlightPlugin.class);
-		}
-		return instance;
-	}
+    public static FlightPlugin getInstance() {
+        if (instance == null) {
+            instance = JavaPlugin.getPlugin(FlightPlugin.class);
+        }
+        return instance;
+    }
 
 	/*
 	-------------------------------------------------------------------------
@@ -58,69 +58,69 @@ public abstract class FlightPlugin extends JavaPlugin implements Listener {
 	-------------------------------------------------------------------------
 	 */
 
-	@Override
-	public final void onLoad() {
-		try {
-			getInstance();
-			onWake();
-		} catch (final Throwable throwable) {
-			criticalErrorOnPluginStartup(throwable);
-		}
-	}
+    @Override
+    public final void onLoad() {
+        try {
+            getInstance();
+            onWake();
+        } catch (final Throwable throwable) {
+            criticalErrorOnPluginStartup(throwable);
+        }
+    }
 
-	@Override
-	public final void onEnable() {
-		if (this.emergencyStop) {
-			setEnabled(false);
-			return;
-		}
+    @Override
+    public final void onEnable() {
+        if (this.emergencyStop) {
+            setEnabled(false);
+            return;
+        }
 
-		CommandSender console = Bukkit.getConsoleSender();
+        CommandSender console = Bukkit.getConsoleSender();
 
-		console.sendMessage(" "); // blank line to separate chatter
-		console.sendMessage(Common.colorize("#00a87f============================="));
-		console.sendMessage(Common.colorize(String.format("#00ce74%s &fv&e%s #CBCBCBby #00ce74Tweetzy", getDescription().getName(), getDescription().getVersion())));
-		console.sendMessage(Common.colorize(String.format("#00ce74Developer#CBCBCB: &e%s", String.join(", ", getDescription().getAuthors()))));
+        console.sendMessage(" "); // blank line to separate chatter
+        console.sendMessage(Common.colorize("#00a87f============================="));
+        console.sendMessage(Common.colorize(String.format("#00ce74%s &fv&e%s #CBCBCBby #00ce74Tweetzy", getDescription().getName(), getDescription().getVersion())));
+        console.sendMessage(Common.colorize(String.format("#00ce74Developer#CBCBCB: &e%s", String.join(", ", getDescription().getAuthors()))));
 
-		try {
-			onFlight();
-			// the config.yml should be setup by now
+        try {
+            onFlight();
+            // the config.yml should be setup by now
 
 
-			if (emergencyStop) {
-				console.sendMessage(Common.colorize("#8C1053~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
-				console.sendMessage(" ");
-				return;
-			}
+            if (emergencyStop) {
+                console.sendMessage(Common.colorize("#8C1053~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
+                console.sendMessage(" ");
+                return;
+            }
 
-			// metrics
-			if (this.getBStatsId() != -1) {
-				console.sendMessage(Common.colorize(String.format("&8[#00ce74FlightCore&8]#CBCBCB Enabling metrics for #00ce74%s", getDescription().getName())));
-				Metrics metrics = new Metrics(this, this.getBStatsId());
+            // metrics
+            if (this.getBStatsId() != -1) {
+                console.sendMessage(Common.colorize(String.format("&8[#00ce74FlightCore&8]#CBCBCB Enabling metrics for #00ce74%s", getDescription().getName())));
+                Metrics metrics = new Metrics(this, this.getBStatsId());
 
-				if (!this.getCustomMetricCharts().isEmpty())
-					this.getCustomMetricCharts().forEach(metrics::addCustomChart);
-			}
+                if (!this.getCustomMetricCharts().isEmpty())
+                    this.getCustomMetricCharts().forEach(metrics::addCustomChart);
+            }
 
-		} catch (final Throwable throwable) {
-			criticalErrorOnPluginStartup(throwable);
-			console.sendMessage(Common.colorize("#8C1053~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
-			console.sendMessage(" ");
-			return;
-		}
+        } catch (final Throwable throwable) {
+            criticalErrorOnPluginStartup(throwable);
+            console.sendMessage(Common.colorize("#8C1053~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
+            console.sendMessage(" ");
+            return;
+        }
 
-		console.sendMessage(Common.colorize("#00a87f============================="));
-		console.sendMessage(" ");
-	}
+        console.sendMessage(Common.colorize("#00a87f============================="));
+        console.sendMessage(" ");
+    }
 
-	@Override
-	public final void onDisable() {
-		if (this.emergencyStop) {
-			return;
-		}
+    @Override
+    public final void onDisable() {
+        if (this.emergencyStop) {
+            return;
+        }
 
-		onSleep();
-	}
+        onSleep();
+    }
 
 
 	/*
@@ -129,22 +129,22 @@ public abstract class FlightPlugin extends JavaPlugin implements Listener {
 	-------------------------------------------------------------------------
 	 */
 
-	/**
-	 * Called during {@link JavaPlugin#onLoad()}
-	 */
-	protected void onWake() {
-	}
+    /**
+     * Called during {@link JavaPlugin#onLoad()}
+     */
+    protected void onWake() {
+    }
 
-	/**
-	 * Called during {@link JavaPlugin#onEnable()}
-	 */
-	protected abstract void onFlight();
+    /**
+     * Called during {@link JavaPlugin#onEnable()}
+     */
+    protected abstract void onFlight();
 
-	/**
-	 * Called during {@link JavaPlugin#onDisable()}
-	 */
-	protected void onSleep() {
-	}
+    /**
+     * Called during {@link JavaPlugin#onDisable()}
+     */
+    protected void onSleep() {
+    }
 
     /*
     -------------------------------------------------------------------------
@@ -152,87 +152,87 @@ public abstract class FlightPlugin extends JavaPlugin implements Listener {
     -------------------------------------------------------------------------
      */
 
-	public String getPluginName() {
-		return getDescription().getName();
-	}
+    public String getPluginName() {
+        return getDescription().getName();
+    }
 
-	public String getPluginDescription() {
-		return getDescription().getDescription();
-	}
+    public String getPluginDescription() {
+        return getDescription().getDescription();
+    }
 
-	public String getVersion() {
-		return getDescription().getVersion();
-	}
+    public String getVersion() {
+        return getDescription().getVersion();
+    }
 
-	protected int getBStatsId() {
-		return -1;
-	}
+    protected int getBStatsId() {
+        return -1;
+    }
 
-	protected List<Metrics.CustomChart> getCustomMetricCharts() {
-		return Collections.emptyList();
-	}
+    protected List<Metrics.CustomChart> getCustomMetricCharts() {
+        return Collections.emptyList();
+    }
 
-	protected int getSpigotId() {
-		return -1;
-	}
+    protected int getSpigotId() {
+        return -1;
+    }
 
-	protected void emergencyStop() {
-		this.emergencyStop = true;
-		Bukkit.getPluginManager().disablePlugin(this);
-	}
+    protected void emergencyStop() {
+        this.emergencyStop = true;
+        Bukkit.getPluginManager().disablePlugin(this);
+    }
 
 
-	protected void shutdownDataManager(DataManagerAbstract dataManager) {
-		// 3 minutes is overkill, but we just want to make sure
-		shutdownDataManager(dataManager, 15, TimeUnit.MINUTES.toSeconds(3));
-	}
+    protected void shutdownDataManager(DataManagerAbstract dataManager) {
+        // 3 minutes is overkill, but we just want to make sure
+        shutdownDataManager(dataManager, 15, TimeUnit.MINUTES.toSeconds(3));
+    }
 
-	protected void shutdownDataManager(DataManagerAbstract dataManager, int reportInterval, long secondsUntilForceShutdown) {
-		dataManager.shutdownTaskQueue();
+    protected void shutdownDataManager(DataManagerAbstract dataManager, int reportInterval, long secondsUntilForceShutdown) {
+        dataManager.shutdownTaskQueue();
 
-		while (!dataManager.isTaskQueueTerminated() && secondsUntilForceShutdown > 0) {
-			long secondsToWait = Math.min(reportInterval, secondsUntilForceShutdown);
+        while (!dataManager.isTaskQueueTerminated() && secondsUntilForceShutdown > 0) {
+            long secondsToWait = Math.min(reportInterval, secondsUntilForceShutdown);
 
-			try {
-				if (dataManager.waitForShutdown(secondsToWait, TimeUnit.SECONDS)) {
-					break;
-				}
+            try {
+                if (dataManager.waitForShutdown(secondsToWait, TimeUnit.SECONDS)) {
+                    break;
+                }
 
-				getLogger().info(String.format("A DataManager is currently working on %d tasks... " +
-								"We are giving him another %d seconds until we forcefully shut him down " +
-								"(continuing to report in %d second intervals)",
-						dataManager.getTaskQueueSize(), secondsUntilForceShutdown, reportInterval));
-			} catch (InterruptedException ignore) {
-			} finally {
-				secondsUntilForceShutdown -= secondsToWait;
-			}
-		}
+                getLogger().info(String.format("A DataManager is currently working on %d tasks... " +
+                                "We are giving him another %d seconds until we forcefully shut him down " +
+                                "(continuing to report in %d second intervals)",
+                        dataManager.getTaskQueueSize(), secondsUntilForceShutdown, reportInterval));
+            } catch (InterruptedException ignore) {
+            } finally {
+                secondsUntilForceShutdown -= secondsToWait;
+            }
+        }
 
-		if (!dataManager.isTaskQueueTerminated()) {
-			int unfinishedTasks = dataManager.forceShutdownTaskQueue().size();
+        if (!dataManager.isTaskQueueTerminated()) {
+            int unfinishedTasks = dataManager.forceShutdownTaskQueue().size();
 
-			if (unfinishedTasks > 0) {
-				getLogger().log(Level.WARNING,
-						String.format("A DataManager has been forcefully terminated with %d unfinished tasks - " +
-								"This can be a serious problem, please report it to us (Tweetzy)!", unfinishedTasks));
-			}
-		}
-	}
+            if (unfinishedTasks > 0) {
+                getLogger().log(Level.WARNING,
+                        String.format("A DataManager has been forcefully terminated with %d unfinished tasks - " +
+                                "This can be a serious problem, please report it to us (Tweetzy)!", unfinishedTasks));
+            }
+        }
+    }
 
-	/**
-	 * Logs one or multiple errors that occurred during plugin startup and calls {@link #emergencyStop()} afterwards
-	 *
-	 * @param th The error(s) that occurred
-	 */
-	protected void criticalErrorOnPluginStartup(Throwable th) {
-		Bukkit.getLogger().log(Level.SEVERE,
-				String.format(
-						"Unexpected error while loading %s v%s c%s: Disabling plugin!",
-						getDescription().getName(),
-						getDescription().getVersion(),
-						FlightConstants.getCoreVersion()
-				), th);
+    /**
+     * Logs one or multiple errors that occurred during plugin startup and calls {@link #emergencyStop()} afterwards
+     *
+     * @param th The error(s) that occurred
+     */
+    protected void criticalErrorOnPluginStartup(Throwable th) {
+        Bukkit.getLogger().log(Level.SEVERE,
+                String.format(
+                        "Unexpected error while loading %s v%s c%s: Disabling plugin!",
+                        getDescription().getName(),
+                        getDescription().getVersion(),
+                        FlightConstants.getCoreVersion()
+                ), th);
 
-		emergencyStop();
-	}
+        emergencyStop();
+    }
 }
