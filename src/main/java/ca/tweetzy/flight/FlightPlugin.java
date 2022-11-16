@@ -84,8 +84,6 @@ public abstract class FlightPlugin extends JavaPlugin implements Listener {
 
         try {
             onFlight();
-            // the config.yml should be setup by now
-
 
             if (emergencyStop) {
                 console.sendMessage(Common.colorize("#8C1053~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
@@ -118,7 +116,6 @@ public abstract class FlightPlugin extends JavaPlugin implements Listener {
         if (this.emergencyStop) {
             return;
         }
-
         onSleep();
     }
 
