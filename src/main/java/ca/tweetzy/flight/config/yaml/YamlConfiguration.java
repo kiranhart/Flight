@@ -299,6 +299,7 @@ public class YamlConfiguration implements IConfiguration, HeaderCommentable, Nod
     protected static DumperOptions createDefaultYamlDumperOptions() {
         DumperOptions dumperOptions = new DumperOptions();
         dumperOptions.setProcessComments(true);
+        dumperOptions.setAllowUnicode(true);
 
         dumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         dumperOptions.setIndentWithIndicator(true);
