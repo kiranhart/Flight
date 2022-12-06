@@ -38,6 +38,14 @@ import java.util.Set;
 @UtilityClass
 public final class PlayerUtil {
 
+    public void giveItem(@NonNull final Player player, @NonNull final ItemStack item) {
+        if (player.getInventory().firstEmpty() == -1) {
+            player.getWorld().dropItemNaturally(player.getLocation(), item);
+        } else {
+            player.getInventory().addItem(item);
+        }
+    }
+
     /**
      * Returns the item in the player's hand, or null if the player is not holding an item.
      *
