@@ -20,6 +20,7 @@ package ca.tweetzy.flight.config;
 
 import ca.tweetzy.flight.comp.enums.CompMaterial;
 import ca.tweetzy.flight.utils.Pair;
+import org.bukkit.entity.EntityType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -201,16 +202,10 @@ public interface ConfigEntry {
         return fallbackValue;
     }
 
-    /**
-     * @see #getMaterialOr(CompMaterial)
-     */
     default CompMaterial getMaterial() {
         return getMaterialOr(null);
     }
 
-    /**
-     * @see CompMaterial#matchCompMaterial(String)
-     */
     @Contract("!null -> !null")
     default @Nullable CompMaterial getMaterialOr(@Nullable CompMaterial defaultValue) {
         String value = getString();
@@ -220,5 +215,20 @@ public interface ConfigEntry {
         }
 
         return CompMaterial.matchCompMaterial(value).orElse(null);
+    }
+
+    default EntityType getEntityType() {
+        return getEntityTypeOr(null);
+    }
+
+    @Contract("!null -> !null")
+    default @Nullable EntityType getEntityTypeOr(@Nullable EntityType defaultValue) {
+        String value = getString();
+
+        if (value == null) {
+            return defaultValue;
+        }
+
+        return EntityType.valueOf(value);
     }
 }
