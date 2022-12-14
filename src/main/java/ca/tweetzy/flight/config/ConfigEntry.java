@@ -185,6 +185,22 @@ public interface ConfigEntry {
         return fallbackValue;
     }
 
+    default @Nullable List<Integer> getIntList() {
+        return getIntListOr(null);
+    }
+
+    @Contract("!null -> !null")
+    default @Nullable List<Integer> getIntListOr(List<Integer> fallbackValue) {
+        Object value = get();
+
+        if (value instanceof List) {
+            //noinspection unchecked
+            return (List<Integer>) value;
+        }
+
+        return fallbackValue;
+    }
+
     /**
      * @see #getMaterialOr(CompMaterial)
      */
