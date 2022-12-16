@@ -19,6 +19,7 @@
 package ca.tweetzy.flight.utils;
 
 import ca.tweetzy.flight.comp.NBTEditor;
+import ca.tweetzy.flight.comp.SkullUtils;
 import ca.tweetzy.flight.comp.enums.CompMaterial;
 import ca.tweetzy.flight.comp.enums.ServerVersion;
 import lombok.Getter;
@@ -401,12 +402,9 @@ public final class QuickItem {
         final ItemStack itemStack = CompMaterial.PLAYER_HEAD.parseItem();
         final SkullMeta meta = (SkullMeta) itemStack.getItemMeta();
 
-        try {
-            meta.setOwningPlayer(player);
-        } catch (Throwable ignored) {
-            meta.setOwner(player.getName());
-        }
+        assert meta != null;
 
+        SkullUtils.applySkin(meta, player.getUniqueId());
         itemStack.setItemMeta(meta);
 
         return of(itemStack);
