@@ -18,6 +18,7 @@
 
 package ca.tweetzy.flight;
 
+import ca.tweetzy.flight.config.tweetzy.TweetzyYamlConfig;
 import ca.tweetzy.flight.database.DataManagerAbstract;
 import ca.tweetzy.flight.utils.Common;
 import org.bukkit.Bukkit;
@@ -37,6 +38,8 @@ import java.util.logging.Level;
  * @author Kiran Hart
  */
 public abstract class FlightPlugin extends JavaPlugin implements Listener {
+
+    private static TweetzyYamlConfig coreConfig;
 
     private boolean emergencyStop = false;
 
@@ -83,6 +86,8 @@ public abstract class FlightPlugin extends JavaPlugin implements Listener {
         console.sendMessage(Common.colorize(String.format("#00ce74Developer#CBCBCB: &e%s", String.join(", ", getDescription().getAuthors()))));
 
         try {
+            coreConfig = new TweetzyYamlConfig(this, "config.yml");
+
             onFlight();
 
             if (emergencyStop) {
@@ -171,6 +176,10 @@ public abstract class FlightPlugin extends JavaPlugin implements Listener {
 
     protected int getSpigotId() {
         return -1;
+    }
+
+    public static TweetzyYamlConfig getCoreConfig() {
+        return coreConfig;
     }
 
     protected void emergencyStop() {
