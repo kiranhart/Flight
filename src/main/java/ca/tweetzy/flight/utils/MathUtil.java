@@ -18,8 +18,6 @@
 
 package ca.tweetzy.flight.utils;
 
-import ca.tweetzy.flight.exception.CalculatorException;
-
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
@@ -181,4 +179,13 @@ public final class MathUtil {
         }
         return new Parser().parse();
     }
+
+    public static final class CalculatorException extends RuntimeException {
+
+        public CalculatorException(final String message) {
+            super(message);
+        }
+    }
 }
+
+
