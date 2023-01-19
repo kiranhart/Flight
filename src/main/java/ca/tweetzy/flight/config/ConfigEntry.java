@@ -21,6 +21,7 @@ package ca.tweetzy.flight.config;
 import ca.tweetzy.flight.comp.enums.CompMaterial;
 import ca.tweetzy.flight.utils.Pair;
 import org.bukkit.entity.EntityType;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -200,6 +201,25 @@ public interface ConfigEntry {
         }
 
         return fallbackValue;
+    }
+
+    default ItemStack getItemStack(){
+        return getItemStackOr(null);
+    }
+
+    default ItemStack getItemStackOr(@Nullable ItemStack defaultValue) {
+        String value = getString();
+
+        if (value == null) {
+            return defaultValue;
+        }
+
+        final CompMaterial material = CompMaterial.matchCompMaterial(value).orElse(null);
+
+        if (material == null)
+            return defaultValue;
+
+        return material.parseItem();
     }
 
     default CompMaterial getMaterial() {

@@ -18,6 +18,7 @@
 
 package ca.tweetzy.flight.utils;
 
+import ca.tweetzy.flight.settings.TranslationManager;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
@@ -87,9 +88,12 @@ public final class Replacer {
     public String replaceVariables(String text, Object... replacements) {
         final Map<String, Object> map = new HashMap<>();
 
-        for (int i = 0; i < replacements.length; i += 2) {
-            map.put((String) replacements[i], replacements[i + 1]);
+        if (replacements.length > 0) {
+            for (int i = 0; i < replacements.length; i += 2) {
+                map.put((String) replacements[i], replacements[i + 1]);
+            }
         }
+
 
         return replaceTokens(text, map);
     }

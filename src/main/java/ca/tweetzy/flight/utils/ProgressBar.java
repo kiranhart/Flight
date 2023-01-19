@@ -18,7 +18,8 @@
 
 package ca.tweetzy.flight.utils;
 
-import joptsimple.internal.Strings;
+
+import com.google.common.base.Strings;
 
 /**
  * Date Created: April 10 2022
@@ -45,7 +46,7 @@ public final class ProgressBar {
     public static String make(final int current, int max, int totalBars, char symbol, String completedColor, String notCompletedColor) {
         final float percent = (float) current / max;
         final int bars = (int) (totalBars * percent);
-        return Common.colorize(completedColor + Strings.repeat(symbol, bars)) + Common.colorize(notCompletedColor + Strings.repeat(symbol, totalBars - bars));
+        return Common.colorize(completedColor + Strings.repeat(String.valueOf(symbol), bars)) + Common.colorize(notCompletedColor + Strings.repeat(String.valueOf(symbol), totalBars - bars));
     }
 
     /**

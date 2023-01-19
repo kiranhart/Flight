@@ -7,8 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public abstract class FlightTranslator {
 
@@ -61,6 +60,37 @@ public abstract class FlightTranslator {
 
     public static String string(@NotNull TranslationEntry entry, Object... variables) {
         return string(null, "en_us", entry, variables);
+    }
+
+    public static List<String> list(Player player, @NonNull String language, @NotNull TranslationEntry entry, Object... variables) {
+        final TranslationFile translations = getTranslationFile(language);
+
+        List<String> content = new ArrayList<>();
+
+        if (entry.contents.length == 1) {
+            final String raw = (String) translations.getOr(entry.key, entry.string());
+            content.add(raw);
+        } else {
+            content = (List<String>) translations.getOr(entry.key, entry.list());
+        }
+
+        if (content == null) return Collections.singletonList("");
+
+        content = Replacer.replaceVariables(content, variables);
+
+        if (player != null)
+            content = PlaceholderAPIHook.tryReplace(player, content);
+
+        // do some placeholder shit
+        return content;
+    }
+
+    public static List<String> list(Player player, @NotNull TranslationEntry entry, Object... variables) {
+        return list(player, "en_us", entry, variables);
+    }
+
+    public static List<String> list(@NotNull TranslationEntry entry, Object... variables) {
+        return list(null, "en_us", entry, variables);
     }
 
     protected abstract void registerLanguages();
