@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
  * @author Kiran Hart
  */
 public final class SolidColorPattern implements ColorPattern {
-    Pattern pattern = Pattern.compile("#([0-9A-Fa-f]{6})");
+    Pattern pattern = Pattern.compile("&?#([0-9A-Fa-f]{6})");
 
     /**
      * Applies a solid RGB color to the provided String.
