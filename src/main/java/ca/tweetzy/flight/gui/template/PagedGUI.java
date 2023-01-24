@@ -58,8 +58,8 @@ public abstract class PagedGUI<T> extends BaseGUI {
             final List<T> itemsToFill = this.items.stream().skip((page - 1) * (long) this.fillSlots().size()).limit(this.fillSlots().size()).collect(Collectors.toList());
             pages = (int) Math.max(1, Math.ceil(this.items.size() / (double) this.fillSlots().size()));
 
-            setPrevPage(5, 3, getPreviousButton());
-            setNextPage(5, 5, getNextButton());
+            setPrevPage(getPreviousButtonSlot(), getPreviousButton());
+            setNextPage(getNextButtonSlot(), getNextButton());
             setOnPage(e -> draw());
 
             for (int i = 0; i < this.rows * 9; i++) {
@@ -96,5 +96,12 @@ public abstract class PagedGUI<T> extends BaseGUI {
 
     protected ItemStack getNextButton() {
         return QuickItem.of(CompMaterial.ARROW, "&eNext").make();
+    }
+
+    protected int getPreviousButtonSlot() {
+        return 48;
+    }
+    protected int getNextButtonSlot() {
+        return 50;
     }
 }
