@@ -75,9 +75,9 @@ public abstract class BaseGUI extends Gui {
      */
     protected void applyBackExit() {
         if (this.parent == null)
-            setButton(this.rows - 1, 0, getExitButton(), click -> click.gui.close());
+            setButton(getBackExitButtonSlot(), getExitButton(), click -> click.gui.close());
         else
-            setButton(this.rows - 1, 0, getBackButton(), click -> click.manager.showGUI(click.player, this.parent));
+            setButton(getBackExitButtonSlot(), getBackButton(), click -> click.manager.showGUI(click.player, this.parent));
     }
 
     protected List<Integer> fillSlots() {
@@ -98,5 +98,9 @@ public abstract class BaseGUI extends Gui {
 
     protected ItemStack getNextPageButton() {
         return QuickItem.of(CompMaterial.ARROW, "&eNext").make();
+    }
+
+    protected int getBackExitButtonSlot() {
+       return this.rows - 1 + 0 * 9;
     }
 }
