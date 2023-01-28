@@ -32,10 +32,13 @@ public class TranslationManager extends FlightTranslator {
     =================== CONDITIONS ===================
      */
     public static TranslationEntry ENABLED = create("conditionals.enabled", "&aEnabled");
-    public static TranslationEntry DISABLED = create("conditionals.disabled", "&aDisabled");
+    public static TranslationEntry DISABLED = create("conditionals.disabled", "&cDisabled");
 
-    public static TranslationEntry OPEN = create("conditionals.open", "&eOpen");
-    public static TranslationEntry CLOSED = create("conditionals.closed", "&aClosed");
+    public static TranslationEntry TRUE = create("conditionals.true", "&aTrue");
+    public static TranslationEntry FALSE = create("conditionals.false", "&CFalse");
+
+    public static TranslationEntry OPEN = create("conditionals.open", "&aOpen");
+    public static TranslationEntry CLOSED = create("conditionals.closed", "&cClosed");
 
     /*
     =================== MOUSE / BUTTON ACTIONS ===================
