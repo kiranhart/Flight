@@ -34,6 +34,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -98,6 +99,10 @@ public class TweetzyYamlConfig extends YamlConfiguration {
      */
     public boolean init() {
         try {
+            if (!this.file.exists()) {
+                this.file.createNewFile();
+            }
+
             this.load();
             this.save();
 
@@ -154,7 +159,7 @@ public class TweetzyYamlConfig extends YamlConfiguration {
     }
 
     public void load() throws IOException {
-        try (Reader reader = new FileReader(this.file)) {
+        try (Reader reader = Files.newBufferedReader(this.file.toPath(), StandardCharsets.UTF_8)) {
             load(reader);
         } catch (FileNotFoundException ignore) {
         } catch (IOException e) {
@@ -165,7 +170,7 @@ public class TweetzyYamlConfig extends YamlConfiguration {
     public void save() throws IOException {
         Files.createDirectories(this.file.toPath().getParent());
 
-        try (Writer writer = new FileWriter(this.file)) {
+        try (Writer writer = Files.newBufferedWriter(this.file.toPath(), StandardCharsets.UTF_8)) {
             super.save(writer);
         } catch (IOException e) {
             throw new IOException("Unable to save '" + this.file.getPath() + "'", e);

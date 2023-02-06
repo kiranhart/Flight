@@ -1,5 +1,6 @@
 package ca.tweetzy.flight.settings;
 
+import ca.tweetzy.flight.FlightPlugin;
 import ca.tweetzy.flight.hooks.PlaceholderAPIHook;
 import ca.tweetzy.flight.utils.Replacer;
 import lombok.NonNull;
@@ -7,11 +8,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.util.*;
 
 public abstract class FlightTranslator {
 
@@ -101,6 +99,12 @@ public abstract class FlightTranslator {
 
     public void setup() {
         registerLanguages();
+
+        // create locales folder
+        final File localeFolder = new File(FlightPlugin.getInstance().getDataFolder() + "/locales");
+        if (!localeFolder.exists())
+            localeFolder.mkdirs();
+
 
         for (TranslationFile translationFile : translationFiles.values()) {
 
