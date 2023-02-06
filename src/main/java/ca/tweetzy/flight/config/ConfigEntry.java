@@ -18,8 +18,12 @@
 
 package ca.tweetzy.flight.config;
 
+import ca.tweetzy.flight.comp.NBTEditor;
+import ca.tweetzy.flight.comp.SkullUtils;
 import ca.tweetzy.flight.comp.enums.CompMaterial;
+import ca.tweetzy.flight.utils.MathUtil;
 import ca.tweetzy.flight.utils.Pair;
+import ca.tweetzy.flight.utils.QuickItem;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
@@ -203,7 +207,7 @@ public interface ConfigEntry {
         return fallbackValue;
     }
 
-    default ItemStack getItemStack(){
+    default ItemStack getItemStack() {
         return getItemStackOr(null);
     }
 
@@ -212,6 +216,21 @@ public interface ConfigEntry {
 
         if (value == null) {
             return defaultValue;
+        }
+
+        // SKULLS / HEADS
+        if (SkullUtils.detectSkullValueType(value) == SkullUtils.ValueType.TEXTURE_URL)
+            return NBTEditor.getHead(value);
+
+        // model data
+        if (value.split(":").length == 2 && MathUtil.isInt(value.split(":")[1])) {
+            final String[] split = value.split(":");
+
+            final CompMaterial material = CompMaterial.matchCompMaterial(split[0].toUpperCase()).orElse(null);
+            final int modelData = Integer.parseInt(split[1]);
+
+            if (material == null) return defaultValue;
+            return QuickItem.of(material).modelData(modelData).make();
         }
 
         final CompMaterial material = CompMaterial.matchCompMaterial(value).orElse(null);

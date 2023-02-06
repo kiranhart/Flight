@@ -7,17 +7,21 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class FlightTranslator {
 
-    protected String mainLanguage;
+    protected static String mainLanguage;
 
     private static final Map<String, TranslationFile> translationFiles = new HashMap<>();
     private static final Map<String, Object> translations = new HashMap<>();
 
-    public FlightTranslator(@NotNull final String mainLanguage) {
-        this.mainLanguage = mainLanguage;
+    public FlightTranslator(@NotNull String lang) {
+        mainLanguage = lang;
     }
 
     protected static TranslationEntry create(@NotNull final String key, @NonNull final String... contents) {
@@ -32,7 +36,7 @@ public abstract class FlightTranslator {
     }
 
     private static TranslationFile getMainTranslationFile() {
-        return translationFiles.get("en_us");
+        return translationFiles.get(mainLanguage);
     }
 
     protected static void registerLanguage(@NonNull JavaPlugin javaPlugin, @NonNull final String languageCode) {
@@ -55,11 +59,11 @@ public abstract class FlightTranslator {
     }
 
     public static String string(Player player, @NotNull TranslationEntry entry, Object... variables) {
-        return string(player, "en_us", entry, variables);
+        return string(player, mainLanguage, entry, variables);
     }
 
     public static String string(@NotNull TranslationEntry entry, Object... variables) {
-        return string(null, "en_us", entry, variables);
+        return string(null, mainLanguage, entry, variables);
     }
 
     public static List<String> list(Player player, @NonNull String language, @NotNull TranslationEntry entry, Object... variables) {
@@ -86,11 +90,11 @@ public abstract class FlightTranslator {
     }
 
     public static List<String> list(Player player, @NotNull TranslationEntry entry, Object... variables) {
-        return list(player, "en_us", entry, variables);
+        return list(player, mainLanguage, entry, variables);
     }
 
     public static List<String> list(@NotNull TranslationEntry entry, Object... variables) {
-        return list(null, "en_us", entry, variables);
+        return list(null, mainLanguage, entry, variables);
     }
 
     protected abstract void registerLanguages();
@@ -99,6 +103,7 @@ public abstract class FlightTranslator {
         registerLanguages();
 
         for (TranslationFile translationFile : translationFiles.values()) {
+
             translations.forEach((key, value) -> {
                 final String[] contents = (String[]) value;
                 translationFile.createEntry(key, contents.length > 1 ? contents : contents[0]);

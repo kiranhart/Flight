@@ -67,7 +67,7 @@ public abstract class BaseGUI extends Gui {
      * @param override The GUI to show when the back button is clicked.
      */
     protected void applyBackExit(Gui override) {
-        setButton(this.rows - 1, 0, getBackButton(), click -> click.manager.showGUI(click.player, override));
+        setButton(getBackExitButtonSlot(), getBackButton(), click -> click.manager.showGUI(click.player, override));
     }
 
     /**
@@ -101,6 +101,6 @@ public abstract class BaseGUI extends Gui {
     }
 
     protected int getBackExitButtonSlot() {
-       return this.rows - 1 + 0 * 9;
+       return this.rows * 9 - 9;
     }
 }

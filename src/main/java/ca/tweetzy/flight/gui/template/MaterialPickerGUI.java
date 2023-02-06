@@ -29,7 +29,7 @@ import ca.tweetzy.flight.utils.Inflector;
 import ca.tweetzy.flight.utils.QuickItem;
 import ca.tweetzy.flight.utils.input.TitleInput;
 import lombok.NonNull;
-import org.apache.commons.lang.WordUtils;
+import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 

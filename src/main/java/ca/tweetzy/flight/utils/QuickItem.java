@@ -36,11 +36,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Date Created: April 07 2022
@@ -357,6 +353,19 @@ public final class QuickItem {
      */
     public static QuickItem of(final CompMaterial material, final String name, @NonNull final String... lore) {
         return new QuickItem().material(material).name(name).lore(lore).hideTags(true);
+    }
+
+    public static QuickItem of(final String material) {
+        if (SkullUtils.detectSkullValueType(material) == SkullUtils.ValueType.TEXTURE_URL)
+            return of(NBTEditor.getHead(material));
+
+        final String[] split = material.split(":");
+
+        if (split.length == 2 && MathUtil.isInt(split[1])) {
+            return new QuickItem().material(CompMaterial.matchCompMaterial(split[0].toUpperCase()).orElse(CompMaterial.STONE)).modelData(Integer.parseInt(split[1])).hideTags(true);
+        }
+
+        return new QuickItem().material(CompMaterial.matchCompMaterial(split[0].toUpperCase()).orElse(CompMaterial.STONE)).hideTags(true);
     }
 
     /**

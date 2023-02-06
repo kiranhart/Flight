@@ -51,6 +51,25 @@ public final class MathUtil {
         romanNumbers.put(1, "I");
     }
 
+    public static boolean isInt(final String s) {
+        try {
+            Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public static boolean isDouble(final String s) {
+        try {
+            Double.parseDouble(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+
     /**
      * Return a roman number representation of the given number
      *
