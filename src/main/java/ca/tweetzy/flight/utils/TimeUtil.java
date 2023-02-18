@@ -18,6 +18,7 @@
 
 package ca.tweetzy.flight.utils;
 
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
 import java.text.SimpleDateFormat;
@@ -39,14 +40,20 @@ public final class TimeUtil {
        return convertToReadableDate(timeInMilliseconds, "MMMM/dd/yyyy - hh:mm a");
     }
 
-    public Map<TimeUnit, Long> getTimeByLong(final long milliseconds) {
+    public Map<TimeUnit, Long> getRemainingTime(final long milliseconds) {
         final Map<TimeUnit, Long> times = new HashMap<>();
+        final long seconds = (milliseconds - System.currentTimeMillis()) / 1000;
 
-        times.put(TimeUnit.DAYS, TimeUnit.SECONDS.toDays(milliseconds));
-        times.put(TimeUnit.HOURS, TimeUnit.SECONDS.toHours(milliseconds) - (TimeUnit.SECONDS.toDays(milliseconds) * 24L));
-        times.put(TimeUnit.MINUTES, TimeUnit.SECONDS.toMinutes(milliseconds) - (TimeUnit.SECONDS.toHours(milliseconds) * 60));
-        times.put(TimeUnit.SECONDS, TimeUnit.SECONDS.toSeconds(milliseconds) - (TimeUnit.SECONDS.toMinutes(milliseconds) * 60));
+        times.put(TimeUnit.DAYS, TimeUnit.SECONDS.toDays(seconds));
+        times.put(TimeUnit.HOURS, TimeUnit.SECONDS.toHours(seconds) - (TimeUnit.SECONDS.toDays(seconds) * 24L));
+        times.put(TimeUnit.MINUTES, TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds) * 60));
+        times.put(TimeUnit.SECONDS, TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) * 60));
 
         return times;
+    }
+
+    public String getTimeStringFromMillis(final long milliseconds) {
+        final Map<TimeUnit, Long> values = getRemainingTime(milliseconds);
+        return String.format("%dd %dh %dm %ds", values.get(TimeUnit.DAYS), values.get(TimeUnit.HOURS), values.get(TimeUnit.MINUTES), values.get(TimeUnit.SECONDS));
     }
 }
