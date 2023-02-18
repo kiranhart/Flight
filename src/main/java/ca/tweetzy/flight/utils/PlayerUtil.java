@@ -18,6 +18,7 @@
 
 package ca.tweetzy.flight.utils;
 
+import ca.tweetzy.flight.comp.enums.CompMaterial;
 import ca.tweetzy.flight.comp.enums.ServerVersion;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
@@ -37,13 +38,12 @@ import java.util.Set;
  */
 @UtilityClass
 public final class PlayerUtil {
-    
+
     /**
      * Gives an item to a player, or drops on the ground if their inventory is full
-     * 
-     * @param player The player to give the item to
-     * @param item The ItemStack to give or drop
      *
+     * @param player The player to give the item to
+     * @param item   The ItemStack to give or drop
      */
     public void giveItem(@NonNull final Player player, @NonNull final ItemStack item) {
         if (player.getInventory().firstEmpty() == -1) {
@@ -51,6 +51,16 @@ public final class PlayerUtil {
         } else {
             player.getInventory().addItem(item);
         }
+    }
+
+    /**
+     * Returns true if the player's hand is empty.
+     *
+     * @param player The player to check the hand of.
+     * @return true if empty
+     */
+    public boolean isHandEmpty(@NonNull final Player player) {
+        return getHand(player).getType() == CompMaterial.AIR.parseMaterial();
     }
 
     /**

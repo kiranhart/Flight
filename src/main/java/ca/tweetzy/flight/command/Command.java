@@ -18,7 +18,13 @@
 
 package ca.tweetzy.flight.command;
 
+import ca.tweetzy.flight.FlightPlugin;
+import ca.tweetzy.flight.gui.Gui;
+import ca.tweetzy.flight.gui.GuiManager;
+import ca.tweetzy.flight.utils.Common;
+import lombok.NonNull;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,4 +72,12 @@ public abstract class Command {
     public abstract String getSyntax();
 
     public abstract String getDescription();
+
+    protected void tell(@NonNull final CommandSender sender, @NonNull final String msg) {
+        Common.tell(sender, true, msg);
+    }
+
+    protected void tellNoPrefix(@NonNull final CommandSender sender, @NonNull final String msg) {
+        Common.tell(sender, false, msg);
+    }
 }

@@ -22,6 +22,9 @@ import lombok.experimental.UtilityClass;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @UtilityClass
 public final class TimeUtil {
@@ -34,5 +37,16 @@ public final class TimeUtil {
 
     public String convertToReadableDate(long timeInMilliseconds) {
        return convertToReadableDate(timeInMilliseconds, "MMMM/dd/yyyy - hh:mm a");
+    }
+
+    public Map<TimeUnit, Long> getTimeByLong(final long milliseconds) {
+        final Map<TimeUnit, Long> times = new HashMap<>();
+
+        times.put(TimeUnit.DAYS, TimeUnit.SECONDS.toDays(milliseconds));
+        times.put(TimeUnit.HOURS, TimeUnit.SECONDS.toHours(milliseconds) - (TimeUnit.SECONDS.toDays(milliseconds) * 24L));
+        times.put(TimeUnit.MINUTES, TimeUnit.SECONDS.toMinutes(milliseconds) - (TimeUnit.SECONDS.toHours(milliseconds) * 60));
+        times.put(TimeUnit.SECONDS, TimeUnit.SECONDS.toSeconds(milliseconds) - (TimeUnit.SECONDS.toMinutes(milliseconds) * 60));
+
+        return times;
     }
 }

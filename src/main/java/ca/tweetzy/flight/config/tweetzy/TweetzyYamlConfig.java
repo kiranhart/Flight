@@ -27,13 +27,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -99,6 +93,9 @@ public class TweetzyYamlConfig extends YamlConfiguration {
      */
     public boolean init() {
         try {
+            if (!this.file.getParentFile().exists())
+                this.file.getParentFile().mkdirs();
+
             if (!this.file.exists()) {
                 this.file.createNewFile();
             }

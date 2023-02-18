@@ -27,6 +27,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -56,6 +57,8 @@ public abstract class Input implements Listener, Runnable {
 
     public void onExit(final Player player) {
     }
+
+    public void onDeath(final Player player) {}
 
     public abstract boolean onInput(final String input);
 
@@ -102,6 +105,14 @@ public abstract class Input implements Listener, Runnable {
     public void close(InventoryOpenEvent e) {
         if (e.getPlayer().equals(this.player)) {
             this.close(false);
+        }
+    }
+
+    @EventHandler
+    public void onDeath(PlayerDeathEvent e) {
+        if (e.getEntity().equals(this.player)) {
+            this.onDeath(e.getEntity());
+            close(false);
         }
     }
 
