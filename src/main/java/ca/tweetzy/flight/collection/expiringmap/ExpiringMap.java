@@ -18,8 +18,9 @@
 
 package ca.tweetzy.flight.collection.expiringmap;
 
-import net.jodah.expiringmap.internal.Assert;
-import net.jodah.expiringmap.internal.NamedThreadFactory;
+
+import ca.tweetzy.flight.collection.expiringmap.internal.Assert;
+import ca.tweetzy.flight.collection.expiringmap.internal.NamedThreadFactory;
 
 import java.lang.ref.WeakReference;
 import java.util.AbstractCollection;
