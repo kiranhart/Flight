@@ -141,6 +141,7 @@ public class GuiManager {
             this.manager = manager;
         }
 
+
         @EventHandler(priority = EventPriority.LOW)
         void onDragGUI(InventoryDragEvent event) {
             if (!(event.getWhoClicked() instanceof Player)) {

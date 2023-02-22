@@ -58,7 +58,8 @@ public abstract class Input implements Listener, Runnable {
     public void onExit(final Player player) {
     }
 
-    public void onDeath(final Player player) {}
+    public void onDeath(final Player player) {
+    }
 
     public abstract boolean onInput(final String input);
 

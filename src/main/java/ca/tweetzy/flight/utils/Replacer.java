@@ -18,7 +18,6 @@
 
 package ca.tweetzy.flight.utils;
 
-import ca.tweetzy.flight.settings.TranslationManager;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 

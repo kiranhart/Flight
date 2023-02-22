@@ -57,6 +57,7 @@ public final class PlayerUtil {
      * Returns true if the player's hand is empty.
      *
      * @param player The player to check the hand of.
+     *
      * @return true if empty
      */
     public boolean isHandEmpty(@NonNull final Player player) {

@@ -2,7 +2,6 @@ package ca.tweetzy.flight.settings;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.List;

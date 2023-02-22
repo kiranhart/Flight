@@ -34,6 +34,7 @@ public final class InventoryBorder {
 
     /**
      * @param rows The number of rows in the gui.
+     *
      * @return A list of integers representing the gui border.
      */
     public static List<Integer> getBorders(final int rows) {
@@ -53,6 +54,7 @@ public final class InventoryBorder {
 
     /**
      * @param rows The number of rows in the gui.
+     *
      * @return A list of integers that represent the slots excluding border
      */
     public static List<Integer> getInsideBorders(final int rows) {

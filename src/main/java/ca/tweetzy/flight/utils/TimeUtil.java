@@ -18,7 +18,6 @@
 
 package ca.tweetzy.flight.utils;
 
-import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
 import java.text.SimpleDateFormat;
@@ -37,7 +36,7 @@ public final class TimeUtil {
     }
 
     public String convertToReadableDate(long timeInMilliseconds) {
-       return convertToReadableDate(timeInMilliseconds, "MMMM/dd/yyyy - hh:mm a");
+        return convertToReadableDate(timeInMilliseconds, "MMMM/dd/yyyy - hh:mm a");
     }
 
     public Map<TimeUnit, Long> getRemainingTime(final long milliseconds) {

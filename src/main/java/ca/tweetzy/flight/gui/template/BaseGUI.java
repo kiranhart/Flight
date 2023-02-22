@@ -101,6 +101,6 @@ public abstract class BaseGUI extends Gui {
     }
 
     protected int getBackExitButtonSlot() {
-       return this.rows * 9 - 9;
+        return this.rows * 9 - 9;
     }
 }

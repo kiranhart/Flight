@@ -101,6 +101,7 @@ public abstract class PagedGUI<T> extends BaseGUI {
     protected int getPreviousButtonSlot() {
         return 48;
     }
+
     protected int getNextButtonSlot() {
         return 50;
     }

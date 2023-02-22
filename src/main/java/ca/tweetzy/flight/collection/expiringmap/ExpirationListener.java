@@ -25,11 +25,11 @@ package ca.tweetzy.flight.collection.expiringmap;
  * @param <V> Value type
  */
 public interface ExpirationListener<K, V> {
-  /**
-   * Called when a map entry expires.
-   *
-   * @param key Expired key
-   * @param value Expired value
-   */
-  void expired(K key, V value);
+    /**
+     * Called when a map entry expires.
+     *
+     * @param key   Expired key
+     * @param value Expired value
+     */
+    void expired(K key, V value);
 }

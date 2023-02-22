@@ -34,7 +34,8 @@ public final class Filterer {
      * Returns true if the phrase matches the item name, pluralized item name, singularized item name, item lore, or item enchantments.
      *
      * @param phrase The phrase to search for
-     * @param stack The itemstack to search for
+     * @param stack  The itemstack to search for
+     *
      * @return A boolean value.
      */
     public boolean searchByItemInfo(@NonNull final String phrase, @NonNull final ItemStack stack) {
