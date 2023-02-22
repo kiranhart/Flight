@@ -28,6 +28,12 @@ import java.util.List;
 @UtilityClass
 public final class ItemUtil {
 
+    /**
+     * If the item has a display name, return it, otherwise return the item's type
+     *
+     * @param itemStack The item stack to get the name of.
+     * @return The name of the item.
+     */
     public String getStackName(@NonNull final ItemStack itemStack) {
         if (itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName()) {
             return itemStack.getItemMeta().getDisplayName();
@@ -36,6 +42,12 @@ public final class ItemUtil {
         }
     }
 
+    /**
+     * If the item has lore, return it, otherwise return an empty list.
+     *
+     * @param stack The ItemStack to get the lore from.
+     * @return The item lore
+     */
     public List<String> getItemLore(@NonNull final ItemStack stack) {
         final List<String> lore = new ArrayList<>();
         if (stack.hasItemMeta()) {
@@ -46,6 +58,12 @@ public final class ItemUtil {
         return lore;
     }
 
+    /**
+     * It returns a list of all the enchantments on the item
+     *
+     * @param stack The item stack to get the enchantments from.
+     * @return A list of enchants as strings
+     */
     public List<String> getItemEnchantments(@NonNull final ItemStack stack) {
         final List<String> enchantments = new ArrayList<>();
         if (!stack.getEnchantments().isEmpty()) {

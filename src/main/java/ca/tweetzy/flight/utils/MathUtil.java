@@ -51,6 +51,13 @@ public final class MathUtil {
         romanNumbers.put(1, "I");
     }
 
+    /**
+     * If the string can be parsed as an integer
+     *
+     * @param s The string to check
+     *
+     * @return true if it's an integer
+     */
     public static boolean isInt(final String s) {
         try {
             Integer.parseInt(s);
@@ -60,6 +67,13 @@ public final class MathUtil {
         }
     }
 
+    /**
+     * If the string can be parsed as a double
+     *
+     * @param s The string to check
+     *
+     * @return true if it's a double
+     */
     public static boolean isDouble(final String s) {
         try {
             Double.parseDouble(s);
@@ -68,7 +82,6 @@ public final class MathUtil {
             return false;
         }
     }
-
 
     /**
      * Return a roman number representation of the given number
