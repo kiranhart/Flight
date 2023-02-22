@@ -22,16 +22,8 @@ import ca.tweetzy.flight.FlightPlugin;
 import ca.tweetzy.flight.comp.enums.CompMaterial;
 import ca.tweetzy.flight.comp.enums.CompSound;
 import ca.tweetzy.flight.comp.enums.ServerVersion;
-import ca.tweetzy.flight.gui.events.GuiClickEvent;
-import ca.tweetzy.flight.gui.events.GuiCloseEvent;
-import ca.tweetzy.flight.gui.events.GuiDropItemEvent;
-import ca.tweetzy.flight.gui.events.GuiOpenEvent;
-import ca.tweetzy.flight.gui.events.GuiPageEvent;
-import ca.tweetzy.flight.gui.methods.Clickable;
-import ca.tweetzy.flight.gui.methods.Closable;
-import ca.tweetzy.flight.gui.methods.Droppable;
-import ca.tweetzy.flight.gui.methods.Openable;
-import ca.tweetzy.flight.gui.methods.Pagable;
+import ca.tweetzy.flight.gui.events.*;
+import ca.tweetzy.flight.gui.methods.*;
 import ca.tweetzy.flight.utils.Common;
 import ca.tweetzy.flight.utils.InventoryUpdate;
 import ca.tweetzy.flight.utils.QuickItem;
@@ -63,6 +55,9 @@ public class Gui {
     protected final Map<Integer, Boolean> unlockedCells = new HashMap<>();
     protected final Map<Integer, ItemStack> cellItems = new HashMap<>();
     protected final Map<Integer, Map<ClickType, Clickable>> conditionalButtons = new HashMap<>();
+    protected final Map<Integer, Long> timedClicks = new HashMap<>();
+    protected final Map<Integer, Long> lastClicked = new HashMap<>();
+    protected final Map<Integer, Boolean> singleClicks = new HashMap<>();
     protected ItemStack blankItem = QuickItem.of(CompMaterial.BLACK_STAINED_GLASS_PANE).name(" ").make();
     protected int nextPageIndex = -1, prevPageIndex = -1;
     protected ItemStack nextPageItem, prevPageItem;
@@ -139,6 +134,14 @@ public class Gui {
     public Gui setAcceptsItems(boolean acceptsItems) {
         this.acceptsItems = acceptsItems;
         return this;
+    }
+
+    public void setButtonSingleClick(final int slot) {
+        this.singleClicks.put(slot, false);
+    }
+
+    public void setButtonTimeout(final int slot, final long milliseconds) {
+        this.timedClicks.put(slot,  milliseconds);
     }
 
     /**
@@ -722,9 +725,28 @@ public class Gui {
         Map<ClickType, Clickable> conditionals = conditionalButtons.get(cell);
 
         Clickable button;
-        if (conditionals != null
-                && ((button = conditionals.get(event.getClick())) != null || (button = conditionals.get(null)) != null)) {
+        if (conditionals != null && ((button = conditionals.get(event.getClick())) != null || (button = conditionals.get(null)) != null)) {
+            if (this.singleClicks.containsKey(cell)) {
+                if (this.singleClicks.get(cell)) {
+                    return false;
+                }
+
+                this.singleClicks.put(cell, true);
+            }
+
+            if (this.timedClicks.containsKey(cell)) {
+                if (!this.lastClicked.containsKey(cell)) {
+                    this.lastClicked.put(cell, System.currentTimeMillis());
+                } else {
+                    if (System.currentTimeMillis() <  this.lastClicked.get(cell) + this.timedClicks.get(cell))
+                        return false;
+                    else
+                        this.lastClicked.put(cell, System.currentTimeMillis());
+                }
+            }
+
             button.onClick(new GuiClickEvent(manager, this, player, event, cell, true));
+
         } else {
             // no event for this button
             if (defaultClicker != null) {
