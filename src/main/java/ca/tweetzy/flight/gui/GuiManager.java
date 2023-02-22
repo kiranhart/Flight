@@ -149,13 +149,13 @@ public class GuiManager {
 
             Inventory openInv = event.getInventory();
             Gui gui;
-            if (openInv.getHolder() != null && openInv.getHolder() instanceof GuiHolder
-                    && ((GuiHolder) openInv.getHolder()).manager.uuid.equals(manager.uuid)) {
-                gui = ((GuiHolder) openInv.getHolder()).getGUI();
 
-                if (event.getRawSlots().stream()
-                        .filter(slot -> gui.inventory.getSize() > slot)
-                        .anyMatch(slot -> !gui.unlockedCells.getOrDefault(slot, false))) {
+            if (openInv.getHolder() != null && openInv.getHolder() instanceof GuiHolder && ((GuiHolder) openInv.getHolder()).manager.uuid.equals(manager.uuid)) {
+                gui = ((GuiHolder) openInv.getHolder()).getGui();
+
+                if (!gui.isOpen()) return;
+
+                if (event.getRawSlots().stream().filter(slot -> gui.inventory.getSize() > slot).anyMatch(slot -> !gui.unlockedCells.getOrDefault(slot, false))) {
                     event.setCancelled(true);
                     event.setResult(Result.DENY);
                 }
@@ -172,9 +172,10 @@ public class GuiManager {
             final Player player = (Player) event.getWhoClicked();
 
             Gui gui;
-            if (openInv.getHolder() != null && openInv.getHolder() instanceof GuiHolder &&
-                    ((GuiHolder) openInv.getHolder()).manager.uuid.equals(manager.uuid)) {
-                gui = ((GuiHolder) openInv.getHolder()).getGUI();
+            if (openInv.getHolder() != null && openInv.getHolder() instanceof GuiHolder && ((GuiHolder) openInv.getHolder()).manager.uuid.equals(manager.uuid)) {
+                gui = ((GuiHolder) openInv.getHolder()).getGui();
+
+                if (!gui.isOpen()) return;
 
                 if (event.getClick() == ClickType.DOUBLE_CLICK) {
                     // always cancel this event if there are matching gui elements, since it tends to do bad things
@@ -222,7 +223,7 @@ public class GuiManager {
 
             if (openInv.getHolder() != null && openInv.getHolder() instanceof GuiHolder && ((GuiHolder) openInv.getHolder()).manager.uuid.equals(manager.uuid)) {
 
-                Gui gui = ((GuiHolder) openInv.getHolder()).getGUI();
+                Gui gui = ((GuiHolder) openInv.getHolder()).getGui();
 
                 if (!gui.open) {
                     return;
