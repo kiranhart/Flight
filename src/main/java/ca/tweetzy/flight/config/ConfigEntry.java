@@ -270,9 +270,19 @@ public interface ConfigEntry {
         return EntityType.valueOf(value);
     }
 
-    default <E extends Enum<E>> E getEnum(Class<E> clazz, String s) {
+    default <E extends Enum<E>> E getEnum(Class<E> clazz) {
+        return getEnumOr(clazz, null);
+    }
+
+    default @Nullable <E extends Enum<E>> E getEnumOr(Class<E> clazz, @Nullable E defaultValue) {
+        String value = getString();
+
+        if (value == null) {
+            return defaultValue;
+        }
+
         for (E enums : EnumSet.allOf(clazz)) {
-            if (enums.name().equalsIgnoreCase(s)) {
+            if (enums.name().equalsIgnoreCase(value)) {
                 return enums;
             }
         }
