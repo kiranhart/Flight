@@ -74,8 +74,12 @@ public abstract class FlightTranslator {
         List<String> content = new ArrayList<>();
 
         if (entry.contents.length == 1) {
-            final String raw = (String) translations.getOr(entry.key, entry.string());
-            content.add(raw);
+            final Object obj = translations.getOr(entry.key, entry.string());
+            if (obj instanceof String)
+                content.add((String) obj);
+
+            if (obj instanceof List)
+                content.addAll((List<String>) obj);
         } else {
             content = (List<String>) translations.getOr(entry.key, entry.list());
         }

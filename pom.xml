@@ -6,7 +6,7 @@
 
     <groupId>ca.tweetzy</groupId>
     <artifactId>flight</artifactId>
-    <version>3.10.0</version>
+    <version>3.11.0</version>
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
 
@@ -122,7 +122,6 @@
             <version>1.33</version>
             <scope>compile</scope>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -188,7 +187,7 @@
                     <artifactSet>
                         <includes>
                             <include>ca.tweetzy:*</include>
-                            <include>com.zaxxer:HikariCP</include>
+                            <include>com.zaxxer:HikariCP*</include>
                             <include>org.yaml:snakeyaml</include>
                         </includes>
                     </artifactSet>
@@ -197,7 +196,7 @@
                             <artifact>*:*</artifact>
                             <includes>
                                 <include>ca/</include>
-                                <include>com/zaxxer</include>
+                                <include>com/zaxxer/</include>
                                 <include>org/yaml/</include>
                             </includes>
                             <excludes>
@@ -207,12 +206,12 @@
                     </filters>
                     <relocations>
                         <relocation>
-                            <pattern>com.zaxxer</pattern>
+                            <pattern>com.zaxxer.hikari</pattern>
                             <shadedPattern>${project.groupId}.${project.artifactId}.third_party.com.zaxxer</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>org.yaml</pattern>
-                            <shadedPattern>${project.groupId}.${project.artifactId}.third_party</shadedPattern>
+                            <shadedPattern>${project.groupId}.${project.artifactId}.third_party.org.yaml</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>

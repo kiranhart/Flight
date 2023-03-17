@@ -30,6 +30,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -219,8 +220,7 @@ public interface ConfigEntry {
         }
 
         // SKULLS / HEADS
-        if (SkullUtils.detectSkullValueType(value) == SkullUtils.ValueType.TEXTURE_URL)
-            return NBTEditor.getHead(value);
+        if (SkullUtils.detectSkullValueType(value) == SkullUtils.ValueType.TEXTURE_URL) return NBTEditor.getHead(value);
 
         // model data
         if (value.split(":").length == 2 && MathUtil.isInt(value.split(":")[1])) {
@@ -235,8 +235,7 @@ public interface ConfigEntry {
 
         final CompMaterial material = CompMaterial.matchCompMaterial(value).orElse(null);
 
-        if (material == null)
-            return defaultValue;
+        if (material == null) return defaultValue;
 
         return material.parseItem();
     }
@@ -269,5 +268,14 @@ public interface ConfigEntry {
         }
 
         return EntityType.valueOf(value);
+    }
+
+    default <E extends Enum<E>> E getEnum(Class<E> clazz, String s) {
+        for (E enums : EnumSet.allOf(clazz)) {
+            if (enums.name().equalsIgnoreCase(s)) {
+                return enums;
+            }
+        }
+        return null;
     }
 }

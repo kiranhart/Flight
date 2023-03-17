@@ -56,7 +56,13 @@ public final class Common {
         final String prefix = (PREFIX.length() == 0 || !addPrefix) ? "" : PREFIX + " ";
 
         for (String message : messages) {
-            sender.sendMessage(colorize(prefix + message));
+            message = colorize(prefix + message);
+            if (message.startsWith("<center>")){
+                message = message.replace("<center>", "");
+                message = ChatUtil.centerMessage(message);
+            }
+
+            sender.sendMessage(message);
         }
     }
 
