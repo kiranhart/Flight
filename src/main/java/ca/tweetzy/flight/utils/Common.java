@@ -77,12 +77,8 @@ public final class Common {
             Bukkit.getOnlinePlayers().stream().filter(online -> online.hasPermission(permission)).forEach(filtered -> tell(filtered, prefix, messages));
     }
 
-    public void broadcast(String permission, String... messages) {
-        broadcast(permission, true, messages);
-    }
-
-    public void broadcastNoPrefix(String permission, String... messages) {
-        broadcast(permission, false, messages);
+    public void broadcast(String... messages) {
+        broadcast(null, true, messages);
     }
 
     public void broadcastNoPrefix(String... messages) {
