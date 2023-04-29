@@ -346,6 +346,10 @@ public final class QuickItem {
     // Static access
     // ----------------------------------------------------------------------------------------
 
+    public static ItemStack bg(final ItemStack item) {
+        return of(item).name(" ").clearLore().make();
+    }
+
     /**
      * Convenience method to get a new item creator with material, name and lore set
      *

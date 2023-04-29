@@ -36,6 +36,7 @@ import ca.tweetzy.flight.utils.Common;
 import ca.tweetzy.flight.utils.InventoryUpdate;
 import ca.tweetzy.flight.utils.QuickItem;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -77,6 +78,10 @@ public class Gui {
     protected boolean allowDropItems = true;
     protected boolean allowClose = true;
     protected boolean open = false;
+
+    @Getter
+    @Setter
+    protected boolean allowShiftClick = false;
 
     /*
 	==============================================================
@@ -739,6 +744,9 @@ public class Gui {
                         this.lastClicked.put(cell, System.currentTimeMillis());
                 }
             }
+
+            if (!this.allowShiftClick && event.isShiftClick())// TODO: Info - used to stop players from spam shift clicking items out of gui
+                return false;
 
             button.onClick(new GuiClickEvent(manager, this, player, event, cell, true));
 

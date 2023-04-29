@@ -109,6 +109,7 @@ public class GuiManager {
             Inventory inv = gui.getOrCreateInventory(this);
 
             Bukkit.getScheduler().runTask(plugin, () -> {
+                player.updateInventory();
                 player.openInventory(inv);
                 gui.onOpen(this, player);
 
@@ -178,7 +179,14 @@ public class GuiManager {
 
                 if (!gui.isOpen()) return;
 
-                if (event.getClick() == ClickType.DOUBLE_CLICK) {
+
+                if (event.getClick() == ClickType.SHIFT_LEFT || event.getClick() == ClickType.SHIFT_RIGHT) {
+                    event.setCancelled(!gui.isAllowShiftClick());
+                    if (gui.onClick(manager, player, openInv, event)) {
+                        if (gui.getDefaultSound() != null)
+                            player.playSound(player.getLocation(), gui.getDefaultSound().parseSound(), 1F, 1F);
+                    }
+                } else if (event.getClick() == ClickType.DOUBLE_CLICK) {
                     // always cancel this event if there are matching gui elements, since it tends to do bad things
                     ItemStack clicked = event.getCursor();
                     if (clicked != null && clicked.getType() != Material.AIR) {
@@ -238,7 +246,10 @@ public class GuiManager {
                 if (manager.shutdown) {
                     gui.onClose(manager, player);
                 } else {
-                    Bukkit.getScheduler().runTaskLater(manager.plugin, () -> gui.onClose(manager, player), 1);
+                    Bukkit.getScheduler().runTaskLater(manager.plugin, () -> {
+                        gui.onClose(manager, player);
+                        player.updateInventory();
+                    }, 1);
                 }
 
                 manager.openInventories.remove(player);
