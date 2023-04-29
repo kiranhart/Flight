@@ -35,6 +35,7 @@ import ca.tweetzy.flight.gui.methods.Pagable;
 import ca.tweetzy.flight.utils.Common;
 import ca.tweetzy.flight.utils.InventoryUpdate;
 import ca.tweetzy.flight.utils.QuickItem;
+import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -61,6 +62,8 @@ public class Gui {
     protected Gui parent = null;
     protected Inventory inventory;
     protected String title;
+
+    @Getter
     protected int rows = 6;
     protected int page = 1;
     protected int pages = 1;
