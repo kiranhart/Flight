@@ -72,9 +72,15 @@ public final class CommandManager implements CommandExecutor, TabCompleter {
     @Setter
     private List<String> syntaxErrorMessages = Arrays.asList(
             "&8&m-----------------------------------------------------",
-            "&cIncorrect Syntax!",
-            "&aValid Syntax&f: ",
-            "&e%syntax%",
+            "<center>%pl_name%",
+            "<center>&cSeems like you entered that command incorrectly.",
+            "",
+            "<center>&6<> &f- &7Required arguments",
+            "<center>&8[] &f- &7Optional arguments",
+            "",
+            "<center>&aHere is the correct usage&F:",
+            "<center>&f/&e%syntax%",
+            "",
             "&8&m-----------------------------------------------------"
     );
 
@@ -346,7 +352,9 @@ public final class CommandManager implements CommandExecutor, TabCompleter {
 
             if (returnType == ReturnType.INVALID_SYNTAX) {
                 for (String s : syntaxErrorMessages) {
-                    Common.tell(sender, s.replace("%syntax%", command.getSyntax()));
+                    Common.tellNoPrefix(sender, s
+                            .replace("%pl_name%", Common.PLUGIN_NAME)
+                            .replace("%syntax%", command.getSyntax()));
                 }
             }
 

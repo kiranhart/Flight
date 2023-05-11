@@ -39,9 +39,18 @@ import java.util.stream.Collectors;
 public final class Common {
 
     public String PREFIX = "[FlightCore]";
+    public String PLUGIN_NAME = "FlightCore";
 
     public void setPrefix(String prefix) {
         PREFIX = prefix;
+    }
+
+    public void setPluginName(String pluginName) {
+        PLUGIN_NAME = pluginName;
+    }
+
+    public void tell(CommandSender sender,  List<String> messages) {
+        tell(sender, true, messages);
     }
 
     public void tell(CommandSender sender, String... messages) {
@@ -52,18 +61,28 @@ public final class Common {
         tell(sender, false, messages);
     }
 
+    public void tellNoPrefix(CommandSender sender, List<String> messages) {
+        tell(sender, false, messages);
+    }
+
     public void tell(CommandSender sender, boolean addPrefix, String... messages) {
         final String prefix = (PREFIX.length() == 0 || !addPrefix) ? "" : PREFIX + " ";
 
         for (String message : messages) {
             message = colorize(prefix + message);
-            if (message.startsWith("<center>")){
+            message = message.replace("%pl_name%", PLUGIN_NAME);
+
+            if (message.startsWith("<center>")) {
                 message = message.replace("<center>", "");
                 message = ChatUtil.centerMessage(message);
             }
 
             sender.sendMessage(message);
         }
+    }
+
+    public void tell(CommandSender sender, boolean addPrefix, List<String> messages) {
+        tell(sender, addPrefix, messages.toArray(new String[0]));
     }
 
     public void log(String... messages) {
