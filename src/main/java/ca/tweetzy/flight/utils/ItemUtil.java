@@ -35,7 +35,7 @@ public final class ItemUtil {
      *
      * @return The name of the item.
      */
-    public String getStackName(@NonNull final ItemStack itemStack) {
+    public String getItemName(@NonNull final ItemStack itemStack) {
         if (itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName()) {
             return itemStack.getItemMeta().getDisplayName();
         } else {

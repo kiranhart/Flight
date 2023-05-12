@@ -65,30 +65,18 @@ public final class PlayerUtil {
     }
 
     /**
-     * Returns the item in the player's hand, or null if the player is not holding an item.
+     * Returns the item in the player's hand, or null if the player is not holding anything.
      *
-     * @param player The player to get the hand of.
+     * @param player The player to get the item from.
      *
      * @return The item in the player's hand.
      */
     public ItemStack getHand(@NonNull final Player player) {
-        return getHand(player, Hand.MAIN);
-    }
-
-    /**
-     * Returns the item in the player's hand, or null if the player is not holding anything.
-     *
-     * @param player The player to get the item from.
-     * @param hand   The hand to get the item from.
-     *
-     * @return The item in the player's hand.
-     */
-    public ItemStack getHand(@NonNull final Player player, Hand hand) {
         if (ServerVersion.isServerVersionBelow(ServerVersion.V1_9)) {
             return player.getInventory().getItemInHand();
         }
 
-        return hand == Hand.MAIN ? player.getInventory().getItemInMainHand() : player.getInventory().getItemInOffHand();
+        return player.getInventory().getItemInMainHand();
     }
 
     /**
@@ -196,6 +184,3 @@ public final class PlayerUtil {
     }
 }
 
-enum Hand {
-    MAIN, OFF
-}

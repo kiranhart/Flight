@@ -39,7 +39,7 @@ public final class Filterer {
      * @return A boolean value.
      */
     public boolean searchByItemInfo(@NonNull final String phrase, @NonNull final ItemStack stack) {
-        return match(phrase, ItemUtil.getStackName(stack)) ||
+        return match(phrase, ItemUtil.getItemName(stack)) ||
                 match(phrase, Inflector.getInstance().pluralize(stack.getType().name())) ||
                 match(phrase, Inflector.getInstance().singularize(stack.getType().name())) ||
                 match(phrase, ItemUtil.getItemLore(stack)) ||
