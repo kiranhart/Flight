@@ -73,6 +73,7 @@ import java.util.regex.PatternSyntaxException;
  * @see ItemStack
  */
 public enum CompMaterial {
+
     ACACIA_BOAT("BOAT_ACACIA"),
     ACACIA_BUTTON("WOOD_BUTTON"),
     ACACIA_CHEST_BOAT,
@@ -94,7 +95,7 @@ public enum CompMaterial {
     ACACIA_WOOD(0, "LOG_2"),
     ACTIVATOR_RAIL,
     /**
-     * https://minecraft.gamepedia.com/Air
+     * <a href="https://minecraft.gamepedia.com/Air">Air</a>
      * {@link Material#isAir()}
      *
      * @see #VOID_AIR
@@ -240,7 +241,7 @@ public enum CompMaterial {
     BREAD,
     BREWING_STAND("BREWING_STAND", "BREWING_STAND_ITEM"),
     BRICK("CLAY_BRICK"),
-    BRICKS("BRICKS", "BRICK"),
+    BRICKS("BRICK"),
     BRICK_SLAB(4, "STEP"),
     BRICK_STAIRS,
     BRICK_WALL,
@@ -261,6 +262,7 @@ public enum CompMaterial {
     BROWN_TERRACOTTA(12, "STAINED_CLAY"),
     BROWN_WALL_BANNER(3, "WALL_BANNER"),
     BROWN_WOOL(12, "WOOL"),
+    BRUSH,
     BUBBLE_COLUMN,
     BUBBLE_CORAL,
     BUBBLE_CORAL_BLOCK,
@@ -299,6 +301,25 @@ public enum CompMaterial {
     CHAINMAIL_LEGGINGS,
     CHAIN_COMMAND_BLOCK("COMMAND", "COMMAND_CHAIN"),
     CHARCOAL(1, "COAL"),
+    CHERRY_BOAT,
+    CHERRY_BUTTON,
+    CHERRY_CHEST_BOAT,
+    CHERRY_DOOR,
+    CHERRY_FENCE,
+    CHERRY_FENCE_GATE,
+    CHERRY_HANGING_SIGN,
+    CHERRY_LEAVES,
+    CHERRY_LOG,
+    CHERRY_PLANKS,
+    CHERRY_PRESSURE_PLATE,
+    CHERRY_SAPLING,
+    CHERRY_SIGN,
+    CHERRY_SLAB,
+    CHERRY_STAIRS,
+    CHERRY_TRAPDOOR,
+    CHERRY_WALL_HANGING_SIGN,
+    CHERRY_WALL_SIGN,
+    CHERRY_WOOD,
     CHEST("LOCKED_CHEST"),
     CHEST_MINECART("STORAGE_MINECART"),
     CHICKEN("RAW_CHICKEN"),
@@ -322,6 +343,7 @@ public enum CompMaterial {
     COAL_BLOCK,
     COAL_ORE,
     COARSE_DIRT(1, "DIRT"),
+    COAST_ARMOR_TRIM_SMITHING_TEMPLATE,
     COBBLED_DEEPSLATE,
     COBBLED_DEEPSLATE_SLAB,
     COBBLED_DEEPSLATE_STAIRS,
@@ -461,6 +483,7 @@ public enum CompMaterial {
     DEAD_TUBE_CORAL_FAN,
     DEAD_TUBE_CORAL_WALL_FAN,
     DEBUG_STICK,
+    DECORATED_POT,
     DEEPSLATE,
     DEEPSLATE_BRICKS,
     DEEPSLATE_BRICK_SLAB,
@@ -514,6 +537,7 @@ public enum CompMaterial {
     DRIPSTONE_BLOCK,
     DROPPER,
     DROWNED_SPAWN_EGG,
+    DUNE_ARMOR_TRIM_SMITHING_TEMPLATE,
     ECHO_SHARD,
     EGG,
     ELDER_GUARDIAN_SPAWN_EGG(4, "MONSTER_EGG"),
@@ -546,6 +570,7 @@ public enum CompMaterial {
     EXPOSED_CUT_COPPER,
     EXPOSED_CUT_COPPER_SLAB,
     EXPOSED_CUT_COPPER_STAIRS,
+    EYE_ARMOR_TRIM_SMITHING_TEMPLATE,
     FARMLAND("SOIL"),
     FEATHER,
     FERMENTED_SPIDER_EYE,
@@ -554,7 +579,7 @@ public enum CompMaterial {
      * For some reasons filled map items are really special.
      * Their data value starts from 0 and every time a player
      * creates a new map that maps data value increases.
-     * https://github.com/CryptoMorin/XSeries/issues/91
+     * <a href="https://github.com/CryptoMorin/XSeries/issues/91">GitHub Issue</a>
      */
     FILLED_MAP("MAP"),
     FIRE,
@@ -918,6 +943,7 @@ public enum CompMaterial {
     NETHERITE_SCRAP,
     NETHERITE_SHOVEL,
     NETHERITE_SWORD,
+    NETHERITE_UPGRADE_SMITHING_TEMPLATE,
     NETHERRACK,
     NETHER_BRICK("NETHER_BRICK_ITEM"),
     NETHER_BRICKS("NETHER_BRICK"),
@@ -931,7 +957,7 @@ public enum CompMaterial {
     NETHER_SPROUTS,
     NETHER_STAR,
     /**
-     * Just like mentioned in https://minecraft.gamepedia.com/Nether_Wart
+     * Just like mentioned in <a href="https://minecraft.gamepedia.com/Nether_Wart">Nether Wart</a>
      * Nether wart is also known as nether stalk in the code.
      * NETHER_STALK is the planted state of nether warts.
      */
@@ -1009,6 +1035,7 @@ public enum CompMaterial {
     PINK_CONCRETE_POWDER(6, "CONCRETE_POWDER"),
     PINK_DYE(9, "INK_SACK"),
     PINK_GLAZED_TERRACOTTA,
+    PINK_PETALS,
     PINK_SHULKER_BOX,
     PINK_STAINED_GLASS(6, "STAINED_GLASS"),
     PINK_STAINED_GLASS_PANE(6, "THIN_GLASS", "STAINED_GLASS_PANE"),
@@ -1063,6 +1090,7 @@ public enum CompMaterial {
     POTTED_BLUE_ORCHID(1, "FLOWER_POT"),
     POTTED_BROWN_MUSHROOM("FLOWER_POT"),
     POTTED_CACTUS("FLOWER_POT"),
+    POTTED_CHERRY_SAPLING,
     POTTED_CORNFLOWER,
     POTTED_CRIMSON_FUNGUS,
     POTTED_CRIMSON_ROOTS,
@@ -1082,10 +1110,15 @@ public enum CompMaterial {
     POTTED_RED_MUSHROOM("FLOWER_POT"),
     POTTED_RED_TULIP(4, "FLOWER_POT"),
     POTTED_SPRUCE_SAPLING(1, "FLOWER_POT"),
+    POTTED_TORCHFLOWER,
     POTTED_WARPED_FUNGUS,
     POTTED_WARPED_ROOTS,
     POTTED_WHITE_TULIP(6, "FLOWER_POT"),
     POTTED_WITHER_ROSE,
+    POTTERY_SHARD_ARCHER,
+    POTTERY_SHARD_ARMS_UP,
+    POTTERY_SHARD_PRIZE,
+    POTTERY_SHARD_SKULL,
     POWDER_SNOW,
     POWDER_SNOW_BUCKET,
     POWDER_SNOW_CAULDRON,
@@ -1201,6 +1234,7 @@ public enum CompMaterial {
     REPEATER("DIODE_BLOCK_ON", "DIODE_BLOCK_OFF", "DIODE"),
     REPEATING_COMMAND_BLOCK("COMMAND", "COMMAND_REPEATING"),
     RESPAWN_ANCHOR,
+    RIB_ARMOR_TRIM_SMITHING_TEMPLATE,
     ROOTED_DIRT,
     ROSE_BUSH(4, "DOUBLE_PLANT"),
     ROTTEN_FLESH,
@@ -1223,6 +1257,7 @@ public enum CompMaterial {
     SEAGRASS,
     SEA_LANTERN,
     SEA_PICKLE,
+    SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE,
     SHEARS,
     SHEEP_SPAWN_EGG(91, "MONSTER_EGG"),
     SHIELD,
@@ -1255,6 +1290,8 @@ public enum CompMaterial {
     SMOOTH_SANDSTONE_STAIRS,
     SMOOTH_STONE,
     SMOOTH_STONE_SLAB,
+    SNIFFER_SPAWN_EGG,
+    SNOUT_ARMOR_TRIM_SMITHING_TEMPLATE,
     SNOW,
     SNOWBALL("SNOW_BALL"),
     SNOW_BLOCK,
@@ -1270,6 +1307,7 @@ public enum CompMaterial {
     SPECTRAL_ARROW,
     SPIDER_EYE,
     SPIDER_SPAWN_EGG(52, "MONSTER_EGG"),
+    SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE,
     SPLASH_POTION,
     SPONGE,
     SPORE_BLOSSOM,
@@ -1319,6 +1357,8 @@ public enum CompMaterial {
     STRIPPED_BAMBOO_BLOCK,
     STRIPPED_BIRCH_LOG,
     STRIPPED_BIRCH_WOOD,
+    STRIPPED_CHERRY_LOG,
+    STRIPPED_CHERRY_WOOD,
     STRIPPED_CRIMSON_HYPHAE,
     STRIPPED_CRIMSON_STEM,
     STRIPPED_DARK_OAK_LOG,
@@ -1345,6 +1385,7 @@ public enum CompMaterial {
      */
     SUGAR_CANE("SUGAR_CANE_BLOCK"),
     SUNFLOWER("DOUBLE_PLANT"),
+    SUSPICIOUS_SAND,
     SUSPICIOUS_STEW,
     SWEET_BERRIES,
     SWEET_BERRY_BUSH,
@@ -1354,11 +1395,15 @@ public enum CompMaterial {
     TALL_SEAGRASS,
     TARGET,
     TERRACOTTA("HARD_CLAY"),
+    TIDE_ARMOR_TRIM_SMITHING_TEMPLATE,
     TINTED_GLASS,
     TIPPED_ARROW,
     TNT,
     TNT_MINECART("EXPLOSIVE_MINECART"),
     TORCH,
+    TORCHFLOWER,
+    TORCHFLOWER_CROP,
+    TORCHFLOWER_SEEDS,
     TOTEM_OF_UNDYING("TOTEM"),
     TRADER_LLAMA_SPAWN_EGG,
     TRAPPED_CHEST,
@@ -1379,6 +1424,7 @@ public enum CompMaterial {
     TWISTING_VINES,
     TWISTING_VINES_PLANT,
     VERDANT_FROGLIGHT,
+    VEX_ARMOR_TRIM_SMITHING_TEMPLATE,
     VEX_SPAWN_EGG(35, "MONSTER_EGG"),
     VILLAGER_SPAWN_EGG(120, "MONSTER_EGG"),
     VINDICATOR_SPAWN_EGG(36, "MONSTER_EGG"),
@@ -1392,6 +1438,7 @@ public enum CompMaterial {
     WALL_TORCH("TORCH"),
     WANDERING_TRADER_SPAWN_EGG,
     WARDEN_SPAWN_EGG,
+    WARD_ARMOR_TRIM_SMITHING_TEMPLATE,
     WARPED_BUTTON,
     WARPED_DOOR,
     WARPED_FENCE,
@@ -1416,7 +1463,7 @@ public enum CompMaterial {
      * This is used for blocks only.
      * In 1.13- WATER will turn into STATIONARY_WATER after it finished spreading.
      * After 1.13+ this uses
-     * https://hub.spigotmc.org/javadocs/spigot/org/bukkit/block/data/Levelled.html water flowing system.
+     * <a href="https://hub.spigotmc.org/javadocs/spigot/org/bukkit/block/data/Levelled.html">Levelled</a> water flowing system.
      */
     WATER("STATIONARY_WATER"),
     WATER_BUCKET,
@@ -1465,6 +1512,7 @@ public enum CompMaterial {
     WHITE_TULIP(6, "RED_ROSE"),
     WHITE_WALL_BANNER(15, "WALL_BANNER"),
     WHITE_WOOL("WOOL"),
+    WILD_ARMOR_TRIM_SMITHING_TEMPLATE,
     WITCH_SPAWN_EGG(66, "MONSTER_EGG"),
     WITHER_ROSE,
     WITHER_SKELETON_SKULL(1, "SKULL", "SKULL_ITEM"),

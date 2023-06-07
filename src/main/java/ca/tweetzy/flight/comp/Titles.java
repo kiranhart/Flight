@@ -17,7 +17,6 @@
  */
 package ca.tweetzy.flight.comp;
 
-import ca.tweetzy.flight.utils.Common;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -26,8 +25,6 @@ import javax.annotation.Nullable;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -149,7 +146,7 @@ public final class Titles implements Cloneable {
         Objects.requireNonNull(player, "Cannot send title to null player");
         if (title == null && subtitle == null) return;
         if (ReflectionUtils.supports(11)) {
-            player.sendTitle(Common.colorize(title), Common.colorize(subtitle), fadeIn, stay, fadeOut);
+            player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
             return;
         }
 
@@ -158,11 +155,11 @@ public final class Titles implements Cloneable {
             ReflectionUtils.sendPacket(player, timesPacket);
 
             if (title != null) {
-                Object titlePacket = PACKET_PLAY_OUT_TITLE.invoke(TITLE, CHAT_COMPONENT_TEXT.invoke(Common.colorize(title)), fadeIn, stay, fadeOut);
+                Object titlePacket = PACKET_PLAY_OUT_TITLE.invoke(TITLE, CHAT_COMPONENT_TEXT.invoke(title), fadeIn, stay, fadeOut);
                 ReflectionUtils.sendPacket(player, titlePacket);
             }
             if (subtitle != null) {
-                Object subtitlePacket = PACKET_PLAY_OUT_TITLE.invoke(SUBTITLE, CHAT_COMPONENT_TEXT.invoke(Common.colorize(subtitle)), fadeIn, stay, fadeOut);
+                Object subtitlePacket = PACKET_PLAY_OUT_TITLE.invoke(SUBTITLE, CHAT_COMPONENT_TEXT.invoke(subtitle), fadeIn, stay, fadeOut);
                 ReflectionUtils.sendPacket(player, subtitlePacket);
             }
         } catch (Throwable throwable) {
@@ -183,6 +180,20 @@ public final class Titles implements Cloneable {
      */
     public static void sendTitle(@Nonnull Player player, @Nonnull String title, @Nonnull String subtitle) {
         sendTitle(player, 10, 20, 10, title, subtitle);
+    }
+
+    /**
+     * Parses and sends a title from the config.
+     *
+     * @param player the player to send the title to.
+     * @param config the configuration section to parse the title properties from.
+     *
+     * @since 1.0.0
+     */
+    public static Titles sendTitle(@Nonnull Player player, @Nonnull ConfigurationSection config) {
+        Titles titles = parseTitle(config, null);
+        titles.send(player);
+        return titles;
     }
 
     public static Titles parseTitle(@Nonnull ConfigurationSection config) {
@@ -242,20 +253,6 @@ public final class Titles implements Cloneable {
     }
 
     /**
-     * Parses and sends a title from the config.
-     *
-     * @param player the player to send the title to.
-     * @param config the configuration section to parse the title properties from.
-     *
-     * @since 1.0.0
-     */
-    public static Titles sendTitle(@Nonnull Player player, @Nonnull ConfigurationSection config) {
-        Titles titles = parseTitle(config, null);
-        titles.send(player);
-        return titles;
-    }
-
-    /**
      * Clears the title and subtitle message from the player's screen.
      *
      * @param player the player to clear the title from.
@@ -278,54 +275,5 @@ public final class Titles implements Cloneable {
         }
 
         ReflectionUtils.sendPacket(player, clearPacket);
-    }
-
-    /**
-     * Supports pre-1.13 tab method.
-     * Changes the tablist header and footer message for a player.
-     * This is not fully completed as it's not used a lot.
-     * <p>
-     * Headers and footers cannot be null because the client will simply
-     * ignore the packet.
-     *
-     * @param header  the header of the tablist.
-     * @param footer  the footer of the tablist.
-     * @param players players to send this change to.
-     *
-     * @since 1.0.0
-     */
-    public static void sendTabList(@Nonnull String header, @Nonnull String footer, Player... players) {
-        Objects.requireNonNull(players, "Cannot send tab title to null players");
-        Objects.requireNonNull(header, "Tab title header cannot be null");
-        Objects.requireNonNull(footer, "Tab title footer cannot be null");
-
-        if (ReflectionUtils.supports(13)) {
-            // https://hub.spigotmc.org/stash/projects/SPIGOT/repos/bukkit/browse/src/main/java/org/bukkit/entity/Player.java?until=2975358a021fe25d52a8103f7d7aaeceb3abf245&untilPath=src%2Fmain%2Fjava%2Forg%2Fbukkit%2Fentity%2FPlayer.java
-            for (Player player : players) player.setPlayerListHeaderFooter(header, footer);
-            return;
-        }
-
-        try {
-            Class<?> IChatBaseComponent = ReflectionUtils.getNMSClass("network.chat", "IChatBaseComponent");
-            Class<?> PacketPlayOutPlayerListHeaderFooter = ReflectionUtils.getNMSClass("network.protocol.game", "PacketPlayOutPlayerListHeaderFooter");
-
-            Method chatComponentBuilderMethod = IChatBaseComponent.getDeclaredClasses()[0].getMethod("a", String.class);
-            Object tabHeader = chatComponentBuilderMethod.invoke(null, "{\"text\":\"" + header + "\"}");
-            Object tabFooter = chatComponentBuilderMethod.invoke(null, "{\"text\":\"" + footer + "\"}");
-
-            Object packet = PacketPlayOutPlayerListHeaderFooter.getConstructor().newInstance();
-            Field headerField = PacketPlayOutPlayerListHeaderFooter.getDeclaredField("a"); // Changed to "header" in 1.13
-            Field footerField = PacketPlayOutPlayerListHeaderFooter.getDeclaredField("b"); // Changed to "footer" in 1.13
-
-            headerField.setAccessible(true);
-            headerField.set(packet, tabHeader);
-
-            footerField.setAccessible(true);
-            footerField.set(packet, tabFooter);
-
-            for (Player player : players) ReflectionUtils.sendPacket(player, packet);
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
     }
 }

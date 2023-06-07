@@ -60,7 +60,7 @@ import java.util.regex.Pattern;
  *
  * @author Crypto Morin
  * @version 4.0.0
- * @see ca.tweetzy.flight.comp.enums.CompMaterial
+ * @see CompMaterial
  * @see ReflectionUtils
  * @see SkullCacheListener
  */
@@ -140,7 +140,7 @@ public class SkullUtils {
         SkullMeta meta = (SkullMeta) head.getItemMeta();
 
         if (SUPPORTS_UUID) meta.setOwningPlayer(Bukkit.getOfflinePlayer(id));
-        else meta.setOwner(id.toString());
+        else meta.setOwner(Bukkit.getOfflinePlayer(id).getName());
 
         head.setItemMeta(meta);
         return head;
@@ -169,20 +169,13 @@ public class SkullUtils {
         SkullMeta meta = (SkullMeta) head;
         // @formatter:off
         switch (detectSkullValueType(identifier)) {
-            case UUID:
-                return applySkin(head, Bukkit.getOfflinePlayer(UUID.fromString(identifier)));
-            case NAME:
-                return applySkin(head, Bukkit.getOfflinePlayer(identifier));
-            case BASE64:
-                return setSkullBase64(meta, identifier);
-            case TEXTURE_URL:
-                return setSkullBase64(meta, encodeTexturesURL(identifier));
-            case TEXTURE_HASH:
-                return setSkullBase64(meta, encodeTexturesURL(TEXTURES + identifier));
-            case UNKNOWN:
-                return setSkullBase64(meta, INVALID_BASE64);
-            default:
-                throw new AssertionError("Unknown skull value");
+            case UUID: return applySkin(head, Bukkit.getOfflinePlayer(UUID.fromString(identifier)));
+            case NAME: return applySkin(head, Bukkit.getOfflinePlayer(identifier));
+            case BASE64:       return setSkullBase64(meta, identifier);
+            case TEXTURE_URL:  return setSkullBase64(meta, encodeTexturesURL(identifier));
+            case TEXTURE_HASH: return setSkullBase64(meta, encodeTexturesURL(TEXTURES + identifier));
+            case UNKNOWN:      return setSkullBase64(meta, INVALID_BASE64);
+            default: throw new AssertionError("Unknown skull value");
         }
         // @formatter:on
     }
@@ -217,20 +210,13 @@ public class SkullUtils {
     public static GameProfile detectProfileFromString(String identifier) {
         // @formatter:off sometimes programming is just art that a machine can't understand :)
         switch (detectSkullValueType(identifier)) {
-            case UUID:
-                return new GameProfile(UUID.fromString(identifier), null);
-            case NAME:
-                return new GameProfile(null, identifier);
-            case BASE64:
-                return profileFromBase64(identifier);
-            case TEXTURE_URL:
-                return profileFromBase64(encodeTexturesURL(identifier));
-            case TEXTURE_HASH:
-                return profileFromBase64(encodeTexturesURL(TEXTURES + identifier));
-            case UNKNOWN:
-                return profileFromBase64(INVALID_BASE64); // This can't be cached because the caller might change it.
-            default:
-                throw new AssertionError("Unknown skull value");
+            case UUID:         return new GameProfile(UUID.fromString(               identifier), null);
+            case NAME:         return new GameProfile(null,                          identifier);
+            case BASE64:       return profileFromBase64(                             identifier);
+            case TEXTURE_URL:  return profileFromBase64(encodeTexturesURL(           identifier));
+            case TEXTURE_HASH: return profileFromBase64(encodeTexturesURL(TEXTURES + identifier));
+            case UNKNOWN:      return profileFromBase64(INVALID_BASE64); // This can't be cached because the caller might change it.
+            default: throw new AssertionError("Unknown skull value");
         }
         // @formatter:on
     }
@@ -318,7 +304,6 @@ public class SkullUtils {
      * https://help.minecraft.net/hc/en-us/articles/360034636712
      *
      * @param name the username to check.
-     *
      * @return true if the string matches the Minecraft username rule, otherwise false.
      */
     private static boolean isUsername(@Nonnull String name) {
@@ -327,7 +312,8 @@ public class SkullUtils {
 
         // For some reasons Apache's Lists.charactersOf is faster than character indexing for small strings.
         for (char ch : Lists.charactersOf(name)) {
-            if (ch != '_' && !(ch >= 'A' && ch <= 'Z') && !(ch >= 'a' && ch <= 'z') && !(ch >= '0' && ch <= '9')) return false;
+            if (ch != '_' && !(ch >= 'A' && ch <= 'Z') && !(ch >= 'a' && ch <= 'z') && !(ch >= '0' && ch <= '9'))
+                return false;
         }
         return true;
     }

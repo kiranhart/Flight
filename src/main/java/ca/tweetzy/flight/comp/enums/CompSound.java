@@ -19,28 +19,29 @@ package ca.tweetzy.flight.comp.enums;
 
 import com.google.common.base.Enums;
 import com.google.common.base.Strings;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
-import org.apache.commons.lang.WordUtils;
 import org.bukkit.Instrument;
 import org.bukkit.Location;
 import org.bukkit.Note;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Locale;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.WeakHashMap;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
  * <b>CompSound</b> - Universal Minecraft Sound Support<br>
@@ -62,7 +63,6 @@ import java.util.concurrent.CompletableFuture;
  * @see Sound
  */
 public enum CompSound {
-
     AMBIENT_BASALT_DELTAS_ADDITIONS,
     AMBIENT_BASALT_DELTAS_LOOP,
     AMBIENT_BASALT_DELTAS_MOOD,
@@ -209,6 +209,36 @@ public enum CompSound {
     BLOCK_CHAIN_HIT,
     BLOCK_CHAIN_PLACE,
     BLOCK_CHAIN_STEP,
+    BLOCK_CHERRY_LEAVES_BREAK,
+    BLOCK_CHERRY_LEAVES_FALL,
+    BLOCK_CHERRY_LEAVES_HIT,
+    BLOCK_CHERRY_LEAVES_PLACE,
+    BLOCK_CHERRY_LEAVES_STEP,
+    BLOCK_CHERRY_SAPLING_BREAK,
+    BLOCK_CHERRY_SAPLING_FALL,
+    BLOCK_CHERRY_SAPLING_HIT,
+    BLOCK_CHERRY_SAPLING_PLACE,
+    BLOCK_CHERRY_SAPLING_STEP,
+    BLOCK_CHERRY_WOOD_BREAK,
+    BLOCK_CHERRY_WOOD_BUTTON_CLICK_OFF,
+    BLOCK_CHERRY_WOOD_BUTTON_CLICK_ON,
+    BLOCK_CHERRY_WOOD_DOOR_CLOSE,
+    BLOCK_CHERRY_WOOD_DOOR_OPEN,
+    BLOCK_CHERRY_WOOD_FALL,
+    BLOCK_CHERRY_WOOD_FENCE_GATE_CLOSE,
+    BLOCK_CHERRY_WOOD_FENCE_GATE_OPEN,
+    BLOCK_CHERRY_WOOD_HANGING_SIGN_BREAK,
+    BLOCK_CHERRY_WOOD_HANGING_SIGN_FALL,
+    BLOCK_CHERRY_WOOD_HANGING_SIGN_HIT,
+    BLOCK_CHERRY_WOOD_HANGING_SIGN_PLACE,
+    BLOCK_CHERRY_WOOD_HANGING_SIGN_STEP,
+    BLOCK_CHERRY_WOOD_HIT,
+    BLOCK_CHERRY_WOOD_PLACE,
+    BLOCK_CHERRY_WOOD_PRESSURE_PLATE_CLICK_OFF,
+    BLOCK_CHERRY_WOOD_PRESSURE_PLATE_CLICK_ON,
+    BLOCK_CHERRY_WOOD_STEP,
+    BLOCK_CHERRY_WOOD_TRAPDOOR_CLOSE,
+    BLOCK_CHERRY_WOOD_TRAPDOOR_OPEN,
     BLOCK_CHEST_CLOSE("CHEST_CLOSE", "ENTITY_CHEST_CLOSE"),
     BLOCK_CHEST_LOCKED,
     BLOCK_CHEST_OPEN("CHEST_OPEN", "ENTITY_CHEST_OPEN"),
@@ -244,6 +274,12 @@ public enum CompSound {
     BLOCK_CORAL_BLOCK_PLACE,
     BLOCK_CORAL_BLOCK_STEP,
     BLOCK_CROP_BREAK,
+    BLOCK_DECORATED_POT_BREAK,
+    BLOCK_DECORATED_POT_FALL,
+    BLOCK_DECORATED_POT_HIT,
+    BLOCK_DECORATED_POT_PLACE,
+    BLOCK_DECORATED_POT_SHATTER,
+    BLOCK_DECORATED_POT_STEP,
     BLOCK_DEEPSLATE_BREAK,
     BLOCK_DEEPSLATE_BRICKS_BREAK,
     BLOCK_DEEPSLATE_BRICKS_FALL,
@@ -485,6 +521,11 @@ public enum CompSound {
     BLOCK_PACKED_MUD_HIT,
     BLOCK_PACKED_MUD_PLACE,
     BLOCK_PACKED_MUD_STEP,
+    BLOCK_PINK_PETALS_BREAK,
+    BLOCK_PINK_PETALS_FALL,
+    BLOCK_PINK_PETALS_HIT,
+    BLOCK_PINK_PETALS_PLACE,
+    BLOCK_PINK_PETALS_STEP,
     BLOCK_PISTON_CONTRACT("PISTON_RETRACT"),
     BLOCK_PISTON_EXTEND("PISTON_EXTEND"),
     BLOCK_POINTED_DRIPSTONE_BREAK,
@@ -622,6 +663,11 @@ public enum CompSound {
     BLOCK_STONE_PRESSURE_PLATE_CLICK_OFF("BLOCK_STONE_PRESSUREPLATE_CLICK_OFF"),
     BLOCK_STONE_PRESSURE_PLATE_CLICK_ON("BLOCK_STONE_PRESSUREPLATE_CLICK_ON"),
     BLOCK_STONE_STEP("STEP_STONE"),
+    BLOCK_SUSPICIOUS_SAND_BREAK,
+    BLOCK_SUSPICIOUS_SAND_FALL,
+    BLOCK_SUSPICIOUS_SAND_HIT,
+    BLOCK_SUSPICIOUS_SAND_PLACE,
+    BLOCK_SUSPICIOUS_SAND_STEP,
     BLOCK_SWEET_BERRY_BUSH_BREAK,
     BLOCK_SWEET_BERRY_BUSH_PICK_BERRIES("ITEM_SWEET_BERRIES_PICK_FROM_BUSH"),
     BLOCK_SWEET_BERRY_BUSH_PLACE,
@@ -1176,6 +1222,18 @@ public enum CompSound {
     ENTITY_SLIME_JUMP_SMALL("SLIME_WALK2", "ENTITY_SMALL_SLIME_SQUISH"),
     ENTITY_SLIME_SQUISH("SLIME_WALK2"),
     ENTITY_SLIME_SQUISH_SMALL("ENTITY_SMALL_SLIME_SQUISH"),
+    ENTITY_SNIFFER_DEATH,
+    ENTITY_SNIFFER_DIGGING,
+    ENTITY_SNIFFER_DIGGING_STOP,
+    ENTITY_SNIFFER_DROP_SEED,
+    ENTITY_SNIFFER_EAT,
+    ENTITY_SNIFFER_HAPPY,
+    ENTITY_SNIFFER_HURT,
+    ENTITY_SNIFFER_IDLE,
+    ENTITY_SNIFFER_SCENTING,
+    ENTITY_SNIFFER_SEARCHING,
+    ENTITY_SNIFFER_SNIFFING,
+    ENTITY_SNIFFER_STEP,
     ENTITY_SNOWBALL_THROW,
     ENTITY_SNOW_GOLEM_AMBIENT("ENTITY_SNOWMAN_AMBIENT"),
     ENTITY_SNOW_GOLEM_DEATH("ENTITY_SNOWMAN_DEATH"),
@@ -1339,6 +1397,7 @@ public enum CompSound {
     ENTITY_ZOMBIFIED_PIGLIN_DEATH("ZOMBIE_PIG_DEATH", "ENTITY_ZOMBIE_PIG_DEATH", "ENTITY_ZOMBIE_PIGMAN_DEATH"),
     ENTITY_ZOMBIFIED_PIGLIN_HURT("ZOMBIE_PIG_HURT", "ENTITY_ZOMBIE_PIG_HURT", "ENTITY_ZOMBIE_PIGMAN_HURT"),
     EVENT_RAID_HORN,
+    INTENTIONALLY_EMPTY,
     ITEM_ARMOR_EQUIP_CHAIN,
     ITEM_ARMOR_EQUIP_DIAMOND,
     ITEM_ARMOR_EQUIP_ELYTRA,
@@ -1357,6 +1416,8 @@ public enum CompSound {
     ITEM_BOTTLE_EMPTY,
     ITEM_BOTTLE_FILL,
     ITEM_BOTTLE_FILL_DRAGONBREATH,
+    ITEM_BRUSH_BRUSHING,
+    ITEM_BRUSH_BRUSH_SAND_COMPLETED,
     ITEM_BUCKET_EMPTY,
     ITEM_BUCKET_EMPTY_AXOLOTL,
     ITEM_BUCKET_EMPTY_FISH,
@@ -1442,6 +1503,7 @@ public enum CompSound {
     MUSIC_NETHER_NETHER_WASTES,
     MUSIC_NETHER_SOUL_SAND_VALLEY,
     MUSIC_NETHER_WARPED_FOREST,
+    MUSIC_OVERWORLD_CHERRY_GROVE,
     MUSIC_OVERWORLD_DEEP_DARK,
     MUSIC_OVERWORLD_DRIPSTONE_CAVES,
     MUSIC_OVERWORLD_FROZEN_PEAKS,
@@ -1467,7 +1529,6 @@ public enum CompSound {
     UI_TOAST_OUT,
     WEATHER_RAIN("AMBIENCE_RAIN"),
     WEATHER_RAIN_ABOVE;
-
 
     /**
      * Cached list of {@link CompSound#values()} to avoid allocating memory for
@@ -1520,7 +1581,8 @@ public enum CompSound {
         for (int i = 0; i < len; i++) {
             char ch = name.charAt(i);
 
-            if (!appendUnderline && count != 0 && (ch == '-' || ch == ' ' || ch == '_') && chs[count] != '_') appendUnderline = true;
+            if (!appendUnderline && count != 0 && (ch == '-' || ch == ' ' || ch == '_') && chs[count] != '_')
+                appendUnderline = true;
             else {
                 boolean number = false;
                 // A few sounds have numbers in them.
@@ -1550,7 +1612,8 @@ public enum CompSound {
      */
     @Nonnull
     public static Optional<CompSound> matchCompSound(@Nonnull String sound) {
-        Validate.notEmpty(sound, "Cannot match CompSound of a null or empty sound name");
+        if (sound == null || sound.isEmpty())
+            throw new IllegalArgumentException("Cannot match CompSound of a null or empty sound name");
         return Optional.ofNullable(Data.NAMES.get(format(sound)));
     }
 
@@ -1570,47 +1633,33 @@ public enum CompSound {
         return Objects.requireNonNull(Data.NAMES.get(sound.name()), () -> "Unsupported sound: " + sound.name());
     }
 
-    /**
-     * A quick async way to play a sound from the config.
-     *
-     * @param player the player to play the sound to.
-     * @param sound  the sound to play to the player.
-     *
-     * @see #play(Location, String)
-     * @since 1.0.0
-     */
-    @Nonnull
-    public static CompletableFuture<Record> play(@Nonnull Player player, @Nullable String sound) {
-        Objects.requireNonNull(player, "Cannot play sound to null player");
-        return CompletableFuture.supplyAsync(() -> {
-            Record record = parse(sound);
-            if (record == null) return null;
-            record.forPlayer(player).play();
-            return record;
-        }).exceptionally(x -> {
-            x.printStackTrace();
-            return null;
-        });
-    }
+    private static List<String> split(@Nonnull String str, @SuppressWarnings("SameParameterValue") char separatorChar) {
+        List<String> list = new ArrayList<>(5);
+        boolean match = false, lastMatch = false;
+        int len = str.length();
+        int start = 0;
 
-    /**
-     * A quick async way to play a sound from the config.
-     *
-     * @see #play(Location, String)
-     * @since 3.0.0
-     */
-    @Nonnull
-    public static CompletableFuture<Record> play(@Nonnull Location location, @Nullable String sound) {
-        Objects.requireNonNull(location, "Cannot play sound to null location");
-        return CompletableFuture.supplyAsync(() -> {
-            Record record = parse(sound);
-            if (record == null) return null;
-            record.atLocation(location).play();
-            return record;
-        }).exceptionally(x -> {
-            x.printStackTrace();
-            return null;
-        });
+        for (int i = 0; i < len; i++) {
+            if (str.charAt(i) == separatorChar) {
+                if (match) {
+                    list.add(str.substring(start, i));
+                    match = false;
+                    lastMatch = true;
+                }
+
+                // This is important, it should not be i++
+                start = i + 1;
+                continue;
+            }
+
+            lastMatch = false;
+            match = true;
+        }
+
+        if (match || lastMatch) {
+            list.add(str.substring(start, len));
+        }
+        return list;
     }
 
     /**
@@ -1653,9 +1702,9 @@ public enum CompSound {
     @Nullable
     public static Record parse(@Nullable String sound) {
         if (Strings.isNullOrEmpty(sound) || sound.equalsIgnoreCase("none")) return null;
-        String[] split = StringUtils.split(StringUtils.deleteWhitespace(sound), ',');
+        @SuppressWarnings("DynamicRegexReplaceableByCompiledPattern") List<String> split = split(sound.replace(" ", ""), ',');
 
-        String name = split[0];
+        String name = split.get(0);
         boolean playAtLocation;
         if (name.charAt(0) == '~') {
             name = name.substring(1);
@@ -1664,20 +1713,20 @@ public enum CompSound {
 
         if (name.isEmpty()) throw new IllegalArgumentException("No sound name specified: " + sound);
         Optional<CompSound> soundType = matchCompSound(name);
-        if (!soundType.isPresent()) return null;
+        if (!soundType.isPresent()) throw new IllegalArgumentException("Unknown sound: " + name);
 
         float volume = DEFAULT_VOLUME;
         float pitch = DEFAULT_PITCH;
 
         try {
-            if (split.length > 1) volume = Float.parseFloat(split[1]);
+            if (split.size() > 1) volume = Float.parseFloat(split.get(1));
         } catch (NumberFormatException ex) {
-            throw new NumberFormatException("Invalid number '" + split[1] + "' for sound volume '" + sound + '\'');
+            throw new NumberFormatException("Invalid number '" + split.get(1) + "' for sound volume '" + sound + '\'');
         }
         try {
-            if (split.length > 2) pitch = Float.parseFloat(split[2]);
+            if (split.size() > 2) pitch = Float.parseFloat(split.get(2));
         } catch (NumberFormatException ex) {
-            throw new NumberFormatException("Invalid number '" + split[2] + "' for sound pitch '" + sound + '\'');
+            throw new NumberFormatException("Invalid number '" + split.get(2) + "' for sound pitch '" + sound + '\'');
         }
 
         return new Record(soundType.get(), null, null, volume, pitch, playAtLocation);
@@ -1731,14 +1780,14 @@ public enum CompSound {
      * @since 2.0.0
      */
     @Nonnull
-    public static BukkitTask playAscendingNote(@Nonnull JavaPlugin plugin, @Nonnull Player player, @Nonnull Entity playTo, @Nonnull Instrument instrument,
+    public static BukkitTask playAscendingNote(@Nonnull Plugin plugin, @Nonnull Player player, @Nonnull Entity playTo, @Nonnull Instrument instrument,
                                                int ascendLevel, int delay) {
         Objects.requireNonNull(player, "Cannot play note from null player");
         Objects.requireNonNull(playTo, "Cannot play note to null entity");
 
-        Validate.isTrue(ascendLevel > 0, "Note ascend level cannot be lower than 1");
-        Validate.isTrue(ascendLevel <= 7, "Note ascend level cannot be greater than 7");
-        Validate.isTrue(delay > 0, "Delay ticks must be at least 1");
+        if (ascendLevel <= 0) throw new IllegalArgumentException("Note ascend level cannot be lower than 1");
+        if (ascendLevel > 7) throw new IllegalArgumentException("Note ascend level cannot be greater than 7");
+        if (delay <= 0) throw new IllegalArgumentException("Delay ticks must be at least 1");
 
         return new BukkitRunnable() {
             int repeating = ascendLevel;
@@ -1752,13 +1801,15 @@ public enum CompSound {
     }
 
     /**
-     * In most cases your should be using {@link #name()} instead.
+     * In most cases you should be using {@link #name()} instead.
      *
      * @return a friendly readable string name.
      */
     @Override
     public String toString() {
-        return WordUtils.capitalize(this.name().replace('_', ' ').toLowerCase(Locale.ENGLISH));
+        return Arrays.stream(name().split("_"))
+                .map(t -> t.charAt(0) + t.substring(1).toLowerCase())
+                .collect(Collectors.joining(" "));
     }
 
     /**
@@ -1806,19 +1857,42 @@ public enum CompSound {
      * @since 2.0.0
      */
     @Nonnull
-    public BukkitTask playRepeatedly(@Nonnull JavaPlugin plugin, @Nonnull Entity entity, float volume, float pitch, int repeat, int delay) {
-        Objects.requireNonNull(plugin, "Cannot play repeating sound from null plugin");
-        Objects.requireNonNull(entity, "Cannot play repeating sound at null location");
+    public BukkitTask playRepeatedly(@Nonnull Plugin plugin, @Nonnull Entity entity, float volume, float pitch, int repeat, int delay) {
+        return playRepeatedly(plugin, Collections.singleton(entity), volume, pitch, repeat, delay);
+    }
 
-        Validate.isTrue(repeat > 0, "Cannot repeat playing sound " + repeat + " times");
-        Validate.isTrue(delay > 0, "Delay ticks must be at least 1");
+    /**
+     * Plays a sound repeatedly with the given delay at moving targets' locations.
+     *
+     * @param plugin   the plugin handling schedulers. (You can replace this with a static instance)
+     * @param entities the entities to play the sound to. We exactly need the entities to keep the track of location changes.
+     * @param volume   the volume of the sound.
+     * @param pitch    the pitch of the sound.
+     * @param repeat   the amount of times to repeat playing.
+     * @param delay    the delay between each repeat.
+     *
+     * @return the async task handling this operation.
+     *
+     * @see #play(Location, float, float)
+     * @since 2.0.0
+     */
+    @Nonnull
+    public BukkitTask playRepeatedly(@Nonnull Plugin plugin, @Nonnull Iterable<? extends Entity> entities, float volume, float pitch, int repeat, int delay) {
+        Objects.requireNonNull(plugin, "Cannot play repeating sound from null plugin");
+        Objects.requireNonNull(entities, "Cannot play repeating sound at null locations");
+
+        if (repeat <= 0) throw new IllegalArgumentException("Cannot repeat playing sound " + repeat + " times");
+        if (delay <= 0) throw new IllegalArgumentException("Delay ticks must be at least 1");
 
         return new BukkitRunnable() {
             int repeating = repeat;
 
             @Override
             public void run() {
-                play(entity.getLocation(), volume, pitch);
+                for (Entity entity : entities) {
+                    play(entity.getLocation(), volume, pitch);
+                }
+
                 if (repeating-- == 0) cancel();
             }
         }.runTaskTimer(plugin, 0, delay);
@@ -1836,6 +1910,50 @@ public enum CompSound {
         Objects.requireNonNull(player, "Cannot stop playing sound from null player");
         Sound sound = this.parseSound();
         if (sound != null) player.stopSound(sound);
+    }
+
+    /**
+     * A quick async way to play a sound from the config.
+     *
+     * @param player the player to play the sound to.
+     * @param sound  the sound to play to the player.
+     *
+     * @see #play(Location, String)
+     * @since 1.0.0
+     */
+    @Nonnull
+    @Deprecated
+    public static CompletableFuture<Record> play(@Nonnull Player player, @Nullable String sound) {
+        Objects.requireNonNull(player, "Cannot play sound to null player");
+        return CompletableFuture.supplyAsync(() -> {
+            Record record;
+            try {
+                record = parse(sound);
+            } catch (Throwable ex) {
+                return null;
+            }
+            if (record == null) return null;
+            record.forPlayer(player).play();
+            return record;
+        }).exceptionally(x -> {
+            x.printStackTrace();
+            return null;
+        });
+    }
+
+    /**
+     * A quick async way to play a sound from the config.
+     *
+     * @see #play(Location, String)
+     * @since 3.0.0
+     */
+    @Nullable
+    public static Record play(@Nonnull Location location, @Nullable String sound) {
+        Objects.requireNonNull(location, "Cannot play sound to null location");
+        Record record = parse(sound);
+        if (record == null) return null;
+        record.atLocation(location).play();
+        return record;
     }
 
     /**
@@ -1923,7 +2041,7 @@ public enum CompSound {
      *
      * @since 3.0.0
      */
-    public static class Record {
+    public static class Record implements Cloneable {
         @Nonnull
         public final CompSound sound;
         public final float volume, pitch;
@@ -1983,7 +2101,8 @@ public enum CompSound {
          * @since 3.0.0
          */
         public void play() {
-            if (player == null && location == null) throw new IllegalStateException("Cannot play sound when there is no location available");
+            if (player == null && location == null)
+                throw new IllegalStateException("Cannot play sound when there is no location available");
             play(player == null ? location : player.getLocation());
         }
 
@@ -1996,8 +2115,11 @@ public enum CompSound {
          */
         public void play(@Nonnull Location updatedLocation) {
             Objects.requireNonNull(updatedLocation, "Cannot play sound at null location");
-            if (playAtLocation || player == null) location.getWorld().playSound(updatedLocation, sound.parseSound(), volume, pitch);
-            else player.playSound(updatedLocation, sound.parseSound(), volume, pitch);
+            if (playAtLocation || player == null) {
+                location.getWorld().playSound(updatedLocation, sound.parseSound(), volume, pitch);
+            } else {
+                player.playSound(updatedLocation, sound.parseSound(), volume, pitch);
+            }
         }
 
         /**
@@ -2021,6 +2143,19 @@ public enum CompSound {
 
         public String rebuild() {
             return (playAtLocation ? "~" : "") + sound.sound + ", " + volume + ", " + pitch;
+        }
+
+        @SuppressWarnings("MethodDoesntCallSuperMethod")
+        @Override
+        public Record clone() {
+            return new Record(
+                    sound,
+                    player,
+                    location,
+                    volume,
+                    pitch,
+                    playAtLocation
+            );
         }
     }
 }
