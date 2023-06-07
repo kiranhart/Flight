@@ -153,7 +153,7 @@ public final class InventoryUpdate {
             if (container == null) return;
 
             // If the container was added in a newer version than the current, return.
-            if (container.getContainerVersion() > ReflectionUtils.VER && useContainers()) {
+            if (container.getContainerVersion() > ReflectionUtils.MINOR_NUMBER && useContainers()) {
                 Bukkit.getLogger().warning(String.format(
                         "[%s] This container doesn't work on your current version.",
                         plugin.getDescription().getName()));
@@ -253,7 +253,7 @@ public final class InventoryUpdate {
      * @return whether to use containers.
      */
     private static boolean useContainers() {
-        return ReflectionUtils.VER > 13;
+        return ReflectionUtils.MINOR_NUMBER > 13;
     }
 
     /**
@@ -332,7 +332,7 @@ public final class InventoryUpdate {
         public Object getObject() {
             try {
                 if (!useContainers()) return getMinecraftName();
-                int version = ReflectionUtils.VER;
+                int version = ReflectionUtils.MINOR_NUMBER;
                 String name = (version == 14 && this == CARTOGRAPHY_TABLE) ? "CARTOGRAPHY" : name();
                 // Since 1.17, containers go from "a" to "x".
                 if (version > 16) name = String.valueOf(alphabet[ordinal()]);
