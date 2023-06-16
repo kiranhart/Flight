@@ -123,10 +123,13 @@ public final class ReflectionUtils {
         String minorVer = split[1];
         try {
             MINOR_NUMBER = Integer.parseInt(minorVer);
+            if (MINOR_NUMBER < 0)
+                throw new IllegalStateException("Negative minor number? " + minorVer + ' ' + getVersionInformation());
         } catch (Throwable ex) {
             throw new RuntimeException("Failed to parse minor number: " + minorVer + ' ' + getVersionInformation(), ex);
         }
 
+        // Bukkit.getBukkitVersion() = "1.12.2-R0.1-SNAPSHOT"
         Matcher bukkitVer = Pattern.compile("^\\d+\\.\\d+\\.(\\d+)").matcher(Bukkit.getBukkitVersion());
         if (bukkitVer.find()) { // matches() won't work, we just want to match the start using "^"
             try {
@@ -141,6 +144,10 @@ public final class ReflectionUtils {
         }
     }
 
+    /**
+     * Gets the full version information of the server. Useful for including in errors.
+     * @since 7.0.0
+     */
     public static String getVersionInformation() {
         return "(NMS: " + NMS_VERSION + " | " +
                 "Minecraft: " + Bukkit.getVersion() + " | " +
@@ -148,7 +155,49 @@ public final class ReflectionUtils {
     }
 
     /**
-     * Mojang remapped their NMS in 1.17 https://www.spigotmc.org/threads/spigot-bungeecord-1-17.510208/#post-4184317
+     * Gets the latest known patch number of the given minor version.
+     * For example: 1.14 -> 4, 1.17 -> 10
+     * The latest version is expected to get newer patches, so make sure to account for unexpected results.
+     *
+     * @param minorVersion the minor version to get the patch number of.
+     * @return the patch number of the given minor version if recognized, otherwise null.
+     * @since 7.0.0
+     */
+    public static Integer getLatestPatchNumberOf(int minorVersion) {
+        if (minorVersion <= 0) throw new IllegalArgumentException("Minor version must be positive: " + minorVersion);
+
+        // https://minecraft.fandom.com/wiki/Java_Edition_version_history
+        // There are many ways to do this, but this is more visually appealing.
+        int[] patches = {
+                /* 1 */ 1,
+                /* 2 */ 5,
+                /* 3 */ 2,
+                /* 4 */ 7,
+                /* 5 */ 2,
+                /* 6 */ 4,
+                /* 7 */ 10,
+                /* 8 */ 8, // I don't think they released a server version for 1.8.9
+                /* 9 */ 4,
+
+                /* 10 */ 2,//          ,_  _  _,
+                /* 11 */ 2,//            \o-o/
+                /* 12 */ 2,//           ,(.-.),
+                /* 13 */ 2,//         _/ |) (| \_
+                /* 14 */ 4,//           /\=-=/\
+                /* 15 */ 2,//          ,| \=/ |,
+                /* 16 */ 5,//        _/ \  |  / \_
+                /* 17 */ 1,//            \_!_/
+                /* 18 */ 2,
+                /* 19 */ 4,
+                /* 20 */ 0,
+        };
+
+        if (minorVersion > patches.length) return null;
+        return patches[minorVersion - 1];
+    }
+
+    /**
+     * Mojang remapped their NMS in 1.17: <a href="https://www.spigotmc.org/threads/spigot-bungeecord-1-17.510208/#post-4184317">Spigot Thread</a>
      */
     public static final String
             CRAFTBUKKIT_PACKAGE = "org.bukkit.craftbukkit." + NMS_VERSION + '.',
@@ -182,7 +231,7 @@ public final class ReflectionUtils {
 
         try {
             connection = lookup.findGetter(entityPlayer,
-                    v(17, "b").orElse("playerConnection"), playerConnection);
+                    v(20, "c").v(17, "b").orElse("playerConnection"), playerConnection);
             getHandle = lookup.findVirtual(craftPlayer, "getHandle", MethodType.methodType(entityPlayer));
             sendPacket = lookup.findVirtual(playerConnection,
                     v(18, "a").orElse("sendPacket"),

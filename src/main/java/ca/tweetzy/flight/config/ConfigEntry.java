@@ -18,7 +18,6 @@
 
 package ca.tweetzy.flight.config;
 
-import ca.tweetzy.flight.comp.NBTEditor;
 import ca.tweetzy.flight.comp.SkullUtils;
 import ca.tweetzy.flight.comp.enums.CompMaterial;
 import ca.tweetzy.flight.utils.MathUtil;
@@ -220,7 +219,7 @@ public interface ConfigEntry {
         }
 
         // SKULLS / HEADS
-        if (SkullUtils.detectSkullValueType(value) == SkullUtils.ValueType.TEXTURE_URL) return NBTEditor.getHead(value);
+        if (SkullUtils.detectSkullValueType(value) == SkullUtils.ValueType.TEXTURE_URL) return QuickItem.createTexturedHead(value);
 
         // model data
         if (value.split(":").length == 2 && MathUtil.isInt(value.split(":")[1])) {

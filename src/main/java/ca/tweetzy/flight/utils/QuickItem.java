@@ -18,14 +18,15 @@
 
 package ca.tweetzy.flight.utils;
 
-import ca.tweetzy.flight.comp.NBTEditor;
 import ca.tweetzy.flight.comp.SkullUtils;
 import ca.tweetzy.flight.comp.enums.CompMaterial;
 import ca.tweetzy.flight.comp.enums.ServerVersion;
+import de.tr7zw.changeme.nbtapi.NBT;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -35,12 +36,16 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
+import org.bukkit.profile.PlayerProfile;
 
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Date Created: April 07 2022
@@ -303,7 +308,10 @@ public final class QuickItem {
         if (this.unbreakable) {
             this.flags.add(ItemFlag.HIDE_ATTRIBUTES);
             this.flags.add(ItemFlag.HIDE_UNBREAKABLE);
-            this.item = NBTEditor.set(this.item, (byte) 1, "Unbreakable");
+
+            NBT.modify(this.item, nbt -> {
+                nbt.setByte("Unbreakable", (byte) 1);
+            });
         }
 
         if (this.hideTags)
@@ -335,9 +343,11 @@ public final class QuickItem {
             } catch (final Throwable t) {
             }
 
-        for (final Map.Entry<String, String> entry : this.tags.entrySet())
-            compiledItem = NBTEditor.set(compiledItem, entry.getValue(), entry.getKey());
-
+        for (final Map.Entry<String, String> entry : this.tags.entrySet()) {
+            NBT.modify(compiledItem, nbt -> {
+                nbt.setString(entry.getKey(), entry.getValue());
+            });
+        }
 
         return compiledItem;
     }
@@ -365,7 +375,7 @@ public final class QuickItem {
 
     public static QuickItem of(final String material) {
         if (SkullUtils.detectSkullValueType(material) == SkullUtils.ValueType.TEXTURE_URL)
-            return of(NBTEditor.getHead(material));
+            return of(createTexturedHead(material));
 
         final String[] split = material.split(":");
 
@@ -425,5 +435,23 @@ public final class QuickItem {
         itemStack.setItemMeta(meta);
 
         return of(itemStack);
+    }
+
+    public static ItemStack createTexturedHead(String url) {
+        ItemStack itemStack = new ItemStack(Material.PLAYER_HEAD);
+
+        if (itemStack.getItemMeta() instanceof SkullMeta) {
+            SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();
+
+            PlayerProfile playerProfile = Bukkit.createPlayerProfile(UUID.randomUUID());
+            try {
+                playerProfile.getTextures().setSkin(URI.create(url).toURL());
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
+            skullMeta.setOwnerProfile(playerProfile);
+            itemStack.setItemMeta(skullMeta);
+        }
+        return itemStack;
     }
 }
