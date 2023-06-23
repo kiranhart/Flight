@@ -22,11 +22,11 @@ import ca.tweetzy.flight.comp.SkullUtils;
 import ca.tweetzy.flight.comp.enums.CompMaterial;
 import ca.tweetzy.flight.comp.enums.ServerVersion;
 import de.tr7zw.changeme.nbtapi.NBT;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -36,16 +36,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
-import org.bukkit.profile.PlayerProfile;
 
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Date Created: April 07 2022
@@ -438,20 +430,21 @@ public final class QuickItem {
     }
 
     public static ItemStack createTexturedHead(String url) {
-        ItemStack itemStack = new ItemStack(Material.PLAYER_HEAD);
+        ItemStack item = CompMaterial.PLAYER_HEAD.parseItem();
+        if (item == null)
+            return CompMaterial.STONE.parseItem();
 
-        if (itemStack.getItemMeta() instanceof SkullMeta) {
-            SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();
+        NBT.modify(item, nbt -> {
+            ReadWriteNBT skull = nbt.getOrCreateCompound("SkullOwner");
+            skull.setString("Id", UUID.randomUUID().toString());
+            skull.getOrCreateCompound("Properties").getCompoundList("textures").addCompound().setString("Value", encodeURL(url));
+        });
 
-            PlayerProfile playerProfile = Bukkit.createPlayerProfile(UUID.randomUUID());
-            try {
-                playerProfile.getTextures().setSkin(URI.create(url).toURL());
-            } catch (MalformedURLException e) {
-                throw new RuntimeException(e);
-            }
-            skullMeta.setOwnerProfile(playerProfile);
-            itemStack.setItemMeta(skullMeta);
-        }
-        return itemStack;
+        return item;
+    }
+
+    private static String encodeURL(final String url) {
+        byte[] encodedData = Base64.getEncoder().encode(String.format("{textures:{SKIN:{url:\"%s\"}}}", url).getBytes());
+        return new String(encodedData);
     }
 }
