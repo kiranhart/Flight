@@ -18,6 +18,7 @@
 
 package ca.tweetzy.flight.utils;
 
+import ca.tweetzy.flight.comp.NBTEditor;
 import ca.tweetzy.flight.comp.SkullUtils;
 import ca.tweetzy.flight.comp.enums.CompMaterial;
 import ca.tweetzy.flight.comp.enums.ServerVersion;
@@ -434,13 +435,15 @@ public final class QuickItem {
         if (item == null)
             return CompMaterial.STONE.parseItem();
 
-        NBT.modify(item, nbt -> {
-            ReadWriteNBT skull = nbt.getOrCreateCompound("SkullOwner");
-            skull.setString("Id", UUID.randomUUID().toString());
-            skull.getOrCreateCompound("Properties").getCompoundList("textures").addCompound().setString("Value", encodeURL(url));
-        });
+//        NBT.modify(item, nbt -> {
+//            ReadWriteNBT skull = nbt.getOrCreateCompound("SkullOwner");
+//            skull.setString("Id", UUID.randomUUID().toString());
+//            skull.getOrCreateCompound("Properties").getCompoundList("textures").addCompound().setString("Value", encodeURL(url));
+//        });
 
-        return item;
+        return NBTEditor.getHead(url);
+
+//        return item;
     }
 
     private static String encodeURL(final String url) {
