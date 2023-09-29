@@ -179,6 +179,10 @@ public class GuiManager {
 
                 if (!gui.isOpen()) return;
 
+                if (event.getAction() == InventoryAction.HOTBAR_SWAP || event.getClick() == ClickType.SWAP_OFFHAND){
+                    event.setCancelled(true);
+                    return;
+                }
 
                 if (event.getClick() == ClickType.SHIFT_LEFT || event.getClick() == ClickType.SHIFT_RIGHT) {
                     event.setCancelled(!gui.isAllowShiftClick());
