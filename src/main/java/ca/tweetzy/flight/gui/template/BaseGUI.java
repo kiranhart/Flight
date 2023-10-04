@@ -74,10 +74,12 @@ public abstract class BaseGUI extends Gui {
      * If the GUI has a parent, then the back button will be set to the back button, otherwise it will be set to the exit button
      */
     protected void applyBackExit() {
-        if (this.parent == null)
+        if (this.parent == null) {
             setButton(getBackExitButtonSlot(), getExitButton(), click -> click.gui.close());
-        else
+        } else {
             setButton(getBackExitButtonSlot(), getBackButton(), click -> click.manager.showGUI(click.player, this.parent));
+        }
+
     }
 
     protected List<Integer> fillSlots() {

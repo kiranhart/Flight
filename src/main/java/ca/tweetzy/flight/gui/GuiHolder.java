@@ -18,21 +18,17 @@
 
 package ca.tweetzy.flight.gui;
 
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Internal class for marking an inventory as a GUI inventory
  */
 class GuiHolder implements InventoryHolder {
 
-    @Getter
-    private final Gui gui;
-
+    final Gui gui;
     final GuiManager manager;
 
     public GuiHolder(GuiManager manager, Gui gui) {
@@ -41,8 +37,12 @@ class GuiHolder implements InventoryHolder {
     }
 
     @Override
-    public @NotNull Inventory getInventory() {
+    public Inventory getInventory() {
         return gui.inventory;
+    }
+
+    public Gui getGUI() {
+        return gui;
     }
 
     public Inventory newInventory(int size, String title) {
