@@ -25,6 +25,7 @@ import ca.tweetzy.flight.utils.QuickItem;
 import lombok.NonNull;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +38,7 @@ import java.util.stream.Collectors;
 public abstract class PagedGUI<T> extends BaseGUI {
 
     protected final Gui parent;
-    private final List<T> items;
+    private List<T> items = new ArrayList<>();
 
     public PagedGUI(final Gui parent, @NonNull final String title, final int rows, @NonNull final List<T> items) {
         super(parent, title, rows);
@@ -104,5 +105,9 @@ public abstract class PagedGUI<T> extends BaseGUI {
 
     protected int getNextButtonSlot() {
         return 50;
+    }
+
+    protected void updateItems(@NonNull final List<T> items) {
+        this.items = items;
     }
 }
