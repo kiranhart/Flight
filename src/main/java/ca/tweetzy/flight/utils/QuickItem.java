@@ -19,11 +19,10 @@
 package ca.tweetzy.flight.utils;
 
 import ca.tweetzy.flight.comp.NBTEditor;
-import ca.tweetzy.flight.comp.SkullUtils;
 import ca.tweetzy.flight.comp.enums.CompMaterial;
 import ca.tweetzy.flight.comp.enums.ServerVersion;
+import com.cryptomorin.xseries.SkullUtils;
 import de.tr7zw.changeme.nbtapi.NBT;
-import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Bukkit;

@@ -17,7 +17,7 @@
  */
 package ca.tweetzy.flight.utils;
 
-import ca.tweetzy.flight.comp.ReflectionUtils;
+import com.cryptomorin.xseries.ReflectionUtils;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;

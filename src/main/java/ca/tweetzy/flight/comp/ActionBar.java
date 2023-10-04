@@ -17,6 +17,7 @@
  */
 package ca.tweetzy.flight.comp;
 
+import com.cryptomorin.xseries.ReflectionUtils;
 import com.google.common.base.Strings;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -33,7 +34,11 @@ import java.lang.invoke.MethodType;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 
-import static ca.tweetzy.flight.comp.ReflectionUtils.*;
+import static com.cryptomorin.xseries.ReflectionUtils.NMS_PACKAGE;
+import static com.cryptomorin.xseries.ReflectionUtils.getNMSClass;
+import static com.cryptomorin.xseries.ReflectionUtils.sendPacket;
+import static com.cryptomorin.xseries.ReflectionUtils.v;
+
 
 /**
  * A reflection API for action bars in Minecraft.

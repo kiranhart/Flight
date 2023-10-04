@@ -18,11 +18,11 @@
 
 package ca.tweetzy.flight.config;
 
-import ca.tweetzy.flight.comp.SkullUtils;
 import ca.tweetzy.flight.comp.enums.CompMaterial;
 import ca.tweetzy.flight.utils.MathUtil;
 import ca.tweetzy.flight.utils.Pair;
 import ca.tweetzy.flight.utils.QuickItem;
+import com.cryptomorin.xseries.SkullUtils;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
