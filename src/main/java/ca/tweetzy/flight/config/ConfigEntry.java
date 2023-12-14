@@ -219,7 +219,7 @@ public interface ConfigEntry {
         }
 
         // SKULLS / HEADS
-        if (SkullUtils.detectSkullValueType(value) == SkullUtils.ValueType.TEXTURE_URL) return QuickItem.createTexturedHead(value);
+        if (value.contains("textures.minecraft.net")) return QuickItem.createTexturedHead(value);
 
         // model data
         if (value.split(":").length == 2 && MathUtil.isInt(value.split(":")[1])) {

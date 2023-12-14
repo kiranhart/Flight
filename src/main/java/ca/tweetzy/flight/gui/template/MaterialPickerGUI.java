@@ -85,8 +85,8 @@ public final class MaterialPickerGUI extends BaseGUI {
         final List<CompMaterial> itemsToFill = validMaterials.stream().skip((page - 1) * (long) this.fillSlots().size()).limit(this.fillSlots().size()).collect(Collectors.toList());
         pages = (int) Math.max(1, Math.ceil(validMaterials.size() / (double) this.fillSlots().size()));
 
-        setPrevPage(5, 3, this.getPreviousPageButton());
-        setNextPage(5, 5, this.getNextPageButton());
+        setPrevPage(5, 3, this.getPreviousButton());
+        setNextPage(5, 5, this.getNextButton());
         setOnPage(e -> draw());
 
         for (int i = 0; i < this.rows * 9; i++) {
@@ -140,7 +140,37 @@ public final class MaterialPickerGUI extends BaseGUI {
     }
 
     @Override
+    protected ItemStack getNextButton() {
+        return QuickItem.of(CompMaterial.ARROW).name("&ENext").make();
+    }
+
+    @Override
+    protected ItemStack getPreviousButton() {
+        return QuickItem.of(CompMaterial.ARROW).name("&ePrevious").make();
+    }
+
+    @Override
+    protected int getPreviousButtonSlot() {
+        return 48;
+    }
+
+    @Override
+    protected int getNextButtonSlot() {
+        return 50;
+    }
+
+    @Override
     protected List<Integer> fillSlots() {
         return InventoryBorder.getInsideBorders(5);
+    }
+
+    @Override
+    protected ItemStack getBackButton() {
+        return QuickItem.of(CompMaterial.DARK_OAK_DOOR).name("&EBack").lore("&7Click to go back").make();
+    }
+
+    @Override
+    protected ItemStack getExitButton() {
+        return QuickItem.of(CompMaterial.BARRIER).name("&cExit").lore("&7Click to exit menu").make();
     }
 }

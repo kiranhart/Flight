@@ -86,21 +86,17 @@ public abstract class BaseGUI extends Gui {
         return IntStream.rangeClosed(0, 44).boxed().collect(Collectors.toList());
     }
 
-    protected ItemStack getBackButton() {
-        return QuickItem.of(CompMaterial.DARK_OAK_DOOR).name("&aBack").lore("&7Click to go back").make();
-    }
+    protected abstract ItemStack getBackButton();
 
-    protected ItemStack getExitButton() {
-        return QuickItem.of(CompMaterial.BARRIER).name("&cExit").lore("&7Click to close menu").make();
-    }
+    protected abstract ItemStack getExitButton();
 
-    protected ItemStack getPreviousPageButton() {
-        return QuickItem.of(CompMaterial.ARROW, "&ePrevious").make();
-    }
+    protected abstract ItemStack getPreviousButton();
 
-    protected ItemStack getNextPageButton() {
-        return QuickItem.of(CompMaterial.ARROW, "&eNext").make();
-    }
+    protected abstract ItemStack getNextButton();
+
+    protected abstract int getPreviousButtonSlot();
+
+    protected abstract int getNextButtonSlot();
 
     protected int getBackExitButtonSlot() {
         return this.rows * 9 - 9;

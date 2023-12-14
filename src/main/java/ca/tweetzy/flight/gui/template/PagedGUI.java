@@ -18,10 +18,8 @@
 
 package ca.tweetzy.flight.gui.template;
 
-import ca.tweetzy.flight.comp.enums.CompMaterial;
 import ca.tweetzy.flight.gui.Gui;
 import ca.tweetzy.flight.gui.events.GuiClickEvent;
-import ca.tweetzy.flight.utils.QuickItem;
 import lombok.NonNull;
 import org.bukkit.inventory.ItemStack;
 
@@ -39,6 +37,7 @@ public abstract class PagedGUI<T> extends BaseGUI {
 
     protected final Gui parent;
     private List<T> items = new ArrayList<>();
+
 
     public PagedGUI(final Gui parent, @NonNull final String title, final int rows, @NonNull final List<T> items) {
         super(parent, title, rows);
@@ -90,22 +89,6 @@ public abstract class PagedGUI<T> extends BaseGUI {
     protected abstract ItemStack makeDisplayItem(final T object);
 
     protected abstract void onClick(final T object, final GuiClickEvent clickEvent);
-
-    protected ItemStack getPreviousButton() {
-        return QuickItem.of(CompMaterial.ARROW, "&ePrevious").make();
-    }
-
-    protected ItemStack getNextButton() {
-        return QuickItem.of(CompMaterial.ARROW, "&eNext").make();
-    }
-
-    protected int getPreviousButtonSlot() {
-        return 48;
-    }
-
-    protected int getNextButtonSlot() {
-        return 50;
-    }
 
     protected void updateItems(@NonNull final List<T> items) {
         this.items = items;

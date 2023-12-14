@@ -18,11 +18,11 @@
 
 package ca.tweetzy.flight.utils;
 
-import ca.tweetzy.flight.comp.NBTEditor;
 import ca.tweetzy.flight.comp.enums.CompMaterial;
 import ca.tweetzy.flight.comp.enums.ServerVersion;
 import com.cryptomorin.xseries.SkullUtils;
 import de.tr7zw.changeme.nbtapi.NBT;
+import io.github.bananapuncher714.nbteditor.NBTEditor;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
@@ -366,7 +366,7 @@ public final class QuickItem {
     }
 
     public static QuickItem of(final String material) {
-        if (SkullUtils.detectSkullValueType(material) == SkullUtils.ValueType.TEXTURE_URL)
+        if (material.contains("textures.minecraft.net"))
             return of(createTexturedHead(material));
 
         final String[] split = material.split(":");
