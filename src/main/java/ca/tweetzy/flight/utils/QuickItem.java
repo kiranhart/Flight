@@ -321,10 +321,6 @@ public final class QuickItem {
         if (this.amount != -1)
             compiledItem.setAmount(this.amount);
 
-        // Apply Bukkit metadata
-        compiledItem.setItemMeta(compiledMeta);
-
-
         //
         // From now on we have to re-set the item
         //
@@ -334,6 +330,9 @@ public final class QuickItem {
                 compiledMeta.setCustomModelData(this.modelData);
             } catch (final Throwable t) {
             }
+
+        // Apply Bukkit metadata
+        compiledItem.setItemMeta(compiledMeta);
 
         for (final Map.Entry<String, String> entry : this.tags.entrySet()) {
             NBT.modify(compiledItem, nbt -> {
