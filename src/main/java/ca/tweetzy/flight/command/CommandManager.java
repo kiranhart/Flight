@@ -23,11 +23,8 @@ import ca.tweetzy.flight.comp.enums.ServerVersion;
 import ca.tweetzy.flight.utils.Common;
 import lombok.Setter;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.command.SimpleCommandMap;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.Server;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -37,14 +34,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -386,8 +376,7 @@ public final class CommandManager implements CommandExecutor, TabCompleter {
             // Retrieve the SimpleCommandMap from the server
             Class<?> clazzCraftServer = Bukkit.getServer().getClass();
             Object craftServer = clazzCraftServer.cast(Bukkit.getServer());
-            SimpleCommandMap commandMap = (SimpleCommandMap) craftServer.getClass()
-                    .getDeclaredMethod("getCommandMap").invoke(craftServer);
+            SimpleCommandMap commandMap = (SimpleCommandMap) craftServer.getClass().getDeclaredMethod("getCommandMap").invoke(craftServer);
 
             // Construct a new Command object
             Constructor<PluginCommand> constructorPluginCommand = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
@@ -419,4 +408,93 @@ public final class CommandManager implements CommandExecutor, TabCompleter {
             ex.printStackTrace();
         }
     }
+
+
+    /// special case for things like shops
+    public static boolean unregisterCommands(Collection<? extends org.bukkit.command.Command> cmds) {
+        boolean changed = false;
+        CommandMap commandMap = getCommandMap();
+        Map<String, org.bukkit.command.Command> knownCmds = getKnownCommands(commandMap);
+
+        HashMap<String, org.bukkit.command.Command> commandsToCheck = new HashMap<>();
+
+        for (org.bukkit.command.Command c : cmds) {
+            commandsToCheck.put(c.getLabel().toLowerCase(), c);
+            commandsToCheck.put(c.getName().toLowerCase(), c);
+            c.getAliases().forEach(a -> commandsToCheck.put(a.toLowerCase(), c));
+        }
+
+        for (Map.Entry<String, org.bukkit.command.Command> check : commandsToCheck.entrySet()) {
+            org.bukkit.command.Command mappedCommand = knownCmds.get(check.getKey());
+            if (check.getValue().equals(mappedCommand)) {
+                mappedCommand.unregister(commandMap);
+                knownCmds.remove(check.getKey());
+                changed = true;
+            } else if (check.getValue() instanceof PluginCommand) {
+                PluginCommand checkPCmd = (PluginCommand) check.getValue();
+
+                if (mappedCommand instanceof PluginCommand) {
+
+                    PluginCommand mappedPCmd = (PluginCommand) mappedCommand;
+                    CommandExecutor mappedExec = mappedPCmd.getExecutor();
+
+                    if (mappedExec != null && mappedExec.equals(checkPCmd.getExecutor())) {
+                        mappedPCmd.setExecutor(null);
+                        mappedPCmd.setTabCompleter(null);
+                    }
+                }
+                checkPCmd.setExecutor(emptyExec);
+                checkPCmd.setTabCompleter(emptyExec);
+            }
+        }
+        return changed;
+    }
+
+    public static CommandMap getCommandMap() {
+        Server server = Bukkit.getServer();
+        try {
+            Method m = server.getClass().getDeclaredMethod("getCommandMap");
+            m.setAccessible(true);
+            return (CommandMap) m.invoke(Bukkit.getServer());
+        } catch (Exception ignored) {
+        }
+        try {
+            Field commandMapField = server.getClass().getDeclaredField("commandMap");
+            commandMapField.setAccessible(true);
+            return (CommandMap) commandMapField.get(server);
+        } catch (Exception e) {
+            throw new RuntimeException("Could not get commandMap", e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Map<String, org.bukkit.command.Command> getKnownCommands(CommandMap m) {
+        try {
+            Method me = m.getClass().getDeclaredMethod("getKnownCommands");
+            me.setAccessible(true);
+            return (Map<String, org.bukkit.command.Command>) me.invoke(m);
+        } catch (Exception ignored) {
+        }
+        try {
+            Field knownCommandsField = m.getClass().getDeclaredField("knownCommands");
+            knownCommandsField.setAccessible(true);
+            return (Map<String, org.bukkit.command.Command>) knownCommandsField.get(m);
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException("Could not get knownCommands", e);
+        }
+    }
+
+    public static final TabExecutor emptyExec = new TabExecutor() {
+        @Nullable
+        @Override
+        public List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull org.bukkit.command.Command command, @NotNull String s, @NotNull String[] strings) {
+            return null;
+        }
+
+        @Override
+        public boolean onCommand(@NotNull CommandSender commandSender, @NotNull org.bukkit.command.Command command, @NotNull String s, @NotNull String[] strings) {
+            return false;
+        }
+    };
+
 }
