@@ -22,7 +22,6 @@ import ca.tweetzy.flight.comp.enums.CompMaterial;
 import ca.tweetzy.flight.comp.enums.ServerVersion;
 import com.cryptomorin.xseries.SkullUtils;
 import de.tr7zw.changeme.nbtapi.NBT;
-import io.github.bananapuncher714.nbteditor.NBTEditor;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
@@ -37,7 +36,12 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Date Created: April 07 2022
@@ -433,15 +437,12 @@ public final class QuickItem {
         if (item == null)
             return CompMaterial.STONE.parseItem();
 
-//        NBT.modify(item, nbt -> {
-//            ReadWriteNBT skull = nbt.getOrCreateCompound("SkullOwner");
-//            skull.setString("Id", UUID.randomUUID().toString());
-//            skull.getOrCreateCompound("Properties").getCompoundList("textures").addCompound().setString("Value", encodeURL(url));
-//        });
+        SkullMeta sm = (SkullMeta) item.getItemMeta();
 
-        return NBTEditor.getHead(url);
+        SkullUtils.applySkin(sm, encodeURL(url));
+        item.setItemMeta(sm);
 
-//        return item;
+        return item;
     }
 
     private static String encodeURL(final String url) {
