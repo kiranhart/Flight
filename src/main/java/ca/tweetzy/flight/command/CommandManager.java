@@ -385,13 +385,13 @@ public final class CommandManager implements CommandExecutor, TabCompleter {
 
             // If we're on Paper 1.8, we need to register timings (spigot creates timings on init, paper creates it on register)
             // later versions of paper create timings if needed when the command is executed
-            if (ServerProject.isServer(ServerProject.PAPER, ServerProject.TACO) && ServerVersion.isServerVersionBelow(ServerVersion.V1_9)) {
-                Class<?> clazz = Class.forName("co.aikar.timings.TimingsManager");
-                Method method = clazz.getMethod("getCommandTiming", String.class, Command.class);
-                Field field = PluginCommand.class.getField("timings");
-
-                field.set(commandObject, method.invoke(null, plugin.getName().toLowerCase(), commandObject));
-            }
+//            if (ServerVersion.isServerVersionBelow(ServerVersion.V1_9) && ServerProject.isServer(ServerProject.PAPER, ServerProject.TACO)) {
+//                Class<?> clazz = Class.forName("co.aikar.timings.TimingsManager");
+//                Method method = clazz.getMethod("getCommandTiming", String.class, Command.class);
+//                Field field = PluginCommand.class.getField("timings");
+//
+//                field.set(commandObject, method.invoke(null, plugin.getName().toLowerCase(), commandObject));
+//            }
 
             // Set command action
             commandObject.setExecutor(executor);
