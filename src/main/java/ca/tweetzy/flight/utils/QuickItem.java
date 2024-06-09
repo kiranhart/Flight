@@ -20,7 +20,7 @@ package ca.tweetzy.flight.utils;
 
 import ca.tweetzy.flight.comp.enums.CompMaterial;
 import ca.tweetzy.flight.comp.enums.ServerVersion;
-import com.cryptomorin.xseries.SkullUtils;
+import com.cryptomorin.xseries.XSkull;
 import de.tr7zw.changeme.nbtapi.NBT;
 import lombok.Getter;
 import lombok.NonNull;
@@ -426,7 +426,8 @@ public final class QuickItem {
 
         assert meta != null;
 
-        SkullUtils.applySkin(meta, player.getUniqueId());
+        XSkull.applySkin(meta, player);
+
         itemStack.setItemMeta(meta);
 
         return of(itemStack);
@@ -439,7 +440,7 @@ public final class QuickItem {
 
         SkullMeta sm = (SkullMeta) item.getItemMeta();
 
-        SkullUtils.applySkin(sm, encodeURL(url));
+        XSkull.applySkin(sm, encodeURL(url));
         item.setItemMeta(sm);
 
         return item;
