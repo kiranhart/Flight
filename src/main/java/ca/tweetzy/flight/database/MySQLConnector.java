@@ -31,13 +31,18 @@ public class MySQLConnector implements DatabaseConnector {
     private HikariDataSource hikari;
     private boolean initializedSuccessfully;
 
-    public MySQLConnector(Plugin plugin, String hostname, int port, String database, String username, String password, boolean useSSL) {
+    public MySQLConnector(Plugin plugin, String hostname, int port, String database, String username, String password) {
+        this(plugin, hostname, port, database, username, password, "?useUnicode=yes&characterEncoding=UTF-8&useServerPrepStmts=false&rewriteBatchedStatements=true&useSSL=true");
+    }
+
+
+    public MySQLConnector(Plugin plugin, String hostname, int port, String database, String username, String password, String additionalConnectionParams) {
         this.plugin = plugin;
 
         plugin.getLogger().info("connecting to " + hostname + " : " + port);
 
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:mysql://" + hostname + ":" + port + "/" + database + "?useSSL=" + useSSL);
+        config.setJdbcUrl("jdbc:mysql://" + hostname + ":" + port + "/" + database + additionalConnectionParams);
         config.setUsername(username);
         config.setPassword(password);
         config.setMaximumPoolSize(3);
