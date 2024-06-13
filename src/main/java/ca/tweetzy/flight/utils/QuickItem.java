@@ -36,12 +36,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Date Created: April 07 2022
@@ -426,8 +421,7 @@ public final class QuickItem {
 
         assert meta != null;
 
-        XSkull.applySkin(meta, player);
-
+        XSkull.of(meta).profile(player).apply();
         itemStack.setItemMeta(meta);
 
         return of(itemStack);
@@ -439,8 +433,10 @@ public final class QuickItem {
             return CompMaterial.STONE.parseItem();
 
         SkullMeta sm = (SkullMeta) item.getItemMeta();
+        assert sm != null;
 
-        XSkull.applySkin(sm, encodeURL(url));
+        XSkull.of(sm).profile(XSkull.SkullInputType.TEXTURE_URL, url);
+//        XSkull.applySkin(sm, encodeURL(url));
         item.setItemMeta(sm);
 
         return item;
