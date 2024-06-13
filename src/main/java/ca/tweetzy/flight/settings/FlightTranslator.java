@@ -124,4 +124,24 @@ public abstract class FlightTranslator {
             translationFile.init();
         }
     }
+
+    public void setup(JavaPlugin plugin) {
+        registerLanguages();
+
+        // create locales folder
+        final File localeFolder = new File(plugin.getDataFolder() + "/locales");
+        if (!localeFolder.exists())
+            localeFolder.mkdirs();
+
+
+        for (TranslationFile translationFile : translationFiles.values()) {
+
+            translations.forEach((key, value) -> {
+                final String[] contents = (String[]) value;
+                translationFile.createEntry(key, contents.length > 1 ? contents : contents[0]);
+            });
+
+            translationFile.init();
+        }
+    }
 }
