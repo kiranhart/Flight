@@ -435,8 +435,7 @@ public final class QuickItem {
         SkullMeta sm = (SkullMeta) item.getItemMeta();
         assert sm != null;
 
-        XSkull.of(sm).profile(XSkull.SkullInputType.TEXTURE_URL, url);
-//        XSkull.applySkin(sm, encodeURL(url));
+        XSkull.of(sm).profile(XSkull.SkullInputType.TEXTURE_URL, url).apply();
         item.setItemMeta(sm);
 
         return item;
