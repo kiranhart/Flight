@@ -106,6 +106,9 @@ public abstract class FlightTranslator {
     protected abstract void registerLanguages();
 
     public void setup() {
+        translationFiles.clear();
+        translations.clear();
+
         registerLanguages();
 
         // create locales folder
