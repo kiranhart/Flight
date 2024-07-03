@@ -48,11 +48,16 @@ public final class InventorySafeMaterials {
 
         for (int i = 0; i < CompMaterial.values().length; i++) {
             final CompMaterial material = CompMaterial.values()[i];
-            drawer.setItem(0, material.parseItem());
-            if (drawer.getItem(0) != null) {
-                drawer.setItem(0, null);
-                list.add(material);
+
+            try {
+                drawer.setItem(0, material.parseItem());
+                if (drawer.getItem(0) != null) {
+                    drawer.setItem(0, null);
+                    list.add(material);
+                }
+            } catch (IllegalArgumentException ignored) {
             }
+
         }
 
         return list.stream().sorted(Comparator.comparing(CompMaterial::name)).collect(Collectors.toList());
