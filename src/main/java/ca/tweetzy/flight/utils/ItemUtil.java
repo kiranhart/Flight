@@ -18,6 +18,7 @@
 
 package ca.tweetzy.flight.utils;
 
+import com.cryptomorin.xseries.XEnchantment;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.bukkit.inventory.ItemStack;
@@ -71,7 +72,7 @@ public final class ItemUtil {
         final List<String> enchantments = new ArrayList<>();
         if (!stack.getEnchantments().isEmpty()) {
             stack.getEnchantments().forEach((k, i) -> {
-                enchantments.add(k.getName());
+                enchantments.add(ChatUtil.capitalizeFully(XEnchantment.matchXEnchantment(k).name()));
             });
         }
         return enchantments;
