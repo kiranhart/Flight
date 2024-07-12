@@ -20,9 +20,9 @@ package ca.tweetzy.flight.utils;
 
 import ca.tweetzy.flight.comp.enums.CompMaterial;
 import ca.tweetzy.flight.comp.enums.ServerVersion;
-import com.cryptomorin.xseries.SkullUtils;
+import com.cryptomorin.xseries.profiles.builder.XSkull;
+import com.cryptomorin.xseries.profiles.objects.Profileable;
 import de.tr7zw.changeme.nbtapi.NBT;
-import io.github.bananapuncher714.nbteditor.NBTEditor;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
@@ -37,7 +37,13 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Date Created: April 07 2022
@@ -351,6 +357,10 @@ public final class QuickItem {
         return of(item).name(" ").clearLore().make();
     }
 
+    public static ItemStack bg(final String item) {
+        return of(item).name(" ").clearLore().make();
+    }
+
     /**
      * Convenience method to get a new item creator with material, name and lore set
      *
@@ -422,10 +432,14 @@ public final class QuickItem {
 
         assert meta != null;
 
-        SkullUtils.applySkin(meta, player.getUniqueId());
+        XSkull.of(meta).profile(Profileable.of(player)).lenient().apply();
         itemStack.setItemMeta(meta);
 
         return of(itemStack);
+    }
+
+    public static CompletableFuture<ItemStack> asyncTexturedHead(String url) {
+        return XSkull.of(CompMaterial.PLAYER_HEAD.parseItem()).profile(Profileable.detect(url)).lenient().applyAsync();
     }
 
     public static ItemStack createTexturedHead(String url) {
@@ -433,15 +447,29 @@ public final class QuickItem {
         if (item == null)
             return CompMaterial.STONE.parseItem();
 
-//        NBT.modify(item, nbt -> {
-//            ReadWriteNBT skull = nbt.getOrCreateCompound("SkullOwner");
-//            skull.setString("Id", UUID.randomUUID().toString());
-//            skull.getOrCreateCompound("Properties").getCompoundList("textures").addCompound().setString("Value", encodeURL(url));
-//        });
+        SkullMeta sm = (SkullMeta) item.getItemMeta();
+        assert sm != null;
 
-        return NBTEditor.getHead(url);
+        XSkull.of(sm).profile(Profileable.detect(url)).lenient().apply();
+        item.setItemMeta(sm);
 
-//        return item;
+        return item;
+    }
+
+    public static String toString(ItemStack item) {
+        return SerializeUtil.itemToString(item);
+    }
+
+    public static String toString(ItemStack... items) {
+        return SerializeUtil.itemsToString(items);
+    }
+
+    public static ItemStack getItem(String string) {
+        return SerializeUtil.stringToItem(string);
+    }
+
+    public static ItemStack[] getItems(String string) {
+        return SerializeUtil.stringToItems(string);
     }
 
     private static String encodeURL(final String url) {

@@ -1298,7 +1298,7 @@ public enum CompMaterial {
     SCULK_SENSOR,
     SCULK_SHRIEKER,
     SCULK_VEIN,
-    SCUTE,
+    TURTLE_SCUTE("SCUTE"),
     SEAGRASS,
     SEA_LANTERN,
     SEA_PICKLE,

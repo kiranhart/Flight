@@ -71,6 +71,7 @@ public final class Common {
         for (String message : messages) {
             message = colorize(prefix + message);
             message = message.replace("%pl_name%", PLUGIN_NAME);
+            message = message.replace("%pl_prefix%", PREFIX);
 
             if (message.startsWith("<center>")) {
                 message = message.replace("<center>", "");
@@ -105,6 +106,8 @@ public final class Common {
     }
 
     public String colorize(String string) {
+        string = string.replace("%pl_name%", PLUGIN_NAME);
+        string = string.replace("%pl_prefix%", PREFIX);
         return ColorFormatter.process(string);
     }
 

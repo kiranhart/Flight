@@ -18,8 +18,8 @@
 
 package ca.tweetzy.flight.utils.input;
 
-import ca.tweetzy.flight.comp.ActionBar;
-import ca.tweetzy.flight.comp.Titles;
+import com.cryptomorin.xseries.messages.ActionBar;
+import com.cryptomorin.xseries.messages.Titles;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

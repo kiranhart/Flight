@@ -2,6 +2,7 @@ package ca.tweetzy.flight.settings;
 
 import ca.tweetzy.flight.FlightPlugin;
 import ca.tweetzy.flight.hooks.PlaceholderAPIHook;
+import ca.tweetzy.flight.utils.Common;
 import ca.tweetzy.flight.utils.Replacer;
 import lombok.NonNull;
 import org.bukkit.entity.Player;
@@ -57,7 +58,7 @@ public abstract class FlightTranslator {
             content = PlaceholderAPIHook.tryReplace(player, content);
 
         // do some placeholder shit
-        return content;
+        return Common.colorize(content);
     }
 
     public static String string(Player player, @NotNull TranslationEntry entry, Object... variables) {
@@ -92,7 +93,7 @@ public abstract class FlightTranslator {
             content = PlaceholderAPIHook.tryReplace(player, content);
 
         // do some placeholder shit
-        return content;
+        return Common.colorize(content);
     }
 
     public static List<String> list(Player player, @NotNull TranslationEntry entry, Object... variables) {
@@ -106,10 +107,33 @@ public abstract class FlightTranslator {
     protected abstract void registerLanguages();
 
     public void setup() {
+        translationFiles.clear();
+        translations.clear();
+
         registerLanguages();
 
         // create locales folder
         final File localeFolder = new File(FlightPlugin.getInstance().getDataFolder() + "/locales");
+        if (!localeFolder.exists())
+            localeFolder.mkdirs();
+
+
+        for (TranslationFile translationFile : translationFiles.values()) {
+
+            translations.forEach((key, value) -> {
+                final String[] contents = (String[]) value;
+                translationFile.createEntry(key, contents.length > 1 ? contents : contents[0]);
+            });
+
+            translationFile.init();
+        }
+    }
+
+    public void setup(JavaPlugin plugin) {
+        registerLanguages();
+
+        // create locales folder
+        final File localeFolder = new File(plugin.getDataFolder() + "/locales");
         if (!localeFolder.exists())
             localeFolder.mkdirs();
 

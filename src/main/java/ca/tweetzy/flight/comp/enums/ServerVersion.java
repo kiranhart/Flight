@@ -18,28 +18,41 @@
 
 package ca.tweetzy.flight.comp.enums;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 
+@AllArgsConstructor
 public enum ServerVersion {
-    UNKNOWN, V1_7, V1_8, V1_9, V1_10, V1_11, V1_12, V1_13, V1_14, V1_15, V1_16, V1_17, V1_18, V1_19, V1_20, V1_21, V1_22, V1_23;
+    UNKNOWN("Unknown"),
+    V1_7("1.7"),
+    V1_8("1.8"),
+    V1_9("1.9"),
+    V1_10("1.10"),
+    V1_11("1.11"),
+    V1_12("1.12"),
+    V1_13("1.13"),
+    V1_14("1.14"),
+    V1_15("1.15"),
+    V1_16("1.16"),
+    V1_17("1.17"),
+    V1_18("1.18"),
+    V1_19("1.19"),
+    V1_20("1.20"),
+    V1_21("1.21"),
+    V1_22("1.22"),
+    V1_23("1.23");
 
-    private final static String serverPackagePath;
-    private final static String serverPackageVersion;
-    private final static String serverReleaseVersion;
-    private final static ServerVersion serverVersion;
+    @Getter
+    private final String versionName;
 
-    static {
-        String srvPackage = Bukkit.getServer().getClass().getPackage().getName();
-        serverPackagePath = srvPackage;
-        serverPackageVersion = serverPackagePath.substring(serverPackagePath.lastIndexOf('.') + 1);
-        serverReleaseVersion = serverPackageVersion.indexOf('R') != -1 ? serverPackageVersion.substring(serverPackageVersion.indexOf('R') + 1) : "";
-        serverVersion = getVersion();
-    }
+    public static ServerVersion getVersion() {
+        String[] versionPkgRaw = Bukkit.getServer().getBukkitVersion().split("-")[0].split("\\.");
+        String versionPkg = versionPkgRaw[0] + "." + versionPkgRaw[1];
 
-    private static ServerVersion getVersion() {
         for (ServerVersion version : values()) {
-            if (serverPackageVersion.toUpperCase().startsWith(version.name())) {
+            if (versionPkg.equalsIgnoreCase(version.getVersionName())) {
                 return version;
             }
         }
@@ -63,39 +76,27 @@ public enum ServerVersion {
         return this.ordinal() >= other.ordinal();
     }
 
-    public static String getServerVersionString() {
-        return serverPackageVersion;
-    }
-
-    public static String getVersionReleaseNumber() {
-        return serverReleaseVersion;
-    }
-
-    public static ServerVersion getServerVersion() {
-        return serverVersion;
-    }
-
     public static boolean isServerVersion(ServerVersion version) {
-        return serverVersion == version;
+        return getVersion() == version;
     }
 
     public static boolean isServerVersion(ServerVersion... versions) {
-        return ArrayUtils.contains(versions, serverVersion);
+        return ArrayUtils.contains(versions, getVersion());
     }
 
     public static boolean isServerVersionAbove(ServerVersion version) {
-        return serverVersion.ordinal() > version.ordinal();
+        return getVersion().ordinal() > version.ordinal();
     }
 
     public static boolean isServerVersionAtLeast(ServerVersion version) {
-        return serverVersion.ordinal() >= version.ordinal();
+        return getVersion().ordinal() >= version.ordinal();
     }
 
     public static boolean isServerVersionAtOrBelow(ServerVersion version) {
-        return serverVersion.ordinal() <= version.ordinal();
+        return getVersion().ordinal() <= version.ordinal();
     }
 
     public static boolean isServerVersionBelow(ServerVersion version) {
-        return serverVersion.ordinal() < version.ordinal();
+        return getVersion().ordinal() < version.ordinal();
     }
 }

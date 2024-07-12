@@ -18,6 +18,7 @@
 
 package ca.tweetzy.flight.utils;
 
+import de.tr7zw.changeme.nbtapi.NBT;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
@@ -72,5 +73,21 @@ public final class SerializeUtil {
             return null;
         }
         return config.getItemStack("i", null);
+    }
+
+    public String itemToString(final ItemStack itemStack) {
+        return NBT.itemStackToNBT(itemStack).toString();
+    }
+
+    public String itemsToString(final ItemStack... items) {
+        return NBT.itemStackArrayToNBT(items).toString();
+    }
+
+    public ItemStack stringToItem(final String string) {
+        return NBT.itemStackFromNBT(NBT.parseNBT(string));
+    }
+
+    public ItemStack[] stringToItems(final String string) {
+        return NBT.itemStackArrayFromNBT(NBT.parseNBT(string));
     }
 }

@@ -24,12 +24,15 @@ import ca.tweetzy.flight.gui.Gui;
 import ca.tweetzy.flight.gui.events.GuiClickEvent;
 import ca.tweetzy.flight.gui.helper.InventoryBorder;
 import ca.tweetzy.flight.gui.helper.InventorySafeMaterials;
+import ca.tweetzy.flight.utils.ChatUtil;
 import ca.tweetzy.flight.utils.Common;
+import ca.tweetzy.flight.utils.Filterer;
 import ca.tweetzy.flight.utils.Inflector;
 import ca.tweetzy.flight.utils.QuickItem;
 import ca.tweetzy.flight.utils.input.TitleInput;
+import com.cryptomorin.xseries.XEnchantment;
 import lombok.NonNull;
-import org.apache.commons.lang3.text.WordUtils;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -48,10 +51,10 @@ public final class MaterialPickerGUI extends BaseGUI {
     private final Gui parent;
     private final String inputTitle, inputSubtitle;
     private final String searchQuery;
-    private final BiConsumer<GuiClickEvent, CompMaterial> selected;
+    private final BiConsumer<GuiClickEvent, ItemStack> selected;
 
 
-    public MaterialPickerGUI(final Gui parent, final String titleOverride, final String searchQuery, final String inputTitle, final String inputSubtitle, @NonNull final BiConsumer<GuiClickEvent, CompMaterial> selected) {
+    public MaterialPickerGUI(final Gui parent, final String titleOverride, final String searchQuery, final String inputTitle, final String inputSubtitle, @NonNull final BiConsumer<GuiClickEvent, ItemStack> selected) {
         super(parent, titleOverride == null ? "&eMaterial Selector" : titleOverride);
         this.searchQuery = searchQuery;
         this.inputTitle = inputTitle;
@@ -61,15 +64,15 @@ public final class MaterialPickerGUI extends BaseGUI {
         draw();
     }
 
-    public MaterialPickerGUI(final String titleOverride, final String inputTitle, final String inputSubtitle, final String searchQuery, @NonNull final BiConsumer<GuiClickEvent, CompMaterial> selected) {
+    public MaterialPickerGUI(final String titleOverride, final String inputTitle, final String inputSubtitle, final String searchQuery, @NonNull final BiConsumer<GuiClickEvent, ItemStack> selected) {
         this(null, titleOverride, searchQuery, inputTitle, inputSubtitle, selected);
     }
 
-    public MaterialPickerGUI(final String titleOverride, final String searchQuery, @NonNull final BiConsumer<GuiClickEvent, CompMaterial> selected) {
+    public MaterialPickerGUI(final String titleOverride, final String searchQuery, @NonNull final BiConsumer<GuiClickEvent, ItemStack> selected) {
         this(null, titleOverride, searchQuery, "&eMaterial Search", "&fType the search term into chat", selected);
     }
 
-    public MaterialPickerGUI(Gui parent, String title, String searchQuery, BiConsumer<GuiClickEvent, CompMaterial> selected) {
+    public MaterialPickerGUI(Gui parent, String title, String searchQuery, BiConsumer<GuiClickEvent, ItemStack> selected) {
         this(parent, title, searchQuery, "&eMaterial Search", "&fType the search term into chat", selected);
     }
 
@@ -77,12 +80,22 @@ public final class MaterialPickerGUI extends BaseGUI {
     protected void draw() {
         reset();
 
-        List<CompMaterial> validMaterials = InventorySafeMaterials.get();
-        if (this.searchQuery != null) {
-            validMaterials = validMaterials.stream().filter(mat -> Common.match(this.searchQuery, mat.name()) || Common.match(this.searchQuery, Inflector.getInstance().pluralize(mat.name()))).collect(Collectors.toList());
+        List<ItemStack> validMaterials = InventorySafeMaterials.get().stream().map(CompMaterial::parseItem).collect(Collectors.toList());
+
+        // load in enchantments
+        for (XEnchantment value : XEnchantment.values()) {
+            final Enchantment enchantment = value.getEnchant();
+            if (enchantment == null) continue;
+
+            for (int i = 1; i <= enchantment.getMaxLevel(); i++)
+                validMaterials.add(QuickItem.of(CompMaterial.ENCHANTED_BOOK).enchant(value.getEnchant(), i).make());
         }
 
-        final List<CompMaterial> itemsToFill = validMaterials.stream().skip((page - 1) * (long) this.fillSlots().size()).limit(this.fillSlots().size()).collect(Collectors.toList());
+        if (this.searchQuery != null) {
+            validMaterials = validMaterials.stream().filter(mat -> Filterer.searchByItemInfo(this.searchQuery, mat)).collect(Collectors.toList());
+        }
+
+        final List<ItemStack> itemsToFill = validMaterials.stream().skip((page - 1) * (long) this.fillSlots().size()).limit(this.fillSlots().size()).collect(Collectors.toList());
         pages = (int) Math.max(1, Math.ceil(validMaterials.size() / (double) this.fillSlots().size()));
 
         setPrevPage(5, 3, this.getPreviousButton());
@@ -91,7 +104,7 @@ public final class MaterialPickerGUI extends BaseGUI {
 
         for (int i = 0; i < this.rows * 9; i++) {
             if (this.fillSlots().contains(i) && this.fillSlots().indexOf(i) < itemsToFill.size()) {
-                final CompMaterial material = itemsToFill.get(this.fillSlots().indexOf(i));
+                final ItemStack material = itemsToFill.get(this.fillSlots().indexOf(i));
                 setButton(i, buildIcon(material), click -> this.selected.accept(click, material));
             }
         }
@@ -120,9 +133,9 @@ public final class MaterialPickerGUI extends BaseGUI {
         applyBackExit(this.parent);
     }
 
-    protected ItemStack buildIcon(@NonNull final CompMaterial compMaterial) {
-        return QuickItem.of(compMaterial)
-                .name("&e&l" + WordUtils.capitalizeFully(compMaterial.name().replace("_", " ")))
+    protected ItemStack buildIcon(@NonNull final ItemStack itemStack) {
+        return QuickItem.of(itemStack)
+                .name("&e&l" + ChatUtil.capitalizeFully(itemStack.getType()))
                 .lore("&7Click to select this material")
                 .make();
     }
