@@ -106,6 +106,8 @@ public final class Common {
     }
 
     public String colorize(String string) {
+        string = string.replace("%pl_name%", PLUGIN_NAME);
+        string = string.replace("%pl_prefix%", PREFIX);
         return ColorFormatter.process(string);
     }
 

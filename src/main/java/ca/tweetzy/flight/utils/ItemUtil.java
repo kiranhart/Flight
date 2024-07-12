@@ -70,9 +70,9 @@ public final class ItemUtil {
      */
     public List<String> getItemEnchantments(@NonNull final ItemStack stack) {
         final List<String> enchantments = new ArrayList<>();
-        if (!stack.getEnchantments().isEmpty()) {
-            stack.getEnchantments().forEach((k, i) -> {
-                enchantments.add(ChatUtil.capitalizeFully(XEnchantment.matchXEnchantment(k).name()));
+        if (stack.getItemMeta() != null && stack.getItemMeta().hasEnchants()) {
+            stack.getItemMeta().getEnchants().forEach((k, i) -> {
+                enchantments.add(ChatUtil.capitalizeFully(XEnchantment.matchXEnchantment(k)));
             });
         }
         return enchantments;

@@ -26,6 +26,7 @@ import ca.tweetzy.flight.gui.helper.InventoryBorder;
 import ca.tweetzy.flight.gui.helper.InventorySafeMaterials;
 import ca.tweetzy.flight.utils.ChatUtil;
 import ca.tweetzy.flight.utils.Common;
+import ca.tweetzy.flight.utils.Filterer;
 import ca.tweetzy.flight.utils.Inflector;
 import ca.tweetzy.flight.utils.QuickItem;
 import ca.tweetzy.flight.utils.input.TitleInput;
@@ -91,7 +92,7 @@ public final class MaterialPickerGUI extends BaseGUI {
         }
 
         if (this.searchQuery != null) {
-            validMaterials = validMaterials.stream().filter(mat -> Common.match(this.searchQuery, mat.getType().name()) || Common.match(this.searchQuery, Inflector.getInstance().pluralize(mat.getType().name()))).collect(Collectors.toList());
+            validMaterials = validMaterials.stream().filter(mat -> Filterer.searchByItemInfo(this.searchQuery, mat)).collect(Collectors.toList());
         }
 
         final List<ItemStack> itemsToFill = validMaterials.stream().skip((page - 1) * (long) this.fillSlots().size()).limit(this.fillSlots().size()).collect(Collectors.toList());
