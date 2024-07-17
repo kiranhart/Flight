@@ -20,6 +20,7 @@ package ca.tweetzy.flight.utils;
 
 import ca.tweetzy.flight.comp.enums.CompMaterial;
 import ca.tweetzy.flight.comp.enums.ServerVersion;
+import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.profiles.builder.XSkull;
 import com.cryptomorin.xseries.profiles.objects.Profileable;
 import de.tr7zw.changeme.nbtapi.NBT;
@@ -274,7 +275,7 @@ public final class QuickItem {
 
 
         if (this.glow && this.enchants.isEmpty()) {
-            compiledMeta.addEnchant(Enchantment.DURABILITY, 1, true);
+            compiledMeta.addEnchant(XEnchantment.UNBREAKING.getEnchant(), 1, true);
             this.flags.add(ItemFlag.HIDE_ENCHANTS);
         }
 
