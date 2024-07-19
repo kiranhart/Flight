@@ -433,9 +433,13 @@ public final class QuickItem {
 
         assert meta != null;
 
-        XSkull.of(meta).profile(Profileable.of(player)).lenient().apply();
-        itemStack.setItemMeta(meta);
+        try {
+            XSkull.of(meta).profile(Profileable.of(player)).lenient().apply();
+        } catch (Exception ignored) {
+            meta.setOwningPlayer(player);
+        }
 
+        itemStack.setItemMeta(meta);
         return of(itemStack);
     }
 
