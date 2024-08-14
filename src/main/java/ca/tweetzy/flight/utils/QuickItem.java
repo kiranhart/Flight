@@ -20,6 +20,7 @@ package ca.tweetzy.flight.utils;
 
 import ca.tweetzy.flight.comp.enums.CompMaterial;
 import ca.tweetzy.flight.comp.enums.ServerVersion;
+import ca.tweetzy.flight.hooks.PlaceholderAPIHook;
 import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.profiles.builder.XSkull;
 import com.cryptomorin.xseries.profiles.objects.Profileable;
@@ -30,6 +31,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
@@ -172,6 +174,27 @@ public final class QuickItem {
      */
     public QuickItem lore(List<String> lore) {
         this.lores.addAll(lore);
+        return this;
+    }
+
+    public QuickItem lore(Player player, String... lore) {
+        List<String> newLore =Arrays.asList(lore);
+        if (player != null) {
+            newLore = PlaceholderAPIHook.tryReplace(player, newLore);
+        }
+
+        return this.lore(newLore);
+    }
+
+    /**
+     * Append the given lore to the end of existing item lore.
+     */
+    public QuickItem lore(Player player, List<String> lore) {
+        if (player != null) {
+            this.lores.addAll(PlaceholderAPIHook.tryReplace(player, lore));
+        } else {
+            this.lores.addAll(lore);
+        }
         return this;
     }
 
