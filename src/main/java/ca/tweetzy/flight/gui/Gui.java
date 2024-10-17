@@ -64,12 +64,21 @@ public class Gui {
     protected Clickable defaultClicker = null;
     protected Clickable privateDefaultClicker = null;
     protected Clickable playerInvClicker = null;
+    protected Clickable delayClicker = null;
+
     protected Openable opener = null;
     protected Closable closer = null;
     protected Droppable dropper = null;
     protected Pagable pager = null;
     protected CompSound defaultSound = CompSound.UI_BUTTON_CLICK;
     protected CompSound navigateSound = CompSound.ENTITY_BAT_TAKEOFF;
+
+    // Click Delays
+    protected final Map<Integer, Long> slotLastClicked = new HashMap<>();
+    protected final Map<Integer, Long> slotClickDelays = new HashMap<>();
+
+    protected long globalClickDelay = -1;
+    protected long globalLastClicked = -1;
 
     public Gui() {
         this.rows = 3;
@@ -299,8 +308,15 @@ public class Gui {
         return this;
     }
 
+    @NotNull
     protected Gui setPlayerInventoryAction(@Nullable Clickable action) {
         playerInvClicker = action;
+        return this;
+    }
+
+    @NotNull
+    protected Gui setClickDelayAction(@Nullable Clickable action) {
+        delayClicker = action;
         return this;
     }
 
@@ -474,6 +490,25 @@ public class Gui {
         final int cell = col + row * inventoryType.columns;
         setItem(cell, item);
         setConditional(cell, type, action);
+        return this;
+    }
+
+    @NotNull
+    public Gui setGlobalClickDelay(long delay) {
+        this.globalClickDelay = delay;
+        return this;
+    }
+
+    @NotNull
+    public Gui setSlotClickDelay(int slot, long delay) {
+        this.slotClickDelays.put(slot, delay);
+        return this;
+    }
+
+    @NotNull
+    public Gui setSlotClickDelay(int row, int col, long delay) {
+        final int cell = col + row * inventoryType.columns;
+        this.slotClickDelays.put(cell, delay);
         return this;
     }
 
@@ -703,9 +738,33 @@ public class Gui {
     protected boolean onClick(@NotNull GuiManager manager, @NotNull Player player, @NotNull Inventory inventory, @NotNull InventoryClickEvent event) {
         final int cell = event.getSlot();
         Map<ClickType, Clickable> conditionals = conditionalButtons.get(cell);
+
+        // individual slot click delays
+        long slotClickDelay = this.slotClickDelays.getOrDefault(cell, -1L);
+        long slotLastClicked = this.slotLastClicked.getOrDefault(cell,-1L);
+
         Clickable button;
-        if (conditionals != null
-                && ((button = conditionals.get(event.getClick())) != null || (button = conditionals.get(null)) != null)) {
+        if (conditionals != null && ((button = conditionals.get(event.getClick())) != null || (button = conditionals.get(null)) != null)) {
+            if (this.globalClickDelay != -1) {
+                if (this.globalLastClicked == -1 || (System.currentTimeMillis() - this.globalLastClicked) > this.globalClickDelay) {
+                    this.globalLastClicked = System.currentTimeMillis();
+                } else {
+                    if (this.delayClicker != null)
+                        this.delayClicker.onClick(new GuiClickEvent(manager, this, player, event, cell, true));
+                    return false;//todo call delay event
+                }
+            }
+
+            if (slotClickDelay != -1) {
+                if (slotLastClicked == -1 || (System.currentTimeMillis() - slotLastClicked) > slotClickDelay) {
+                    this.slotLastClicked.put(cell, System.currentTimeMillis());
+                } else {
+                    if (this.delayClicker != null)
+                        this.delayClicker.onClick(new GuiClickEvent(manager, this, player, event, cell, true));
+                    return false;
+                }
+            }
+
             button.onClick(new GuiClickEvent(manager, this, player, event, cell, true));
         } else {
             // no event for this button
