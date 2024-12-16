@@ -29,6 +29,7 @@ import ca.tweetzy.flight.utils.Common;
 import ca.tweetzy.flight.utils.Inflector;
 import ca.tweetzy.flight.utils.QuickItem;
 import ca.tweetzy.flight.utils.input.TitleInput;
+import com.cryptomorin.xseries.XSound;
 import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -122,7 +123,7 @@ public final class SoundPickerGUI extends BaseGUI {
     }
 
     protected ItemStack buildIcon(@NonNull final CompSound sound) {
-        return QuickItem.of(CompMaterial.MUSIC_DISC_5).name("&e&l" + ChatUtil.capitalizeFully(sound)).lore("&7Click to select this material").make();
+        return QuickItem.of(CompMaterial.MUSIC_DISC_5).name("&e&l" + ChatUtil.capitalizeFully(sound.parseSound().name())).lore("&7Click to select this material").make();
     }
 
     protected ItemStack buildSearchButton() {

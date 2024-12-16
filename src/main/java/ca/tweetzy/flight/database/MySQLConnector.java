@@ -46,6 +46,7 @@ public class MySQLConnector implements DatabaseConnector {
         config.setUsername(username);
         config.setPassword(password);
         config.setMaximumPoolSize(3);
+        config.setMaxLifetime(20000);
 
         try {
             this.hikari = new HikariDataSource(config);

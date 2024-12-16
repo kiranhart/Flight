@@ -1,28 +1,31 @@
 /*
- * Flight
- * Copyright 2022 Kiran Hart
+ * The MIT License (MIT)
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright (c) 2024 Crypto Morin
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+ * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package ca.tweetzy.flight.comp.enums;
 
+import com.cryptomorin.xseries.XItemStack;
+import com.cryptomorin.xseries.base.XBase;
 import com.google.common.base.Enums;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
-import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
@@ -31,21 +34,16 @@ import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SpawnEggMeta;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.lang.reflect.Field;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
+import java.util.stream.Collectors;
 
 /**
  * <b>CompMaterial</b> - Data Values/Pre-flattening<br>
@@ -54,25 +52,25 @@ import java.util.regex.PatternSyntaxException;
  * This class is mainly designed to support {@link ItemStack}. If you want to use it on blocks, you'll have to use
  * <a href="https://github.com/CryptoMorin/XSeries/blob/master/src/main/java/com/cryptomorin/xseries/XBlock.java">XBlock</a>
  * <p>
- * Pre-flattening: https://minecraft.gamepedia.com/Java_Edition_data_values/Pre-flattening
+ * Pre-flattening: https://minecraft.wiki/w/Java_Edition_data_values/Pre-flattening
  * Materials: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
  * Materials (1.12): https://helpch.at/docs/1.12.2/index.html?org/bukkit/Material.html
  * Material IDs: https://minecraft-ids.grahamedgecombe.com/
  * Material Source Code: https://hub.spigotmc.org/stash/projects/SPIGOT/repos/bukkit/browse/src/main/java/org/bukkit/Material.java
  * CompMaterial v1: https://www.spigotmc.org/threads/329630/
  * <p>
- * This class will throw a "unsupported material" error if someone tries to use an item with an invalid data value which can only happen in 1.12 servers and below or when the
+ * This class will throw an "unsupported material" error if someone tries to use an item with an invalid data value which can only happen in 1.12 servers and below or when the
  * utility is missing a new material in that specific version.
- * To get an invalid item, (aka <a href="https://minecraft.fandom.com/wiki/Missing_Texture_Block">Missing Texture Block</a>) you can use the command
+ * To get an invalid item, (aka <a href="https://minecraft.wiki/w/Missing_Texture_Block">Missing Texture Block</a>) you can use the command
  * <b>/give @p minecraft:dirt 1 10</b> where 1 is the item amount, and 10 is the data value. The material {@link #DIRT} with a data value of {@code 10} doesn't exist.
  *
  * @author Crypto Morin
- * @version 11.3.0
+ * @version 12.0.0
  * @see Material
+ * @see XItemStack
  * @see ItemStack
  */
-public enum CompMaterial {
-
+public enum CompMaterial implements XBase<CompMaterial, Material> {
     ACACIA_BOAT("BOAT_ACACIA"),
     ACACIA_BUTTON("WOOD_BUTTON"),
     ACACIA_CHEST_BOAT,
@@ -197,12 +195,13 @@ public enum CompMaterial {
      * Version 1.12+ interprets "BED" as BLACK_BED due to enum alphabetic ordering.
      */
     BLACK_BED(supports(12) ? 15 : 0, "BED_BLOCK", "BED"),
+    BLACK_BUNDLE,
     BLACK_CANDLE,
     BLACK_CANDLE_CAKE,
     BLACK_CARPET(15, "CARPET"),
     BLACK_CONCRETE(15, "CONCRETE"),
     BLACK_CONCRETE_POWDER(15, "CONCRETE_POWDER"),
-    BLACK_DYE,
+    BLACK_DYE(0, "INK_SACK", "INK_SAC"),
     BLACK_GLAZED_TERRACOTTA,
     BLACK_SHULKER_BOX,
     BLACK_STAINED_GLASS(15, "STAINED_GLASS"),
@@ -217,6 +216,7 @@ public enum CompMaterial {
     BLAZE_SPAWN_EGG(61, "MONSTER_EGG"),
     BLUE_BANNER(4, "STANDING_BANNER", "BANNER"),
     BLUE_BED(supports(12) ? 11 : 0, "BED_BLOCK", "BED"),
+    BLUE_BUNDLE,
     BLUE_CANDLE,
     BLUE_CANDLE_CAKE,
     BLUE_CARPET(11, "CARPET"),
@@ -239,6 +239,7 @@ public enum CompMaterial {
     BONE_MEAL(15, "INK_SACK"),
     BOOK,
     BOOKSHELF,
+    BORDURE_INDENTED_BANNER_PATTERN,
     BOW,
     BOWL,
     BRAIN_CORAL,
@@ -257,6 +258,7 @@ public enum CompMaterial {
     BRICK_WALL,
     BROWN_BANNER(3, "STANDING_BANNER", "BANNER"),
     BROWN_BED(supports(12) ? 12 : 0, "BED_BLOCK", "BED"),
+    BROWN_BUNDLE,
     BROWN_CANDLE,
     BROWN_CANDLE_CAKE,
     BROWN_CARPET(12, "CARPET"),
@@ -344,6 +346,7 @@ public enum CompMaterial {
     CHISELED_POLISHED_BLACKSTONE("POLISHED_BLACKSTONE"),
     CHISELED_QUARTZ_BLOCK(1, "QUARTZ_BLOCK"),
     CHISELED_RED_SANDSTONE(1, "RED_SANDSTONE"),
+    CHISELED_RESIN_BRICKS,
     CHISELED_SANDSTONE(1, "SANDSTONE"),
     CHISELED_STONE_BRICKS(3, "SMOOTH_BRICK"),
     CHISELED_TUFF,
@@ -354,6 +357,7 @@ public enum CompMaterial {
     CLAY,
     CLAY_BALL,
     CLOCK("WATCH"),
+    CLOSED_EYEBLOSSOM,
     COAL,
     COAL_BLOCK,
     COAL_ORE,
@@ -410,6 +414,8 @@ public enum CompMaterial {
     CRACKED_STONE_BRICKS(2, "SMOOTH_BRICK"),
     CRAFTER,
     CRAFTING_TABLE("WORKBENCH"),
+    CREAKING_HEART,
+    CREAKING_SPAWN_EGG,
     CREEPER_BANNER_PATTERN,
     CREEPER_HEAD(4, "SKULL", "SKULL_ITEM"),
     CREEPER_SPAWN_EGG(50, "MONSTER_EGG"),
@@ -443,6 +449,7 @@ public enum CompMaterial {
     CUT_SANDSTONE_SLAB(1, "STEP"),
     CYAN_BANNER(6, "STANDING_BANNER", "BANNER"),
     CYAN_BED(supports(12) ? 9 : 0, "BED_BLOCK", "BED"),
+    CYAN_BUNDLE,
     CYAN_CANDLE,
     CYAN_CANDLE_CAKE,
     CYAN_CARPET(9, "CARPET"),
@@ -602,6 +609,7 @@ public enum CompMaterial {
     FEATHER,
     FERMENTED_SPIDER_EYE,
     FERN(2, "LONG_GRASS"),
+    FIELD_MASONED_BANNER_PATTERN,
     /**
      * For some reason, filled map items are really special.
      * Their data value starts from 0 and every time a player
@@ -679,6 +687,7 @@ public enum CompMaterial {
     GRAVEL,
     GRAY_BANNER(8, "STANDING_BANNER", "BANNER"),
     GRAY_BED(supports(12) ? 7 : 0, "BED_BLOCK", "BED"),
+    GRAY_BUNDLE,
     GRAY_CANDLE,
     GRAY_CANDLE_CAKE,
     GRAY_CARPET(7, "CARPET"),
@@ -694,6 +703,7 @@ public enum CompMaterial {
     GRAY_WOOL(7, "WOOL"),
     GREEN_BANNER(2, "STANDING_BANNER", "BANNER"),
     GREEN_BED(supports(12) ? 13 : 0, "BED_BLOCK", "BED"),
+    GREEN_BUNDLE,
     GREEN_CANDLE,
     GREEN_CANDLE_CAKE,
     GREEN_CARPET(13, "CARPET"),
@@ -819,6 +829,7 @@ public enum CompMaterial {
     LIGHTNING_ROD,
     LIGHT_BLUE_BANNER(12, "STANDING_BANNER", "BANNER"),
     LIGHT_BLUE_BED(supports(12) ? 3 : 0, "BED_BLOCK", "BED"),
+    LIGHT_BLUE_BUNDLE,
     LIGHT_BLUE_CANDLE,
     LIGHT_BLUE_CANDLE_CAKE,
     LIGHT_BLUE_CARPET(3, "CARPET"),
@@ -834,6 +845,7 @@ public enum CompMaterial {
     LIGHT_BLUE_WOOL(3, "WOOL"),
     LIGHT_GRAY_BANNER(7, "STANDING_BANNER", "BANNER"),
     LIGHT_GRAY_BED(supports(12) ? 8 : 0, "BED_BLOCK", "BED"),
+    LIGHT_GRAY_BUNDLE,
     LIGHT_GRAY_CANDLE,
     LIGHT_GRAY_CANDLE_CAKE,
     LIGHT_GRAY_CARPET(8, "CARPET"),
@@ -857,6 +869,7 @@ public enum CompMaterial {
     LILY_PAD("WATER_LILY"),
     LIME_BANNER(10, "STANDING_BANNER", "BANNER"),
     LIME_BED(supports(12) ? 5 : 0, "BED_BLOCK", "BED"),
+    LIME_BUNDLE,
     LIME_CANDLE,
     LIME_CANDLE_CAKE,
     LIME_CARPET(5, "CARPET"),
@@ -877,6 +890,7 @@ public enum CompMaterial {
     MACE,
     MAGENTA_BANNER(13, "STANDING_BANNER", "BANNER"),
     MAGENTA_BED(supports(12) ? 2 : 0, "BED_BLOCK", "BED"),
+    MAGENTA_BUNDLE,
     MAGENTA_CANDLE,
     MAGENTA_CANDLE_CAKE,
     MAGENTA_CARPET(2, "CARPET"),
@@ -1033,8 +1047,10 @@ public enum CompMaterial {
     OCHRE_FROGLIGHT,
     OMINOUS_BOTTLE,
     OMINOUS_TRIAL_KEY,
+    OPEN_EYEBLOSSOM,
     ORANGE_BANNER(14, "STANDING_BANNER", "BANNER"),
     ORANGE_BED(supports(12) ? 1 : 0, "BED_BLOCK", "BED"),
+    ORANGE_BUNDLE,
     ORANGE_CANDLE,
     ORANGE_CANDLE_CAKE,
     ORANGE_CARPET(1, "CARPET"),
@@ -1062,6 +1078,28 @@ public enum CompMaterial {
     PACKED_ICE,
     PACKED_MUD,
     PAINTING,
+    PALE_HANGING_MOSS,
+    PALE_MOSS_BLOCK,
+    PALE_MOSS_CARPET,
+    PALE_OAK_BOAT,
+    PALE_OAK_BUTTON,
+    PALE_OAK_CHEST_BOAT,
+    PALE_OAK_DOOR,
+    PALE_OAK_FENCE,
+    PALE_OAK_FENCE_GATE,
+    PALE_OAK_HANGING_SIGN,
+    PALE_OAK_LEAVES,
+    PALE_OAK_LOG,
+    PALE_OAK_PLANKS,
+    PALE_OAK_PRESSURE_PLATE,
+    PALE_OAK_SAPLING,
+    PALE_OAK_SIGN,
+    PALE_OAK_SLAB,
+    PALE_OAK_STAIRS,
+    PALE_OAK_TRAPDOOR,
+    PALE_OAK_WALL_HANGING_SIGN,
+    PALE_OAK_WALL_SIGN,
+    PALE_OAK_WOOD,
     PANDA_SPAWN_EGG,
     PAPER,
     PARROT_SPAWN_EGG(105, "MONSTER_EGG"),
@@ -1079,6 +1117,7 @@ public enum CompMaterial {
     PILLAGER_SPAWN_EGG,
     PINK_BANNER(9, "STANDING_BANNER", "BANNER"),
     PINK_BED(supports(12) ? 6 : 0, "BED_BLOCK", "BED"),
+    PINK_BUNDLE,
     PINK_CANDLE,
     PINK_CANDLE_CAKE,
     PINK_CARPET(6, "CARPET"),
@@ -1150,6 +1189,7 @@ public enum CompMaterial {
     POTTED_BROWN_MUSHROOM("FLOWER_POT"),
     POTTED_CACTUS("FLOWER_POT"),
     POTTED_CHERRY_SAPLING,
+    POTTED_CLOSED_EYEBLOSSOM,
     POTTED_CORNFLOWER,
     POTTED_CRIMSON_FUNGUS,
     POTTED_CRIMSON_ROOTS,
@@ -1162,8 +1202,10 @@ public enum CompMaterial {
     POTTED_LILY_OF_THE_VALLEY,
     POTTED_MANGROVE_PROPAGULE,
     POTTED_OAK_SAPLING("FLOWER_POT"),
+    POTTED_OPEN_EYEBLOSSOM,
     POTTED_ORANGE_TULIP(5, "FLOWER_POT"),
     POTTED_OXEYE_DAISY(8, "FLOWER_POT"),
+    POTTED_PALE_OAK_SAPLING,
     POTTED_PINK_TULIP(7, "FLOWER_POT"),
     POTTED_POPPY("FLOWER_POT"),
     POTTED_RED_MUSHROOM("FLOWER_POT"),
@@ -1201,6 +1243,7 @@ public enum CompMaterial {
     PUMPKIN_STEM,
     PURPLE_BANNER(5, "STANDING_BANNER", "BANNER"),
     PURPLE_BED(supports(12) ? 10 : 0, "BED_BLOCK", "BED"),
+    PURPLE_BUNDLE,
     PURPLE_CANDLE,
     PURPLE_CANDLE_CAKE,
     PURPLE_CARPET(10, "CARPET"),
@@ -1262,6 +1305,7 @@ public enum CompMaterial {
      * Data value 14 or 0
      */
     RED_BED(supports(12) ? 14 : 0, "BED_BLOCK", "BED"),
+    RED_BUNDLE,
     RED_CANDLE,
     RED_CANDLE_CAKE,
     RED_CARPET(14, "CARPET"),
@@ -1294,6 +1338,13 @@ public enum CompMaterial {
     REINFORCED_DEEPSLATE,
     REPEATER("DIODE_BLOCK_ON", "DIODE_BLOCK_OFF", "DIODE"),
     REPEATING_COMMAND_BLOCK("COMMAND", "COMMAND_REPEATING"),
+    RESIN_BLOCK,
+    RESIN_BRICK,
+    RESIN_BRICKS,
+    RESIN_BRICK_SLAB,
+    RESIN_BRICK_STAIRS,
+    RESIN_BRICK_WALL,
+    RESIN_CLUMP,
     RESPAWN_ANCHOR,
     RIB_ARMOR_TRIM_SMITHING_TEMPLATE,
     ROOTED_DIRT,
@@ -1443,6 +1494,8 @@ public enum CompMaterial {
     STRIPPED_MANGROVE_WOOD,
     STRIPPED_OAK_LOG,
     STRIPPED_OAK_WOOD,
+    STRIPPED_PALE_OAK_LOG,
+    STRIPPED_PALE_OAK_WOOD,
     STRIPPED_SPRUCE_LOG,
     STRIPPED_SPRUCE_WOOD,
     STRIPPED_WARPED_HYPHAE,
@@ -1610,6 +1663,7 @@ public enum CompMaterial {
     WHEAT_SEEDS("SEEDS"),
     WHITE_BANNER(15, "STANDING_BANNER", "BANNER"),
     WHITE_BED("BED_BLOCK", "BED"),
+    WHITE_BUNDLE,
     WHITE_CANDLE,
     WHITE_CANDLE_CAKE,
     WHITE_CARPET("CARPET"),
@@ -1643,6 +1697,7 @@ public enum CompMaterial {
     WRITTEN_BOOK,
     YELLOW_BANNER(11, "STANDING_BANNER", "BANNER"),
     YELLOW_BED(supports(12) ? 4 : 0, "BED_BLOCK", "BED"),
+    YELLOW_BUNDLE,
     YELLOW_CANDLE,
     YELLOW_CANDLE_CAKE,
     YELLOW_CARPET(4, "CARPET"),
@@ -1667,6 +1722,7 @@ public enum CompMaterial {
     ZOMBIE_VILLAGER_SPAWN_EGG(27, "MONSTER_EGG"),
     ZOMBIE_WALL_HEAD(2, "SKULL", "SKULL_ITEM"),
     ZOMBIFIED_PIGLIN_SPAWN_EGG(57, "MONSTER_EGG", "ZOMBIE_PIGMAN_SPAWN_EGG");
+
 
     /**
      * Cached array of {@link CompMaterial#values()} to avoid allocating memory for
@@ -1693,16 +1749,8 @@ public enum CompMaterial {
             .expireAfterAccess(1, TimeUnit.HOURS)
             .build();
     /**
-     * This is used for {@link #isOneOf(Collection)}
-     *
-     * @since 3.4.0
-     */
-    private static final Cache<String, Pattern> CACHED_REGEX = CacheBuilder.newBuilder()
-            .expireAfterAccess(3, TimeUnit.HOURS)
-            .build();
-    /**
      * The maximum data value in the pre-flattening update which belongs to {@link #VILLAGER_SPAWN_EGG}<br>
-     * https://minecraftitemids.com/types/spawn-egg
+     * <a href="https://minecraftitemids.com/types/spawn-egg">Spawn Eggs</a>
      *
      * @see #matchCompMaterialWithData(String)
      * @since 8.0.0
@@ -1754,7 +1802,7 @@ public enum CompMaterial {
     }
 
     /**
-     * The data value of this material https://minecraft.gamepedia.com/Java_Edition_data_values/Pre-flattening
+     * The data value of this material <a href="https://minecraft.wiki/w/Java_Edition_data_values/Pre-flattening">Pre-flattening</a>
      * It's never a negative number.
      *
      * @see #getData()
@@ -1765,28 +1813,29 @@ public enum CompMaterial {
      *
      * @see #getLegacy()
      */
-    @Nonnull
+    @NotNull
     private final String[] legacy;
     /**
      * The cached Bukkit parsed material.
      *
-     * @see #parseMaterial()
+     * @see #get()
      * @since 9.0.0
      */
     @Nullable
     private final Material material;
 
-    CompMaterial(int data, @Nonnull String... legacy) {
+    CompMaterial(int data, @NotNull String... legacy) {
         this.data = (byte) data;
         this.legacy = legacy;
 
         Material mat = null;
-        if ((!Data.ISFLAT && this.isDuplicated()) || (mat = Material.getMaterial(this.name())) == null) {
-            for (int i = legacy.length - 1; i >= 0; i--) {
-                mat = Material.getMaterial(legacy[i]);
+        if ((!Data.ISFLAT && this.isDuplicated()) || (mat = Data.getExactMaterial(this.name())) == null) {
+            for (int i = legacy.length - 1; i >= 0; i--) { // Backwards checkup
+                mat = Data.getExactMaterial(legacy[i]);
                 if (mat != null) break;
             }
         }
+
         this.material = mat;
     }
 
@@ -1795,57 +1844,15 @@ public enum CompMaterial {
     }
 
     /**
-     * Checks if the version is 1.13 Aquatic Update or higher.
-     * An invocation of this method yields the cached result from the expression:
-     * <p>
-     * <blockquote>
-     * {@link #supports(int) 13}}
-     * </blockquote>
-     *
-     * @return true if 1.13 or higher.
-     *
-     * @see #getVersion()
-     * @see #supports(int)
-     * @since 1.0.0
-     * @deprecated Use {@code CompMaterial.supports(13)} instead. This method name can be confusing.
-     */
-    @Deprecated
-    public static boolean isNewVersion() {
-        return Data.ISFLAT;
-    }
-
-    /**
-     * This is just an extra method that can be used for many cases.
-     * It can be used in {@link org.bukkit.event.player.PlayerInteractEvent}
-     * or when accessing {@link org.bukkit.entity.Player#getMainHand()},
-     * or other compatibility related methods.
-     * <p>
-     * An invocation of this method yields exactly the same result as the expression:
-     * <p>
-     * <blockquote>
-     * !{@link #supports(int)} 9
-     * </blockquote>
-     *
-     * @since 2.0.0
-     * @deprecated Use {@code !CompMaterial.supports(9)} instead.
-     */
-    @Deprecated
-    public static boolean isOneEight() {
-        return !supports(9);
-    }
-
-    /**
      * Gets the CompMaterial with this name similar to {@link #valueOf(String)}
      * without throwing an exception.
      *
      * @param name the name of the material.
-     *
      * @return an optional that can be empty.
-     *
      * @since 5.1.0
      */
-    @Nonnull
-    private static Optional<CompMaterial> getIfPresent(@Nonnull String name) {
+    @NotNull
+    private static Optional<CompMaterial> getIfPresent(@NotNull String name) {
         return Optional.ofNullable(NAMES.get(name));
     }
 
@@ -1853,7 +1860,6 @@ public enum CompMaterial {
      * The current version of the server.
      *
      * @return the current server version minor number.
-     *
      * @see #supports(int)
      * @since 2.0.0
      */
@@ -1869,7 +1875,7 @@ public enum CompMaterial {
      * @since 1.0.0
      */
     @Nullable
-    private static CompMaterial requestOldCompMaterial(@Nonnull String name, byte data) {
+    private static CompMaterial requestOldCompMaterial(@NotNull String name, byte data) {
         String holder = name + data;
         CompMaterial cache = NAME_CACHE.getIfPresent(holder);
         if (cache != null) return cache;
@@ -1886,21 +1892,6 @@ public enum CompMaterial {
     }
 
     /**
-     * Parses the given material name as an CompMaterial with a given data
-     * value in the string if attached. Check {@link #matchCompMaterialWithData(String)} for more info.
-     *
-     * @see #matchCompMaterialWithData(String)
-     * @see #matchDefinedCompMaterial(String, byte)
-     * @since 2.0.0
-     */
-    @Nonnull
-    public static Optional<CompMaterial> matchCompMaterial(@Nonnull String name) {
-        Validate.notEmpty(name, "Cannot match a material with null or empty material name");
-        Optional<CompMaterial> oldMatch = matchCompMaterialWithData(name);
-        return oldMatch.isPresent() ? oldMatch : matchDefinedCompMaterial(format(name), UNKNOWN_DATA_VALUE);
-    }
-
-    /**
      * Parses material name and data value from the specified string.
      * The separator for the material name and its data value is {@code :}
      * Spaces are allowed. Mostly used when getting materials from config for old school minecrafters.
@@ -1912,27 +1903,43 @@ public enum CompMaterial {
      * </pre>
      *
      * @param name the material string that consists of the material name, data and separator character.
-     *
      * @return the parsed CompMaterial.
-     *
      * @see #matchCompMaterial(String)
      * @since 3.0.0
      */
-    @Nonnull
-    private static Optional<CompMaterial> matchCompMaterialWithData(@Nonnull String name) {
+    @Nullable
+    private static Optional<CompMaterial> matchCompMaterialWithData(@NotNull String name) {
         int index = name.indexOf(':');
         if (index != -1) {
             String mat = format(name.substring(0, index));
             try {
                 // We don't use Byte.parseByte because we have our own range check.
-                byte data = (byte) Integer.parseInt(StringUtils.deleteWhitespace(name.substring(index + 1)));
+                byte data = (byte) Integer.parseInt(name.substring(index + 1).replace(" ", ""));
                 return data >= 0 && data < MAX_DATA_VALUE ? matchDefinedCompMaterial(mat, data) : matchDefinedCompMaterial(mat, UNKNOWN_DATA_VALUE);
             } catch (NumberFormatException ignored) {
-                return matchDefinedCompMaterial(mat, UNKNOWN_DATA_VALUE);
+                return Optional.empty();
             }
         }
 
-        return Optional.empty();
+        // noinspection OptionalAssignedToNull
+        return null;
+    }
+
+    /**
+     * Parses the given material name as an CompMaterial with a given data
+     * value in the string if attached. Check {@link #matchCompMaterialWithData(String)} for more info.
+     *
+     * @see #matchCompMaterialWithData(String)
+     * @see #matchDefinedCompMaterial(String, byte)
+     * @since 2.0.0
+     */
+    @SuppressWarnings("OptionalAssignedToNull")
+    @NotNull
+    public static Optional<CompMaterial> matchCompMaterial(@NotNull String name) {
+        if (name == null || name.isEmpty())
+            throw new IllegalArgumentException("Cannot match a material with null or empty material name");
+        Optional<CompMaterial> oldMatch = matchCompMaterialWithData(name);
+        return oldMatch != null ? oldMatch : matchDefinedCompMaterial(format(name), UNKNOWN_DATA_VALUE);
     }
 
     /**
@@ -1943,8 +1950,8 @@ public enum CompMaterial {
      * @see #matchCompMaterial(ItemStack)
      * @since 2.0.0
      */
-    @Nonnull
-    public static CompMaterial matchCompMaterial(@Nonnull Material material) {
+    @NotNull
+    public static CompMaterial matchCompMaterial(@NotNull Material material) {
         Objects.requireNonNull(material, "Cannot match null material");
         return matchDefinedCompMaterial(material.name(), UNKNOWN_DATA_VALUE)
                 .orElseThrow(() -> new IllegalArgumentException("Unsupported material with no data value: " + material.name()));
@@ -1955,22 +1962,24 @@ public enum CompMaterial {
      * if not a damageable item {@link ItemStack#getDurability()}.
      *
      * @param item the ItemStack to match.
-     *
      * @return an CompMaterial if matched any.
-     *
      * @throws IllegalArgumentException may be thrown as an unexpected exception.
      * @see #matchCompMaterial(Material)
      * @since 2.0.0
      */
-    @Nonnull
+    @NotNull
     @SuppressWarnings("deprecation")
-    public static CompMaterial matchCompMaterial(@Nonnull ItemStack item) {
+    public static CompMaterial matchCompMaterial(@NotNull ItemStack item) {
         Objects.requireNonNull(item, "Cannot match null ItemStack");
         String material = item.getType().name();
-        byte data = (byte) (Data.ISFLAT || item.getType().getMaxDurability() > 0 ? 0 : item.getDurability());
 
-        // They didn't really use the items data value in older versions.
-        if (!Data.ISFLAT && item.hasItemMeta() && material.equals("MONSTER_EGG")) {
+        // 1.13+ doesn't use data values at all.
+        // Maps are given different data values for different parts of the map also some plugins use negative values for custom images.
+        // Items that have durability, such as armor and tools don't use the data value to distinguish their material.
+        byte data = (byte) (Data.ISFLAT || material.equals("MAP") || item.getType().getMaxDurability() > 0 ? 0 : item.getDurability());
+
+        // Versions 1.9-1.12 didn't really use the items data value.
+        if (supports(9) && !supports(13) && item.hasItemMeta() && material.equals("MONSTER_EGG")) {
             ItemMeta meta = item.getItemMeta();
             if (meta instanceof SpawnEggMeta) {
                 SpawnEggMeta egg = (SpawnEggMeta) meta;
@@ -1987,11 +1996,20 @@ public enum CompMaterial {
         }
 
         // Refer to the enum for info.
-        // Currently this is the only material with a non-zero data value
+        // Currently, these are the only materials with a non-zero data value
         // that has been renamed after the flattening update.
-        // If this happens to more materials in the future,
-        // I might have to change then system.
-        if (Data.ISFLAT && !supports(14) && material.equals("CACTUS_GREEN")) return GREEN_DYE;
+        // If this happens to more materials in the future, I might have to change the system.
+        if (supports(13) && !supports(14)) {
+            // https://hub.spigotmc.org/stash/projects/SPIGOT/repos/bukkit/diff/src/main/java/org/bukkit/Material.java?until=67d908a9830c71267ee740f5bddd728ce9c64cc7
+            switch (material) {
+                case "CACTUS_GREEN":
+                    return GREEN_DYE;
+                case "ROSE_RED":
+                    return RED_DYE;
+                case "DANDELION_YELLOW":
+                    return YELLOW_DYE;
+            }
+        }
 
         // Check FILLED_MAP enum for more info.
         // if (!Data.ISFLAT && item.hasItemMeta() && item.getItemMeta() instanceof org.bukkit.inventory.meta.MapMeta) return FILLED_MAP;
@@ -2008,16 +2026,14 @@ public enum CompMaterial {
      *
      * @param name the formatted name of the material.
      * @param data the data value of the material. Is always 0 or {@link #UNKNOWN_DATA_VALUE} when {@link Data#ISFLAT}
-     *
      * @return an CompMaterial (with the same data value if specified)
-     *
      * @see #matchCompMaterial(Material)
-     * @see #matchCompMaterial(int, byte)
      * @see #matchCompMaterial(ItemStack)
      * @since 3.0.0
      */
-    @Nonnull
-    protected static Optional<CompMaterial> matchDefinedCompMaterial(@Nonnull String name, byte data) {
+    @SuppressWarnings({"DanglingJavadoc", "JavadocBlankLines"})
+    @NotNull
+    protected static Optional<CompMaterial> matchDefinedCompMaterial(@NotNull String name, byte data) {
         // if (!Boolean.valueOf(Boolean.getBoolean(Boolean.TRUE.toString())).equals(Boolean.FALSE.booleanValue())) return null;
         Boolean duplicated = null;
         boolean isAMap = name.equalsIgnoreCase("MAP");
@@ -2035,8 +2051,244 @@ public enum CompMaterial {
             return (data >= 0 && isAMap) ? Optional.of(FILLED_MAP) : Optional.empty();
         }
 
-        if (!Data.ISFLAT && oldCompMaterial.isPlural() && (duplicated == null ? isDuplicated(name) : duplicated)) return getIfPresent(name);
+        /**
+         * CompMaterial Paradox (Duplication Check)
+         * I've concluded that this is just an infinite loop that keeps
+         * going around the Singular Form and the Plural Form materials. A waste of brain cells and a waste of time.
+         * This solution works just fine anyway.
+         *
+         * A solution for CompMaterial Paradox.
+         * Manually parses the duplicated materials to find the exact material based on the server version.
+         * If the name ends with "S" -> Plural Form Material.
+         * Plural methods are only plural if they're also {@link #DUPLICATED}
+         *
+         * The only special exceptions are {@link #BRICKS} (??) and {@link #NETHER_BRICKS}
+         * Note: BRICKS was added because
+         * {@code CompMaterial.matchCompMaterial("BRICK")} would match {@link #BRICKS} instead in 1.8.
+         */
+        boolean isPlural = oldCompMaterial == CARROTS || oldCompMaterial == POTATOES || oldCompMaterial == BRICKS;
+
+        if (!Data.ISFLAT && isPlural && (duplicated == null ? isDuplicated(name) : duplicated))
+            return getIfPresent(name);
         return Optional.of(oldCompMaterial);
+    }
+
+    /**
+     * Attempts to build the string like an enum name.
+     * Removes all the spaces, and extra non-English characters. Also removes some config/in-game based strings.
+     * While this method is hard to maintain, it's extremely efficient. It's approximately more than x5 times faster than
+     * the normal RegEx + String Methods approach for both formatted and unformatted material names.
+     *
+     * @param name the material name to modify.
+     * @return an enum name.
+     * @since 2.0.0
+     */
+    @NotNull
+    protected static String format(@NotNull String name) {
+        int len = name.length();
+        char[] chs = new char[len];
+        int count = 0;
+        boolean appendUnderline = false;
+
+        for (int i = 0; i < len; i++) {
+            char ch = name.charAt(i);
+
+            if (!appendUnderline && count != 0 && (ch == '-' || ch == ' ' || ch == '_') && chs[count] != '_')
+                appendUnderline = true;
+            else {
+                boolean number = false;
+                // Old materials have numbers in them.
+                if ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (number = (ch >= '0' && ch <= '9'))) {
+                    if (appendUnderline) {
+                        chs[count++] = '_';
+                        appendUnderline = false;
+                    }
+
+                    if (number) chs[count++] = ch;
+                    else chs[count++] = (char) (ch & 0x5f);
+                }
+            }
+        }
+
+        return new String(chs, 0, count);
+    }
+
+    /**
+     * This is an internal API. Use {@link com.cryptomorin.xseries.reflection.XReflection#supports(int)} instead.
+     * Checks if the specified version is the same version or higher than the current server version.
+     *
+     * @param version the major version to be checked. "1." is ignored. E.g. 1.12 = 12 | 1.9 = 9
+     * @return true of the version is equal or higher than the current version.
+     * @since 2.0.0
+     */
+    @ApiStatus.Internal
+    public static boolean supports(int version) {
+        return Data.VERSION >= version;
+    }
+
+    public String[] getLegacy() {
+        return this.legacy;
+    }
+
+    /**
+     * Sets the {@link Material} (and data value on older versions) of an item.
+     * Damageable materials will not have their durability changed.
+     * <p>
+     * Use {@link #parseItem()} instead when creating new ItemStacks.
+     *
+     * @param item the item to change its type.
+     * @see #parseItem()
+     * @since 3.0.0
+     */
+    @NotNull
+    @SuppressWarnings("deprecation")
+    public ItemStack setType(@NotNull ItemStack item) {
+        Objects.requireNonNull(item, "Cannot set material for null ItemStack");
+        Material material = this.get();
+        Objects.requireNonNull(material, () -> "Unsupported material: " + this.name());
+
+        item.setType(material);
+        if (!Data.ISFLAT && material.getMaxDurability() <= 0) item.setDurability(this.data);
+        // Splash Potions weren't an official material pre-flattening.
+        if (!Data.ISFLAT && this == SPLASH_POTION) {
+            item.setDurability((short) 16384); // Hard-coded as 'data' is only a byte.
+        }
+        return item;
+    }
+
+    /**
+     * Checks if the given material name matches any of this CompMaterial's legacy material names.
+     * All the values passed to this method will not be null or empty and are formatted correctly.
+     *
+     * @param name the material name to check.
+     * @return true if it's one of the legacy names, otherwise false.
+     * @since 2.0.0
+     */
+    private boolean anyMatchLegacy(@NotNull String name) {
+        for (int i = this.legacy.length - 1; i >= 0; i--) {
+            if (name.equals(this.legacy[i])) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Parses an enum name to a user-friendly name.
+     * These names will have underlines removed and with each word capitalized.
+     * <p>
+     * <b>Examples:</b>
+     * <pre>
+     *     {@literal EMERALD                 -> Emerald}
+     *     {@literal EMERALD_BLOCK           -> Emerald Block}
+     *     {@literal ENCHANTED_GOLDEN_APPLE  -> Enchanted Golden Apple}
+     * </pre>
+     *
+     * @return a more user-friendly enum name.
+     * @since 3.0.0
+     */
+    @Override
+    @NotNull
+    public String toString() {
+        return Arrays.stream(name().split("_"))
+                .map(t -> t.charAt(0) + t.substring(1).toLowerCase(Locale.ENGLISH))
+                .collect(Collectors.joining(" "));
+    }
+
+    /**
+     * Gets the ID (Magic value) of the material.
+     * <a href="https://www.minecraftinfo.com/idlist.htm">ID List</a>
+     * <p>
+     * Spigot added material ID support back in 1.16+
+     *
+     * @return the ID of the material or <b>-1</b> if it's not a legacy material or the server doesn't support the material.
+     * @since 2.2.0
+     */
+    @SuppressWarnings("deprecation")
+    public int getId() {
+        // https://hub.spigotmc.org/stash/projects/SPIGOT/repos/bukkit/diff/src/main/java/org/bukkit/Material.java?until=1cb03826ebde4ef887519ce37b0a2a341494a183
+        // Should start working again in 1.16+
+        Material material = this.get();
+        if (material == null) return -1;
+        try {
+            return material.getId();
+        } catch (IllegalArgumentException ignored) {
+            return -1;
+        }
+    }
+
+    /**
+     * The data value of this material <a href="https://minecraft.wiki/w/Java_Edition_data_values/Pre-flattening">pre-flattening</a>.
+     * <p>
+     * Can be accessed with {@link ItemStack#getData()} then {@code MaterialData#getData()}
+     * or {@link ItemStack#getDurability()} if not damageable.
+     *
+     * @return data of this material, or 0 if none.
+     * @since 1.0.0
+     */
+    @SuppressWarnings("deprecation")
+    public byte getData() {
+        return data;
+    }
+
+    /**
+     * Parses an item from this CompMaterial.
+     * Uses data values on older versions.
+     *
+     * @return an ItemStack with the same material (and data value if in older versions.)
+     * @see #setType(ItemStack)
+     * @since 2.0.0
+     */
+    @Nullable
+    @SuppressWarnings("deprecation")
+    public ItemStack parseItem() {
+        Material material = this.get();
+        if (material == null) return null;
+        ItemStack base = Data.ISFLAT ? new ItemStack(material) : new ItemStack(material, 1, this.data);
+        // Splash Potions weren't an official material pre-flattening.
+        if (!Data.ISFLAT && this == SPLASH_POTION) {
+            base.setDurability((short) 16384); // Hard-coded as 'data' is only a byte.
+        }
+        return base;
+    }
+
+    /**
+     * Parses the material of this CompMaterial.
+     *
+     * @return the material related to this CompMaterial based on the server version.
+     * @since 1.0.0
+     * @deprecated Use {@link #get()} instead.
+     */
+    @Nullable
+    @Deprecated
+    public Material parseMaterial() {
+        return get();
+    }
+
+    /**
+     * Checks if an item has the same material (and data value on older versions).
+     *
+     * @param item item to check.
+     * @return true if the material is the same as the item's material (and data value if on older versions), otherwise false.
+     * @since 1.0.0
+     */
+    @SuppressWarnings("deprecation")
+    public boolean isSimilar(@NotNull ItemStack item) {
+        Objects.requireNonNull(item, "Cannot compare with null ItemStack");
+        if (item.getType() != this.get()) return false;
+        // Special case for splash potions.
+        if (this == SPLASH_POTION) {
+            return Data.ISFLAT || item.getDurability() == (short) 16384;
+        }
+        return Data.ISFLAT || item.getDurability() == this.data || item.getType().getMaxDurability() > 0;
+    }
+
+    @Override
+    public String[] getNames() {
+        return legacy;
+    }
+
+    @Override
+    public @Nullable Material get() {
+        return material;
     }
 
     /**
@@ -2047,41 +2299,53 @@ public enum CompMaterial {
      * <p>{@code MELON, CARROT, POTATO, BEETROOT -> true}
      *
      * @param name the name of the material to check.
-     *
      * @return true if there's a duplicated material for this material, otherwise false.
-     *
      * @since 2.0.0
      */
-    private static boolean isDuplicated(@Nonnull String name) {
+    private static boolean isDuplicated(@NotNull String name) {
         // Don't use matchCompMaterial() since this method is being called from matchCompMaterial() itself and will cause a StackOverflowError.
         return DUPLICATED.contains(name);
     }
 
     /**
-     * Gets the CompMaterial based on the material's ID (Magic Value) and data value.<br>
-     * You should avoid using this for performance issues.
-     *
-     * @param id   the ID (Magic value) of the material.
-     * @param data the data value of the material.
-     *
-     * @return a parsed CompMaterial with the same ID and data value.
-     *
-     * @see #matchCompMaterial(ItemStack)
-     * @since 2.0.0
-     * @deprecated this method loops through all the available materials and matches their ID using {@link #getId()}
-     *         which takes a really long time. Plugins should no longer support IDs. If you want, you can make a {@link Map} cache yourself.
-     *         This method obviously doesn't work for 1.13+ and will not be supported. This is only here for debugging purposes.
+     * This method is needed due to Java enum initialization limitations.
+     * It's really inefficient yes, but it's only used for initialization.
+     * <p>
+     * Yes there are many other ways like comparing the hardcoded ordinal or using a boolean in the enum constructor,
+     * but it's not really a big deal.
+     * <p>
+     * This method should not be called if the version is after the flattening update {@link Data#ISFLAT}
+     * and is only used for parsing materials, not matching, for matching check {@link #DUPLICATED}
      */
-    @Nonnull
-    @Deprecated
-    public static Optional<CompMaterial> matchCompMaterial(int id, byte data) {
-        if (id < 0 || id > MAX_ID || data < 0) return Optional.empty();
-        for (CompMaterial materials : VALUES) {
-            if (materials.data == data && materials.getId() == id) return Optional.of(materials);
-        }
-        return Optional.empty();
-    }
+    private boolean isDuplicated() {
+        switch (this.name()) {
+            case "MELON":
+            case "CARROT":
+            case "POTATO":
+            case "GRASS":
+            case "BRICK":
+            case "NETHER_BRICK":
 
+                // Illegal Elements
+                // Since both 1.12 and 1.13 have <type>_DOOR CompMaterial will use it
+                // for 1.12 to parse the material, but it needs <type>_DOOR_ITEM.
+                // We'll trick CompMaterial into thinking this needs to be parsed
+                // using the old methods.
+                // Some of these materials have their enum name added to the legacy list as well.
+            case "DARK_OAK_DOOR":
+            case "ACACIA_DOOR":
+            case "BIRCH_DOOR":
+            case "JUNGLE_DOOR":
+            case "SPRUCE_DOOR":
+            case "MAP":
+            case "CAULDRON":
+            case "BREWING_STAND":
+            case "FLOWER_POT":
+                return true;
+            default:
+                return false;
+        }
+    }
 
     /**
      * Return true if the given block is air
@@ -2131,363 +2395,11 @@ public enum CompMaterial {
     }
 
     /**
-     * Attempts to build the string like an enum name.
-     * Removes all the spaces, and extra non-English characters. Also removes some config/in-game based strings.
-     * While this method is hard to maintain, it's extremely efficient. It's approximately more than x5 times faster than
-     * the normal RegEx + String Methods approach for both formatted and unformatted material names.
-     *
-     * @param name the material name to modify.
-     *
-     * @return an enum name.
-     *
-     * @since 2.0.0
-     */
-    @Nonnull
-    protected static String format(@Nonnull String name) {
-        int len = name.length();
-        char[] chs = new char[len];
-        int count = 0;
-        boolean appendUnderline = false;
-
-        for (int i = 0; i < len; i++) {
-            char ch = name.charAt(i);
-
-            if (!appendUnderline && count != 0 && (ch == '-' || ch == ' ' || ch == '_') && chs[count] != '_')
-                appendUnderline = true;
-            else {
-                boolean number = false;
-                // Old materials have numbers in them.
-                if ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (number = (ch >= '0' && ch <= '9'))) {
-                    if (appendUnderline) {
-                        chs[count++] = '_';
-                        appendUnderline = false;
-                    }
-
-                    if (number) chs[count++] = ch;
-                    else chs[count++] = (char) (ch & 0x5f);
-                }
-            }
-        }
-
-        return new String(chs, 0, count);
-    }
-
-    /**
-     * Checks if the specified version is the same version or higher than the current server version.
-     *
-     * @param version the major version to be checked. "1." is ignored. E.g. 1.12 = 12 | 1.9 = 9
-     *
-     * @return true of the version is equal or higher than the current version.
-     *
-     * @since 2.0.0
-     */
-    public static boolean supports(int version) {
-        return Data.VERSION >= version;
-    }
-
-    public String[] getLegacy() {
-        return this.legacy;
-    }
-
-    /**
-     * CompMaterial Paradox (Duplication Check)
-     * I've concluded that this is just an infinite loop that keeps
-     * going around the Singular Form and the Plural Form materials. A waste of brain cells and a waste of time.
-     * This solution works just fine anyway.
-     * <p>
-     * A solution for CompMaterial Paradox.
-     * Manually parses the duplicated materials to find the exact material based on the server version.
-     * If the name ends with "S" -> Plural Form Material.
-     * Plural methods are only plural if they're also {@link #DUPLICATED}
-     * <p>
-     * The only special exceptions are {@link #BRICKS} and {@link #NETHER_BRICKS}
-     *
-     * @return true if this material is a plural form material, otherwise false.
-     *
-     * @since 8.0.0
-     */
-    private boolean isPlural() {
-        // this.name().charAt(this.name().length() - 1) == 'S'
-        return this == CARROTS || this == POTATOES;
-    }
-
-    /**
-     * Checks if the list of given material names matches the given base material.
-     * Mostly used for configs.
-     * <p>
-     * Supports {@link String#contains} {@code CONTAINS:NAME} and Regular Expression {@code REGEX:PATTERN} formats.
-     * <p>
-     * <b>Example:</b>
-     * <blockquote><pre>
-     *     CompMaterial material = {@link #matchCompMaterial(ItemStack)};
-     *     if (material.isOneOf(plugin.getConfig().getStringList("disabled-items")) return;
-     * </pre></blockquote>
-     * <br>
-     * <b>{@code CONTAINS} Examples:</b>
-     * <pre>
-     *     {@code "CONTAINS:CHEST" -> CHEST, ENDERCHEST, TRAPPED_CHEST -> true}
-     *     {@code "cOnTaINS:dYe" -> GREEN_DYE, YELLOW_DYE, BLUE_DYE, INK_SACK -> true}
-     * </pre>
-     * <p>
-     * <b>{@code REGEX} Examples</b>
-     * <pre>
-     *     {@code "REGEX:^.+_.+_.+$" -> Every Material with 3 underlines or more: SHULKER_SPAWN_EGG, SILVERFISH_SPAWN_EGG, SKELETON_HORSE_SPAWN_EGG}
-     *     {@code "REGEX:^.{1,3}$" -> Material names that have 3 letters only: BED, MAP, AIR}
-     * </pre>
-     * <p>
-     * The reason that there are tags for {@code CONTAINS} and {@code REGEX} is for the performance.
-     * Although RegEx patterns are cached in this method,
-     * please avoid using the {@code REGEX} tag if you can use the {@code CONTAINS} tag instead.
-     * It'll have a huge impact on performance.
-     * Please avoid using {@code (capturing groups)} there's no use for them in this case.
-     * If you want to use groups, use {@code (?: non-capturing groups)}. It's faster.
-     * <p>
-     * Want to learn RegEx? You can mess around in <a href="https://regexr.com/">RegExr</a> website.
-     *
-     * @param materials the material names to check base material on.
-     *
-     * @return true if one of the given material names is similar to the base material.
-     *
-     * @since 3.1.1
-     */
-    public boolean isOneOf(@Nullable Collection<String> materials) {
-        if (materials == null || materials.isEmpty()) return false;
-        String name = this.name();
-
-        for (String comp : materials) {
-            String checker = comp.toUpperCase(Locale.ENGLISH);
-            if (checker.startsWith("CONTAINS:")) {
-                comp = format(checker.substring(9));
-                if (name.contains(comp)) return true;
-                continue;
-            }
-            if (checker.startsWith("REGEX:")) {
-                comp = comp.substring(6);
-                Pattern pattern = CACHED_REGEX.getIfPresent(comp);
-                if (pattern == null) {
-                    try {
-                        pattern = Pattern.compile(comp);
-                        CACHED_REGEX.put(comp, pattern);
-                    } catch (PatternSyntaxException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-                if (pattern != null && pattern.matcher(name).matches()) return true;
-                continue;
-            }
-
-            // Direct Object Equals
-            Optional<CompMaterial> xMat = matchCompMaterial(comp);
-            if (xMat.isPresent() && xMat.get() == this) return true;
-        }
-        return false;
-    }
-
-    /**
-     * Sets the {@link Material} (and data value on older versions) of an item.
-     * Damageable materials will not have their durability changed.
-     * <p>
-     * Use {@link #parseItem()} instead when creating new ItemStacks.
-     *
-     * @param item the item to change its type.
-     *
-     * @see #parseItem()
-     * @since 3.0.0
-     */
-    @Nonnull
-    @SuppressWarnings("deprecation")
-    public ItemStack setType(@Nonnull ItemStack item) {
-        Objects.requireNonNull(item, "Cannot set material for null ItemStack");
-        Material material = this.parseMaterial();
-        Objects.requireNonNull(material, () -> "Unsupported material: " + this.name());
-
-        item.setType(material);
-        if (!Data.ISFLAT && material.getMaxDurability() <= 0) item.setDurability(this.data);
-        return item;
-    }
-
-    /**
-     * Checks if the given material name matches any of this CompMaterial's legacy material names.
-     * All the values passed to this method will not be null or empty and are formatted correctly.
-     *
-     * @param name the material name to check.
-     *
-     * @return true if it's one of the legacy names, otherwise false.
-     *
-     * @since 2.0.0
-     */
-    private boolean anyMatchLegacy(@Nonnull String name) {
-        for (int i = this.legacy.length - 1; i >= 0; i--) {
-            if (name.equals(this.legacy[i])) return true;
-        }
-        return false;
-    }
-
-    /**
-     * Parses an enum name to a user-friendly name.
-     * These names will have underlines removed and with each word capitalized.
-     * <p>
-     * <b>Examples:</b>
-     * <pre>
-     *     {@literal EMERALD                 -> Emerald}
-     *     {@literal EMERALD_BLOCK           -> Emerald Block}
-     *     {@literal ENCHANTED_GOLDEN_APPLE  -> Enchanted Golden Apple}
-     * </pre>
-     *
-     * @return a more user-friendly enum name.
-     *
-     * @since 3.0.0
-     */
-    @Override
-    @Nonnull
-    public String toString() {
-        return WordUtils.capitalize(this.name().replace('_', ' ').toLowerCase(Locale.ENGLISH));
-    }
-
-    /**
-     * Gets the ID (Magic value) of the material.
-     * https://www.minecraftinfo.com/idlist.htm
-     * <p>
-     * Spigot added material ID support back in 1.16+
-     *
-     * @return the ID of the material or <b>-1</b> if it's not a legacy material or the server doesn't support the material.
-     *
-     * @see #matchCompMaterial(int, byte)
-     * @since 2.2.0
-     */
-    @SuppressWarnings("deprecation")
-    public int getId() {
-        // https://hub.spigotmc.org/stash/projects/SPIGOT/repos/bukkit/diff/src/main/java/org/bukkit/Material.java?until=1cb03826ebde4ef887519ce37b0a2a341494a183
-        // Should start working again in 1.16+
-        Material material = this.parseMaterial();
-        if (material == null) return -1;
-        try {
-            return material.getId();
-        } catch (IllegalArgumentException ignored) {
-            return -1;
-        }
-    }
-
-    /**
-     * The data value of this material <a href="https://minecraft.gamepedia.com/Java_Edition_data_values/Pre-flattening">pre-flattening</a>.
-     * <p>
-     * Can be accessed with {@link ItemStack#getData()} then {@code MaterialData#getData()}
-     * or {@link ItemStack#getDurability()} if not damageable.
-     *
-     * @return data of this material, or 0 if none.
-     *
-     * @since 1.0.0
-     */
-    @SuppressWarnings("deprecation")
-    public byte getData() {
-        return data;
-    }
-
-    /**
-     * Parses an item from this CompMaterial.
-     * Uses data values on older versions.
-     *
-     * @return an ItemStack with the same material (and data value if in older versions.)
-     *
-     * @see #setType(ItemStack)
-     * @since 2.0.0
-     */
-    @Nullable
-    @SuppressWarnings("deprecation")
-    public ItemStack parseItem() {
-        Material material = this.parseMaterial();
-        if (material == null) return null;
-        return Data.ISFLAT ? new ItemStack(material) : new ItemStack(material, 1, this.data);
-    }
-
-    /**
-     * Parses the material of this CompMaterial.
-     *
-     * @return the material related to this CompMaterial based on the server version.
-     *
-     * @since 1.0.0
-     */
-    @Nullable
-    public Material parseMaterial() {
-        return this.material;
-    }
-
-    /**
-     * Checks if an item has the same material (and data value on older versions).
-     *
-     * @param item item to check.
-     *
-     * @return true if the material is the same as the item's material (and data value if on older versions), otherwise false.
-     *
-     * @since 1.0.0
-     */
-    @SuppressWarnings("deprecation")
-    public boolean isSimilar(@Nonnull ItemStack item) {
-        Objects.requireNonNull(item, "Cannot compare with null ItemStack");
-        if (item.getType() != this.parseMaterial()) return false;
-        return Data.ISFLAT || item.getDurability() == this.data || item.getType().getMaxDurability() > 0;
-    }
-
-    /**
-     * Checks if this material is supported in the current version.
-     * Suggested materials will be ignored.
-     * <p>
-     * Note that you should use {@link #parseMaterial()} or {@link #parseItem()} and check if it's null
-     * if you're going to parse and use the material/item later.
-     *
-     * @return true if the material exists in {@link Material} list.
-     *
-     * @since 2.0.0
-     */
-    public boolean isSupported() {
-        return this.material != null;
-    }
-
-    /**
-     * This method is needed due to Java enum initialization limitations.
-     * It's really inefficient yes, but it's only used for initialization.
-     * <p>
-     * Yes there are many other ways like comparing the hardcoded ordinal or using a boolean in the enum constructor,
-     * but it's not really a big deal.
-     * <p>
-     * This method should not be called if the version is after the flattening update {@link Data#ISFLAT}
-     * and is only used for parsing materials, not matching, for matching check {@link #DUPLICATED}
-     */
-    private boolean isDuplicated() {
-        switch (this.name()) {
-            case "MELON":
-            case "CARROT":
-            case "POTATO":
-            case "GRASS":
-            case "BRICK":
-            case "NETHER_BRICK":
-
-                // Illegal Elements
-                // Since both 1.12 and 1.13 have <type>_DOOR CompMaterial will use it
-                // for 1.12 to parse the material, but it needs <type>_DOOR_ITEM.
-                // We'll trick CompMaterial into thinking this needs to be parsed
-                // using the old methods.
-                // Some of these materials have their enum name added to the legacy list as well.
-            case "DARK_OAK_DOOR":
-            case "ACACIA_DOOR":
-            case "BIRCH_DOOR":
-            case "JUNGLE_DOOR":
-            case "SPRUCE_DOOR":
-            case "MAP":
-            case "CAULDRON":
-            case "BREWING_STAND":
-            case "FLOWER_POT":
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    /**
      * Used for data that need to be accessed during enum initialization.
      *
      * @since 9.0.0
      */
+    @ApiStatus.Internal
     private static final class Data {
         /**
          * The current version of the server in the form of a major version.
@@ -2496,13 +2408,57 @@ public enum CompMaterial {
          * @since 1.0.0
          */
         private static final int VERSION;
+        private static final Map<String, Material> BUKKIT_NAME_MAPPINGS;
 
         static { // This needs to be right below VERSION because of initialization order.
-            String version = Bukkit.getVersion();
-            Matcher matcher = Pattern.compile("MC: \\d\\.(\\d+)").matcher(version);
+            // Null-checked for unit tests that don't run a server.
+            // noinspection ConstantValue
+            if (Bukkit.getServer() == null) {
+                System.err.println("Bukkit.getServer() in null. This should not happen when running a plugin normally");
+                VERSION = 21;
+            } else {
+                String version = Bukkit.getVersion();
+                Matcher matcher = Pattern.compile("MC: \\d\\.(\\d+)").matcher(version);
 
-            if (matcher.find()) VERSION = Integer.parseInt(matcher.group(1));
-            else throw new IllegalArgumentException("Failed to parse server version from: " + version);
+                if (matcher.find()) VERSION = Integer.parseInt(matcher.group(1));
+                else throw new IllegalArgumentException("Failed to parse server version from: " + version);
+            }
+        }
+
+        static {
+            // Since Minecraft v1.21.3, Paper's Material.getMaterial() has been acting weird.
+            // Material.getMaterial("WHITE_DYE") returns null, however the direct call using
+            // BY_NAME.get("WHITE_DYE") returns Material.WHITE_DYE as expected.
+            // This doesn't seem to happen with Spigot since XSeries unit tests confirms this.
+            // I'm unable to find the corresponding patch that may change this behavior on Paper.
+            // It appears the culprit is org.bukkit.craftbukkit.v1_21_R3.legacy.CraftLegacy class.
+            // And it seems like Paper does some bytecode editing to replace Material.getMaterial with this (confirmed by stacktrace)
+            // But this is obviously wrong, why does it look like this?
+            //     public static Material getMaterial(String name) {
+            //         return name.startsWith("LEGACY_") ? Material.getMaterial(name) : Material.getMaterial("LEGACY_" + name);
+            //     }
+            // Material.getMaterial(String name, boolean legacy) was also removed.
+            // I have no idea what is the intention behind this whole thing...
+            // We could use the registry, but this one is more performant until bukkit actually
+            // switches to registries entirely for materials.
+            Map<String, Material> mapping;
+            try {
+                // private static final Map<String, Material> BY_NAME;
+                Field field = Material.class.getDeclaredField("BY_NAME");
+                field.setAccessible(true);
+                // noinspection unchecked
+                mapping = (Map<String, Material>) field.get(null);
+            } catch (Throwable e) {
+                new RuntimeException("Unable to get Material.BY_NAME field", e).printStackTrace();
+                mapping = null;
+            }
+
+            BUKKIT_NAME_MAPPINGS = mapping;
+        }
+
+        private static Material getExactMaterial(String name) {
+            if (BUKKIT_NAME_MAPPINGS != null) return BUKKIT_NAME_MAPPINGS.get(name);
+            else return Material.getMaterial(name);
         }
 
         /**

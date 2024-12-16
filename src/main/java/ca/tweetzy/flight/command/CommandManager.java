@@ -384,15 +384,8 @@ public final class CommandManager implements CommandExecutor, TabCompleter {
             constructorPluginCommand.setAccessible(true);
             PluginCommand commandObject = constructorPluginCommand.newInstance(command, plugin);
 
-            // If we're on Paper 1.8, we need to register timings (spigot creates timings on init, paper creates it on register)
-            // later versions of paper create timings if needed when the command is executed
-            if (ServerProject.isServer(ServerProject.PAPER, ServerProject.TACO) && ServerVersion.isServerVersionBelow(ServerVersion.V1_9)) {
-                Class<?> clazz = Class.forName("co.aikar.timings.TimingsManager");
-                Method method = clazz.getMethod("getCommandTiming", String.class, Command.class);
-                Field field = PluginCommand.class.getField("timings");
-
-                field.set(commandObject, method.invoke(null, plugin.getName().toLowerCase(), commandObject));
-            }
+            // Handle timings for Paper 1.8 more safely
+            handlePaperTimings(plugin, commandObject);
 
             // Set command action
             commandObject.setExecutor(executor);
@@ -406,7 +399,27 @@ public final class CommandManager implements CommandExecutor, TabCompleter {
             Map<String, org.bukkit.command.Command> knownCommands = (Map<String, org.bukkit.command.Command>) fieldKnownCommands.get(commandMap);
             knownCommands.put(command, commandObject);
         } catch (ReflectiveOperationException ex) {
+            plugin.getLogger().severe("Error registering command dynamically: " + ex.getMessage());
             ex.printStackTrace();
+        }
+    }
+
+    private static void handlePaperTimings(Plugin plugin, PluginCommand commandObject) {
+        try {
+            if (ServerProject.isServer(ServerProject.PAPER, ServerProject.TACO) && ServerVersion.isServerVersionBelow(ServerVersion.V1_9)) {
+                Class<?> timingsManagerClass = Class.forName("co.aikar.timings.TimingsManager");
+                Method getCommandTiming = timingsManagerClass.getMethod("getCommandTiming", String.class, Command.class);
+                Field timingsField = PluginCommand.class.getDeclaredField("timings");
+                timingsField.setAccessible(true);
+
+                Object timing = getCommandTiming.invoke(null, plugin.getName().toLowerCase(), commandObject);
+                if (timing != null) {
+                    timingsField.set(commandObject, timing);
+                }
+            }
+        } catch (Exception e) {
+            plugin.getLogger().warning("Failed to set up command timings: " + e.getMessage());
+            // Continue execution even if timings setup fails
         }
     }
 

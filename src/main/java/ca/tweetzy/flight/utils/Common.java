@@ -87,7 +87,7 @@ public final class Common {
     }
 
     public void log(String... messages) {
-        tell(FlightPlugin.getInstance().getServer().getConsoleSender(), messages);
+        tell(Bukkit.getServer().getConsoleSender(), messages);
     }
 
     public void broadcast(String permission, boolean prefix, String... messages) {
