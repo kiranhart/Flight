@@ -24,12 +24,16 @@ import ca.tweetzy.flight.hooks.PlaceholderAPIHook;
 import com.cryptomorin.xseries.XEnchantment;
 import com.cryptomorin.xseries.profiles.builder.XSkull;
 import com.cryptomorin.xseries.profiles.objects.Profileable;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import de.tr7zw.changeme.nbtapi.NBT;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -343,6 +347,14 @@ public final class QuickItem {
 
         for (final ItemFlag flag : this.flags)
             try {
+
+
+                Multimap<Attribute, AttributeModifier> modifiers = compiledMeta.getAttributeModifiers();
+                if(modifiers == null) {
+                    modifiers = HashMultimap.create();
+                    compiledMeta.setAttributeModifiers(modifiers);
+                }
+
                 compiledMeta.addItemFlags(flag);
             } catch (final Throwable t) {
             }
